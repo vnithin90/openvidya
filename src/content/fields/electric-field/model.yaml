@@ -1,0 +1,141 @@
+# PROVISIONAL SCHEMA. Written as a deliberate structural contrast to
+# ../../mechanics/projectile-motion/model.yaml. Note which keys had to change
+# shape and which survived — that difference is the experiment.
+
+concept: Electric Field of Point Charges
+slug: electric-field
+category: field                  # vector field over a spatial domain; no time evolution
+
+assumptions:
+  - Charges are ideal points; no radius, no internal structure.
+  - Charges are static (electrostatics); no radiation, no magnetic field.
+  - Vacuum; no dielectric, no polarisable medium, no conductors.
+  - Superposition holds exactly (linear Maxwell equations).
+  - Test charges do not disturb the sources that produce the field.
+
+governing_law:
+  form: field-rule                # NOT an ODE — this is the first schema break
+  statement: "E(r) = Σ_i k q_i (r - r_i) / |r - r_i|^3"
+  latex: "\\mathbf{E}(\\mathbf{r}) = \\sum_i \\frac{1}{4\\pi\\varepsilon_0} \\frac{q_i (\\mathbf{r}-\\mathbf{r}_i)}{|\\mathbf{r}-\\mathbf{r}_i|^3}"
+  equivalent_forms:
+    - "∇·E = ρ/ε₀   (Gauss's law, differential)"
+    - "∮ E·dA = Q_enc/ε₀   (Gauss's law, integral)"
+    - "∇×E = 0   (electrostatic field is conservative)"
+    - "E = -∇V,  V(r) = Σ_i k q_i / |r - r_i|"
+
+# Projectile motion has `state` + `initial_conditions`. This concept has
+# neither. It has a domain and a set of sources instead.
+domain:
+  dimension: 3
+  region: "all of R^3 except the charge locations"
+  singularities: "|E| -> ∞ as r -> r_i; the point-charge model has no answer there"
+
+sources:
+  type: point-charges
+  count: variable
+  each:
+    q: {unit: C, range: [-5.0e-9, 5.0e-9]}
+    position: {unit: m, range: [-1, 1]}
+
+field_quantity:
+  symbol: E
+  rank: vector
+  unit: V/m
+  derived:
+    - {symbol: V, rank: scalar, unit: V, relation: "E = -∇V"}
+    - {symbol: F, rank: vector, unit: N, relation: "F = qE on a test charge"}
+
+parameters:
+  presets:
+    - {name: single-positive, charges: [{q: 2.0e-9, at: [0, 0, 0]}]}
+    - {name: dipole, charges: [{q: 2.0e-9, at: [-0.3, 0, 0]}, {q: -2.0e-9, at: [0.3, 0, 0]}]}
+    - {name: like-pair, charges: [{q: 2.0e-9, at: [-0.3, 0, 0]}, {q: 2.0e-9, at: [0.3, 0, 0]}]}
+    - {name: quadrupole, charges: [{q: 2.0e-9, at: [-0.3, -0.3, 0]}, {q: -2.0e-9, at: [0.3, -0.3, 0]}, {q: -2.0e-9, at: [-0.3, 0.3, 0]}, {q: 2.0e-9, at: [0.3, 0.3, 0]}]}
+
+implementation:
+  file: src/physics/electric-field/model.ts
+  method: direct-superposition
+  scheme: pointwise sum of Coulomb terms
+  notes: >
+    Returns null at a charge location rather than a large finite number. The
+    singularity is real in this model; hiding it would let the visualization
+    draw something the physics does not support.
+
+# The independence argument is different here. For projectile motion the
+# independent route was "closed form vs numerical integration". Here it is
+# "integral form vs differential/pointwise form" — Gauss's law and the
+# potential gradient are consequences of the model that the implementation
+# never computes.
+verification:
+  - name: gauss_law_sphere_encloses_charge
+    method: numerical-surface-integral
+    independent_of: pointwise_superposition
+    expected: "∮ E·dA = Q_enc / ε₀"
+    tolerance: {relative: 5.0e-3}
+
+  - name: gauss_law_empty_surface
+    method: numerical-surface-integral
+    independent_of: pointwise_superposition
+    expected: "∮ E·dA = 0 when no charge is enclosed"
+    tolerance: {absolute_relative_to_scale: 1.0e-6}
+
+  - name: field_is_conservative
+    method: numerical-line-integral
+    independent_of: pointwise_superposition
+    expected: "∮ E·dl = 0 around any closed loop avoiding the charges"
+    tolerance: {relative: 1.0e-4}
+
+  - name: potential_gradient_matches_field
+    method: finite-difference
+    independent_of: E_summation
+    expected: "-∇V = E, with V summed separately"
+    tolerance: {relative: 1.0e-5}
+
+  - name: dipole_far_field_scaling
+    method: asymptotic
+    independent_of: closed_form_dipole
+    expected: "|E| ∝ r^-3 far from a neutral pair"
+    tolerance: {relative: 1.0e-2}
+
+  - name: monopole_far_field_scaling
+    method: asymptotic
+    independent_of: closed_form
+    expected: "|E| ∝ r^-2 far from a net-charged configuration"
+    tolerance: {relative: 1.0e-3}
+
+  - name: symmetry_null_points
+    method: symmetry
+    independent_of: numerics
+    expected: "E = 0 at the midpoint of two equal like charges"
+    tolerance: {relative: 1.0e-12}
+
+  - name: superposition_linearity
+    method: invariant
+    independent_of: numerics
+    expected: "E(A ∪ B) = E(A) + E(B); E(λq) = λE(q)"
+    tolerance: {relative: 1.0e-12}
+
+validity:
+  holds_when:
+    - Charges are static or moving slowly compared with c.
+    - Observation points are far from any charge compared with its real size.
+    - The medium is vacuum or a very dilute gas.
+  breaks_when:
+    - Charges accelerate (radiation fields appear; E is no longer ∝ 1/r² only).
+    - Observation point approaches a charge (model diverges; real charges have structure).
+    - A dielectric, conductor, or plasma is present (screening, induced charge).
+    - Speeds approach c (electric and magnetic fields mix between frames).
+  not_modelled:
+    - magnetic field
+    - retardation / finite propagation speed
+    - radiation from accelerating charges
+    - quantum or relativistic corrections
+    - polarisable media and conductors
+
+pedagogical_notes:
+  common_misconceptions:
+    - Field lines are not trajectories; a released charge does not follow a field line unless it starts at rest and the line is straight.
+    - Arrow length is a chosen visual scale, not a physical length.
+    - Field line density represents magnitude only in a plane through a symmetric configuration; in 3D projections it can mislead.
+  representation_choices:
+    - Arrows are normalised and coloured by magnitude, because raw |E| spans many orders of magnitude near a charge.

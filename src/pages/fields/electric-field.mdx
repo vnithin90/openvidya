@@ -1,0 +1,86 @@
+---
+layout: ../../layouts/ConceptLayout.astro
+title: The Electric Field of Point Charges
+category: Fields · electrostatics
+summary: Not a trajectory but a rule assigning a vector to every point of space. Structurally a different kind of object from projectile motion — which is exactly why it was built second.
+---
+
+import ElectricFieldSimulation from '../../components/physics/ElectricFieldSimulation.tsx';
+import ModelPanel from '../../components/ui/ModelPanel.astro';
+
+Projectile motion answers the question *where is the particle at time t*. This
+concept answers a different kind of question entirely: *what would happen to a
+charge placed here?* — asked simultaneously at every point in space, whether or
+not anything is there to experience it.
+
+That difference is not a detail. There is no initial condition here, no time
+evolution, nothing to integrate forward. The model is a rule, and the object it
+produces is a field.
+
+<ElectricFieldSimulation client:visible />
+
+Drag the charges. Click empty space to drop a probe and read off the field
+there. Switch between arrows and field lines, and turn on the potential.
+
+## Superposition is the whole trick
+
+Each charge produces its own field, and where several charges are present the
+fields simply add — as vectors, point by point.
+
+$$
+\mathbf{E}(\mathbf{r}) = \sum_i \frac{1}{4\pi\varepsilon_0}\, \frac{q_i\,(\mathbf{r}-\mathbf{r}_i)}{|\mathbf{r}-\mathbf{r}_i|^3}
+$$
+
+Choose **like-pair** and look at the midpoint. Two equal charges push in exactly
+opposite directions there, so the field is precisely zero — a charge released at
+that point would feel nothing at all. Move one charge and the null point moves
+with it.
+
+## Reading distance from the arrows
+
+Choose **dipole** and move the probe outward. Far from a single isolated charge
+the field falls as $1/r^2$. Far from a dipole it falls as $1/r^3$ — faster,
+because the two opposite charges increasingly cancel as you retreat and only
+their separation still registers.
+
+That difference in exponent is measurable, and it is one of the checks in the
+test suite: the far-field slope on a log–log plot must come out at $-2$ for a
+net-charged configuration and $-3$ for a neutral one.
+
+## What the picture is not telling you
+
+Field lines are seductive and it is worth naming what they are not.
+
+They are **not trajectories**. A charge released into this field does not travel
+along a field line, any more than a projectile travels along the direction of
+gravity. The line gives the direction of the *force*, and force sets
+acceleration, not velocity. A charge released at rest starts off along the line
+and then, in general, curves away from it.
+
+The **arrow length is a choice**, not a measurement. In this visualization every
+arrow is drawn the same length and coloured by magnitude, because $|\mathbf{E}|$
+grows without bound near a charge — drawn to scale, a single arrow near a charge
+would be kilometres long and everything else would be invisible.
+
+And this is a **flat slice** through a three-dimensional field. The apparent
+density of lines in the plane is not a reliable guide to magnitude in 3D.
+
+## How we know the code is right
+
+The implementation adds up Coulomb terms. The tests never do. Instead they check
+things that follow from the model without recomputing it: the flux of
+$\mathbf{E}$ through a closed surface,
+
+$$
+\oint \mathbf{E}\cdot d\mathbf{A} = \frac{Q_{\text{enc}}}{\varepsilon_0}
+$$
+
+evaluated as a numerical surface integral; the vanishing of $\oint\mathbf{E}
+\cdot d\mathbf{l}$ around a closed loop; and the relation $\mathbf{E} = -\nabla
+V$ with the potential summed separately and differentiated numerically.
+
+If the exponent in Coulomb's law were 2 instead of 3 in the denominator, or the
+constant were wrong, or a sign were flipped, the flux integral would not land on
+$Q/\varepsilon_0$. That is what makes it a test rather than a restatement.
+
+<ModelPanel src="src/content/fields/electric-field/model.yaml" />

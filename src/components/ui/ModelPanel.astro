@@ -1,0 +1,116 @@
+---
+/**
+ * Renders model.yaml as student-facing content.
+ *
+ * This is the idea worth keeping from the whole design discussion: the
+ * assumptions, the verification, and the validity limits are not developer
+ * metadata. They are part of the lesson. A model is a deliberately
+ * constrained representation of reality, and the constraints are visible here.
+ */
+import fs from 'node:fs';
+import path from 'node:path';
+import YAML from 'yaml';
+
+interface Props {
+  /** Path to model.yaml, relative to the project root. */
+  src: string;
+}
+
+const { src } = Astro.props as Props;
+const raw = fs.readFileSync(path.resolve(process.cwd(), src), 'utf-8');
+const m = YAML.parse(raw);
+---
+
+<section class="model-panel">
+  <h2>What this simulation claims</h2>
+
+  <div class="mp-grid">
+    <div class="mp-card">
+      <h3>What are we assuming?</h3>
+      <ul>{m.assumptions?.map((a: string) => <li>{a}</li>)}</ul>
+    </div>
+
+    <div class="mp-card">
+      <h3>What law are we applying?</h3>
+      <p class="mp-eq">{m.governing_law?.statement}</p>
+      {m.governing_law?.equivalent_forms && (
+        <>
+          <p class="mp-sub">Equivalent statements of the same physics:</p>
+          <ul>{m.governing_law.equivalent_forms.map((f: string) => <li><code>{f}</code></li>)}</ul>
+        </>
+      )}
+    </div>
+
+    <div class="mp-card">
+      <h3>How was it computed?</h3>
+      <p><b>{m.implementation?.method}</b>{m.implementation?.scheme ? ` — ${m.implementation.scheme}` : ''}</p>
+      <p class="mp-sub">{m.implementation?.notes}</p>
+      <p><code>{m.implementation?.file}</code></p>
+    </div>
+
+    <div class="mp-card mp-verify">
+      <h3>How do we know the code obeys the law?</h3>
+      <p class="mp-sub">
+        Each check below is computed by a route the implementation does not use.
+        Agreement is therefore evidence, not restatement.
+      </p>
+      <table>
+        <thead><tr><th>Check</th><th>Route</th><th>Independent of</th></tr></thead>
+        <tbody>
+          {m.verification?.map((v: any) => (
+            <tr>
+              <td><code>{v.name}</code><div class="mp-exp">{v.expected}</div></td>
+              <td>{v.method}</td>
+              <td><code>{v.independent_of}</code></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mp-card mp-limits">
+      <h3>Where does this model stop being valid?</h3>
+      {m.validity?.holds_when && (<><h4>Holds when</h4><ul>{m.validity.holds_when.map((s: string) => <li>{s}</li>)}</ul></>)}
+      {m.validity?.breaks_when && (<><h4>Breaks when</h4><ul>{m.validity.breaks_when.map((s: string) => <li>{s}</li>)}</ul></>)}
+      {m.validity?.not_modelled && (
+        <><h4>Not modelled at all</h4>
+        <p class="mp-tags">{m.validity.not_modelled.map((s: string) => <span class="mp-tag">{s}</span>)}</p></>
+      )}
+    </div>
+
+    {m.pedagogical_notes?.common_misconceptions && (
+      <div class="mp-card mp-warn">
+        <h3>What the picture might mislead you into thinking</h3>
+        <ul>{m.pedagogical_notes.common_misconceptions.map((s: string) => <li>{s}</li>)}</ul>
+      </div>
+    )}
+  </div>
+
+  <details class="mp-raw">
+    <summary>View the full model declaration ({src})</summary>
+    <pre><code>{raw}</code></pre>
+  </details>
+</section>
+
+<style>
+  .model-panel { margin: 3rem 0; border-top: 2px solid #e5e7eb; padding-top: 1.5rem; }
+  .mp-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+  .mp-card { border: 1px solid #e5e7eb; border-radius: 10px; padding: 1rem 1.15rem; background: #fcfdff; }
+  .mp-card h3 { margin: 0 0 .6rem; font-size: .95rem; letter-spacing: .01em; }
+  .mp-card h4 { margin: .8rem 0 .3rem; font-size: .8rem; text-transform: uppercase; color: #6b7280; }
+  .mp-card ul { margin: 0; padding-left: 1.1rem; }
+  .mp-card li { margin: .25rem 0; font-size: .9rem; line-height: 1.45; }
+  .mp-eq { font-family: ui-monospace, monospace; background: #f3f4f6; padding: .5rem .6rem; border-radius: 6px; font-size: .85rem; }
+  .mp-sub { color: #6b7280; font-size: .85rem; line-height: 1.5; }
+  .mp-verify, .mp-limits { grid-column: 1 / -1; }
+  .mp-verify table { width: 100%; border-collapse: collapse; font-size: .82rem; margin-top: .5rem; }
+  .mp-verify th { text-align: left; border-bottom: 1px solid #e5e7eb; padding: .35rem .4rem; color: #6b7280; font-weight: 600; }
+  .mp-verify td { border-bottom: 1px solid #f3f4f6; padding: .4rem; vertical-align: top; }
+  .mp-exp { color: #6b7280; font-size: .78rem; margin-top: .15rem; }
+  .mp-tags { display: flex; flex-wrap: wrap; gap: .35rem; }
+  .mp-tag { background: #fee2e2; color: #991b1b; border-radius: 999px; padding: .12rem .6rem; font-size: .78rem; }
+  .mp-warn { background: #fffbeb; border-color: #fde68a; }
+  .mp-raw { margin-top: 1rem; }
+  .mp-raw summary { cursor: pointer; color: #6b7280; font-size: .85rem; }
+  .mp-raw pre { background: #0f172a; color: #e2e8f0; padding: 1rem; border-radius: 8px; overflow: auto; font-size: .78rem; max-height: 480px; }
+</style>

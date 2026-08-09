@@ -1,0 +1,94 @@
+---
+import 'katex/dist/katex.min.css';
+
+interface Props {
+  title: string;
+  category?: string;
+  summary?: string;
+}
+const { title, category, summary } = Astro.props as Props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title} — OpenVidya</title>
+    <meta name="description" content={summary} />
+  </head>
+  <body>
+    <header class="site">
+      <a href="/" class="brand">OpenVidya</a>
+      <nav>
+        <a href="/mechanics/projectile-motion">Projectile motion</a>
+        <a href="/fields/electric-field">Electric field</a>
+      </nav>
+    </header>
+
+    <main>
+      <article>
+        {category && <p class="eyebrow">{category}</p>}
+        <h1>{title}</h1>
+        {summary && <p class="lede">{summary}</p>}
+        <slot />
+      </article>
+    </main>
+
+    <footer class="site">
+      <p>
+        Source and model declarations are part of the material.
+        Text and figures CC BY 4.0; code MIT.
+      </p>
+    </footer>
+
+    <style is:global>
+      :root { --ink:#111827; --muted:#6b7280; --line:#e5e7eb; --accent:#1d4ed8; }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0; color: var(--ink); background: #fff;
+        font: 16px/1.65 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      }
+      header.site, footer.site {
+        display: flex; align-items: center; gap: 1.5rem;
+        padding: .9rem 1.5rem; border-bottom: 1px solid var(--line); flex-wrap: wrap;
+      }
+      footer.site { border-bottom: none; border-top: 1px solid var(--line); margin-top: 4rem; color: var(--muted); font-size: .85rem; }
+      .brand { font-weight: 700; text-decoration: none; color: var(--ink); letter-spacing: -.01em; }
+      header.site nav { display: flex; gap: 1.1rem; }
+      header.site a { color: var(--muted); text-decoration: none; font-size: .9rem; }
+      header.site a:hover { color: var(--accent); }
+      main { max-width: 860px; margin: 0 auto; padding: 2.5rem 1.5rem 0; }
+      .eyebrow { text-transform: uppercase; letter-spacing: .09em; font-size: .72rem; color: var(--muted); margin: 0 0 .4rem; }
+      h1 { font-size: 2.1rem; line-height: 1.15; margin: 0 0 .6rem; letter-spacing: -.02em; }
+      h2 { margin-top: 2.6rem; font-size: 1.35rem; letter-spacing: -.01em; }
+      h3 { font-size: 1.05rem; }
+      .lede { font-size: 1.1rem; color: #374151; margin: 0 0 2rem; }
+      p, li { font-size: 1rem; }
+      code { background: #f3f4f6; padding: .1rem .3rem; border-radius: 4px; font-size: .88em; }
+      blockquote { border-left: 3px solid var(--accent); margin: 1.5rem 0; padding: .2rem 0 .2rem 1rem; color: #374151; }
+
+      /* simulation islands */
+      .sim { border: 1px solid var(--line); border-radius: 12px; padding: 1rem; margin: 2rem 0; background: #fff; }
+      .sim-controls { display: grid; gap: .8rem 1.4rem; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); margin-top: .9rem; }
+      .sim-controls label { display: flex; flex-direction: column; font-size: .82rem; color: #374151; gap: .25rem; }
+      .sim-controls output { font-weight: 600; color: var(--ink); }
+      .sim-controls input[type=range] { width: 100%; accent-color: var(--accent); }
+      .sim-buttons { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin-top: .9rem; }
+      .sim-buttons button {
+        border: 1px solid var(--line); background: #fff; border-radius: 6px;
+        padding: .3rem .7rem; font-size: .82rem; cursor: pointer; color: #374151;
+      }
+      .sim-buttons button:hover { border-color: var(--accent); color: var(--accent); }
+      .sim-buttons button.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+      .sim-preset { display: inline-flex; gap: .35rem; margin-left: auto; }
+      .chk { display: inline-flex; align-items: center; gap: .3rem; font-size: .82rem; color: #374151; }
+      .sim-readout { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: .8rem; font-size: .85rem; font-variant-numeric: tabular-nums; }
+      .sim-results { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: .85rem; }
+      .sim-results td { padding: .35rem .4rem; border-bottom: 1px solid #f3f4f6; }
+      .sim-results td:first-child { color: var(--muted); width: 30%; }
+      .sim-results .chk-cell { color: var(--muted); font-family: ui-monospace, monospace; font-size: .78rem; }
+      .sim-note { font-size: .82rem; color: var(--muted); margin: .8rem 0 0; line-height: 1.5; }
+    </style>
+  </body>
+</html>

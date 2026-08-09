@@ -1,0 +1,59 @@
+---
+import ConceptLayout from '../layouts/ConceptLayout.astro';
+---
+
+<ConceptLayout
+  title="OpenVidya"
+  summary="Interactive physics documentation where the model, the code, the verification and the limits of validity are all part of the material."
+>
+  <p>
+    Two prototype slices, chosen to be structurally as different as possible.
+    They exist to answer one question before any general architecture is
+    designed: <b>what does a physics concept module actually need to declare?</b>
+  </p>
+
+  <div class="cards">
+    <a href="/mechanics/projectile-motion" class="card">
+      <span class="tag">dynamical system · ODE</span>
+      <h3>Projectile Motion</h3>
+      <p>A trajectory through time. Initial conditions, numerical integration, closed-form validation.</p>
+    </a>
+    <a href="/fields/electric-field" class="card">
+      <span class="tag">field · electrostatics</span>
+      <h3>Electric Field of Point Charges</h3>
+      <p>A vector at every point of space. No initial conditions, no time evolution, validated by Gauss's law.</p>
+    </a>
+  </div>
+
+  <h2>The working principle</h2>
+  <blockquote>
+    Humans define the physical model and the educational intent. Agents implement
+    and challenge it. Executable tests verify what can be verified. Humans judge
+    what cannot. Git records the resulting knowledge.
+  </blockquote>
+
+  <p>
+    One distinction does most of the work here. A test that recomputes what the
+    implementation already computed proves only that the code agrees with itself.
+    Every check in these two modules is derived by a <b>different route</b> from
+    the implementation — closed-form solutions against numerical integration,
+    Gauss's law against pointwise superposition. That is why the checks carry
+    information.
+  </p>
+
+  <p>
+    The thing tests <em>cannot</em> establish is whether the chosen model is the
+    right one for a given situation, or whether the animation builds the correct
+    mental picture. Those remain human judgments, and the material says so
+    openly rather than hiding it.
+  </p>
+
+  <style>
+    .cards { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); margin: 2rem 0; }
+    .card { display: block; border: 1px solid #e5e7eb; border-radius: 12px; padding: 1.25rem; text-decoration: none; color: inherit; transition: border-color .15s, transform .15s; }
+    .card:hover { border-color: #1d4ed8; transform: translateY(-2px); }
+    .card h3 { margin: .5rem 0 .4rem; }
+    .card p { margin: 0; color: #6b7280; font-size: .9rem; line-height: 1.5; }
+    .tag { font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; color: #1d4ed8; }
+  </style>
+</ConceptLayout>

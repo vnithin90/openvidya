@@ -1,0 +1,23 @@
+name: verify
+
+# Physics verification gates every merge. Netlify builds the Deploy Preview in
+# parallel; this job decides whether the preview is allowed to become production.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      - name: Physics verification suite
+        run: npm test
+      - name: Site builds
+        run: npm run build

@@ -1,0 +1,9 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Deploy Previews are generated automatically for every pull request.
+# Tests must pass before merge; see .github/workflows/verify.yml

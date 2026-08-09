@@ -1,0 +1,133 @@
+# PROVISIONAL SCHEMA. This is one of two deliberately dissimilar examples
+# written to discover what a general schema needs. Do not generalise from this
+# file alone — compare against ../../fields/electric-field/model.yaml.
+
+concept: Projectile Motion
+slug: projectile-motion
+category: dynamical-system      # ODE, initial-value problem, single particle
+
+# ---------------------------------------------------------------------------
+# What we are choosing to represent. This is a HUMAN judgment. Nothing below
+# verifies that this is the right model for a given situation — only that the
+# code implements it faithfully.
+# ---------------------------------------------------------------------------
+assumptions:
+  - Point particle; no extent, no rotation, no lift.
+  - Uniform gravitational field; g is constant in magnitude and direction.
+  - No air resistance.
+  - Flat, non-rotating ground; no Coriolis or centrifugal terms.
+  - Motion confined to a vertical plane.
+
+governing_law:
+  form: ordinary-differential-equation
+  statement: "dr/dt = v ;  dv/dt = -g ŷ"
+  latex: "\\frac{d\\mathbf{r}}{dt} = \\mathbf{v}, \\qquad \\frac{d\\mathbf{v}}{dt} = -g\\,\\hat{\\mathbf{y}}"
+
+state:
+  variables: [x, y, vx, vy]
+  initial_conditions:
+    x: 0
+    y: y0
+    vx: "v0 cos(theta)"
+    vy: "v0 sin(theta)"
+
+parameters:
+  v0:
+    label: Initial speed
+    unit: m/s
+    range: [0, 100]
+    default: 25
+  theta:
+    label: Launch angle
+    unit: deg
+    range: [0, 90]
+    default: 45
+  g:
+    label: Gravitational field strength
+    unit: m/s^2
+    range: [1, 25]
+    default: 9.81
+  y0:
+    label: Launch height
+    unit: m
+    range: [0, 50]
+    default: 0
+
+# ---------------------------------------------------------------------------
+# HOW THE IMPLEMENTATION SOLVES IT.
+# Recorded explicitly so the independence of each test can be judged.
+# ---------------------------------------------------------------------------
+implementation:
+  file: src/physics/projectile/model.ts
+  method: numerical-integration
+  scheme: RK4
+  step: 1e-3
+  notes: >
+    Deliberately does NOT use the closed-form solution, so that comparison
+    against the closed form in the test suite is an independent check rather
+    than a restatement of the same algebra.
+
+# ---------------------------------------------------------------------------
+# VERIFICATION. Each entry declares what route it uses and what it is
+# independent OF. A test that shares a route with the implementation is a
+# consistency check, not a validation.
+# ---------------------------------------------------------------------------
+verification:
+  - name: range_matches_analytical
+    method: analytical
+    independent_of: numerical_integrator
+    expected: "R = v0^2 sin(2 theta) / g   (for y0 = 0)"
+    tolerance: {relative: 1.0e-6}
+
+  - name: max_height_matches_analytical
+    method: analytical
+    independent_of: numerical_integrator
+    expected: "H = v0^2 sin^2(theta) / (2 g)"
+    tolerance: {relative: 1.0e-6}
+
+  - name: time_of_flight_matches_analytical
+    method: analytical
+    independent_of: numerical_integrator
+    expected: "T = 2 v0 sin(theta) / g   (for y0 = 0)"
+    tolerance: {relative: 1.0e-6}
+
+  - name: complementary_angle_symmetry
+    method: symmetry
+    independent_of: closed_form_range
+    expected: "R(theta) = R(90deg - theta)"
+    tolerance: {relative: 1.0e-6}
+
+  - name: energy_conservation
+    method: conservation-law
+    independent_of: closed_form_solution
+    expected: "v^2/2 + g y  constant along the trajectory"
+    tolerance: {relative: 1.0e-9}
+
+  - name: horizontal_velocity_constant
+    method: invariant
+    independent_of: closed_form_solution
+    expected: "vx(t) = vx(0) for all t"
+    tolerance: {relative: 1.0e-12}
+
+  - name: limiting_cases
+    method: limiting-case
+    independent_of: closed_form_range
+    expected: "R -> 0 as theta -> 0 or 90deg; R maximal at 45deg"
+
+# ---------------------------------------------------------------------------
+# Shown to the student. A model is a deliberately constrained representation,
+# and the constraints are part of the lesson.
+# ---------------------------------------------------------------------------
+validity:
+  holds_when:
+    - Speeds low enough that drag is negligible compared with weight.
+    - Trajectory small compared with the radius and rotation scale of the Earth.
+  breaks_when:
+    - Air resistance is significant (light or fast objects, real sports balls).
+    - Range is large enough that g varies in direction or magnitude.
+    - The object spins appreciably (Magnus effect).
+  not_modelled:
+    - drag
+    - lift / spin
+    - variation of g with altitude
+    - Coriolis effect
