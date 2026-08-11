@@ -1,0 +1,135 @@
+# Fourth concept, and the first ported from the static tree rather than written
+# here. Compare against ../../electricity/what-is-current/model.yaml (definition
+# family) and ../../fields/electric-field/model.yaml (field family). This one is
+# a third shape again: an EQUILIBRIUM, where the measured quantity is a position
+# at which two forces balance.
+
+concept: What decides how hard two charges push?
+slug: what-decides-the-push
+module: E2
+category: equilibrium        # not an ODE, not a field, not a definition
+
+objective: >
+  Establish that the push depends on both charges and on separation, and that it
+  falls off steeper than proportionally — while making it visible that the
+  apparatus can only just tell inverse-square from inverse-cube.
+
+assumptions:
+  - Two identical spheres, equal mass, on threads of equal length from a common point.
+  - Charge divides equally on contact between identical spheres.
+  - Spheres are small compared with their separation, so they are treated as point charges.
+  - Air is still; the only forces are weight, thread tension and the electrostatic push.
+  - Charge does not change during a reading.
+
+governing_law:
+  form: force-law-with-constraint
+  statement: "F ∝ q₁q₂ / rⁿ, with the pair in equilibrium at F = mg·tan θ and r = 2L·sin θ"
+  latex: "F \\propto \\frac{q_1 q_2}{r^n}, \\qquad F = mg\\tan\\theta, \\qquad r = 2L\\sin\\theta"
+  note: >
+    n is deliberately left free. The lesson's whole purpose is that the student
+    measures which n their data supports, and discovers the measurement is
+    barely sharp enough to decide. The constant of proportionality is absent for
+    the same reason E1 refused Q = Ne — nothing measured here determines it.
+
+# The quantity the student actually reads is a separation, not a force.
+observable:
+  symbol: r
+  unit: mm
+  method: ruler, between sphere centres
+
+derived_prediction:
+  statement: "halving BOTH charges k times gives r_k/r₀ = 2^(−2k/(n+1))"
+  validity: small-angle only — see verification.independent_of below
+  values:
+    n1: [0.500, 0.250, 0.125]
+    n2: [0.630, 0.397, 0.250]
+    n3: [0.707, 0.500, 0.354]
+
+parameters:
+  ruled:                       # authority rulings, LESSON_E2_AMENDMENTS
+    ball_radius: {value: 10, unit: mm}
+    thread_length: {value: 300, unit: mm}
+    r0: {value: 200, unit: mm}
+    theta0: {value: 19.5, unit: deg, note: "under the 20° cap set by ruling 2"}
+
+implementation:
+  file: src/physics/coulomb-force/model.ts
+  method: closed-form
+  scheme: "r_k/r₀ = 2^(−2k/(n+1)), the small-angle solution"
+  notes: >
+    The closed form is the SMALL-ANGLE result. The apparatus runs at 19.5°, where
+    tan θ and sin θ differ by about 2%, so the closed form is an approximation to
+    the equilibrium the apparatus actually reaches. That gap is not hidden: it is
+    what verification.equilibrium_numerical_matches_closed_form measures.
+
+verification:
+  - name: equilibrium_numerical_matches_closed_form
+    method: root-find the force balance directly
+    independent_of: closed_form_expression
+    expected: "numerically solved r_k/r₀ → 2^(−2k/(n+1)) as θ → 0"
+    tolerance: {relative: 1.0e-4}
+
+  - name: finite_angle_deviation_is_bounded
+    method: root-find at the ruled geometry
+    independent_of: closed_form_expression
+    expected: "deviation from the small-angle form stays under 3% at θ₀ = 19.5°"
+    tolerance: {absolute: 0.03}
+    measured: >
+      Solved: start angle 19.47°, worst deviation +1.12 points (1/r at k=1);
+      inverse-square runs +0.76, +0.66, +0.46 points high at k = 1, 2, 3.
+      Every deviation is POSITIVE — the real apparatus sits above the
+      small-angle prediction, systematically, toward the steeper law.
+
+      ⚠ This is not negligible against what the lesson is trying to see. The
+      square/cube gap at k=1 is 7.7 points, so finite angle is about 15% of the
+      discrimination, and it biases in the direction that makes inverse-square
+      data look slightly cube-like. Belongs in the error budget alongside the
+      stray-charge and finite-sphere terms. **The screens show the small-angle
+      values, and the teacher note must say the bench will read a little high.**
+
+  - name: ordering_of_laws
+    method: invariant
+    independent_of: numerics
+    expected: "for every k ≥ 1, ratio(1/r) < ratio(1/r²) < ratio(1/r³)"
+    tolerance: {relative: 0.0}
+
+  - name: discrimination_grows_with_k
+    method: invariant
+    independent_of: numerics
+    expected: "the square/cube gap widens with each halving"
+    tolerance: {relative: 0.0}
+
+  - name: geometry_is_drawn_to_scale
+    method: invariant
+    independent_of: figure_code
+    expected: "drawn ball radius = drawn separation / 20, matching a/r₀ = 10/200"
+    tolerance: {relative: 1.0e-9}
+
+validity:
+  holds_when:
+    - Angles stay small enough that the small-angle form is within the error budget.
+    - Charge loss during a reading is small compared with the separation change being measured.
+    - Spheres remain far apart compared with their radius.
+  breaks_when:
+    - The spheres approach within a few radii — induced redistribution makes them not point charges. Correction verified in scripts/verify-finite-sphere.py.
+    - Humidity drains charge mid-reading; the separation drifts and imitates a different power law.
+    - Threads are unequal, or the spheres are not identical, so contact does not halve the charge.
+  not_modelled:
+    - air damping and the settling transient   # blocker B3
+    - charge leakage rate
+    - the constant of proportionality
+
+pedagogical_notes:
+  common_misconceptions:
+    - "The bigger charge pushes harder." The forces are equal and opposite however unequal the charges.
+    - "Twice as far, half the push." The falloff is steeper than proportional.
+  representation_choices:
+    - Figures are drawn to scale at a/r₀ = 1/20, so the spheres look as small relative to their separation as they really are.
+    - The law comparison chart plots ratios, not forces — the student never measures a force.
+  conceptual_debt:
+    - "B3: the apparatus has never been built. Every quantitative claim here is a prediction of the model this lesson exists to test, not a result."
+
+external_couplings:
+  - quantity: r0
+    used_by: "LESSON_E3 §5a — E3's source sphere is one of these spheres, and its six probe positions are set relative to this separation"
+    note: changing r₀ changes E3's apparatus, not only E2's
