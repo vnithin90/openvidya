@@ -21,8 +21,16 @@ inventing one.
 > value is in making the student see that, not in hiding it.**
 
 This is not a weakness peculiar to a school laboratory. It is a real feature of
-electrostatics. The two accounts diverge only when charges **move**, and the
-divergence is a time delay of r/c — which no apparatus in this course can reach.
+electrostatics: **static measurements are reproduced equally well by an
+instantaneous action-at-a-distance description and by the static limit of field
+theory.** What separates them is dynamics — finite propagation, and fields with
+their own local behaviour — and the smallest signature of that is a delay of r/c,
+which no apparatus in this course can reach.
+
+⚠ **The compressed form — *"the two accounts diverge only when charges move"* —
+stays in this specification and does not go to a student in that wording.** It
+invites "so they're the same thing for static charges", which is a statement
+about descriptions being *equivalent in a limit*, not about them being identical.
 
 So E3 is the second lesson in a row whose honest outcome is *"my evidence does not
 settle this"* — and the second where that is the point. E2 could not separate two
@@ -84,10 +92,19 @@ Three commitments, all locked before anything is shown.
 > A charged ball hangs at rest. You bring a second charged ball to a point 10 cm
 > away; it is pushed. Now take the second ball **completely away**.
 >
-> **Is anything happening at that empty point?**
+> **What, if anything, do you think is at that point when no second ball is
+> there?**
 
-Commit: **yes / no / cannot be decided**. Written down, with one sentence of
-reason.
+Written down, with **the reason**, in the student's own words — not chosen from a
+list.
+
+⚠ **Not "yes / no / cannot be decided".** An earlier draft offered those three,
+and "yes" is ambiguous in a way that ruins the measurement: one student means
+*"there is an electric field there"* — already adopting the ontology the lesson
+has not reached — and another means *"something physical is going on"*, which is
+a different claim. The teacher cannot tell them apart, and J1 later depends on
+knowing which the student committed to. **The reason is the data here, not the
+answer.**
 
 **P2 — the map.** Around a single charged ball, mark **six positions**. At each,
 draw an arrow for the way a second charged ball would be pushed, and make the
@@ -157,23 +174,45 @@ paper?*). E3 would demonstrate E4 while claiming to map E3.
 ### Probe assumptions, stated rather than assumed away
 
 - `q_probe ≪ q_source`, so the probe does not appreciably alter the source.
-- The probe's presence induces some redistribution on a *conducting* source sphere. The leading correction has the same (a/d)³ form verified two independent ways in `scripts/verify-finite-sphere.py`:
+- The probe's presence induces redistribution on a *conducting* source sphere.
 
-  | source radius | probe distance | perturbation |
-  |---|---|---|
-  | 10 mm | 150 mm | 0.12% |
-  | 10 mm | 100 mm | 0.40% |
-  | 20 mm | 100 mm | 3.2% |
+**⚠ The coefficient here was borrowed from the wrong configuration in the first
+amendment, and is now derived for this one.**
 
-  At 10 mm and 100–150 mm this is **well below what a direction-only map could
-  resolve**. It is recorded as an assumption, not dismissed — and it becomes
-  significant if the probe is brought closer than about 5 source-radii.
+`scripts/verify-finite-sphere.py` computes **two identical spheres at equal
+potential and equal charge**, and extracts B = 1 − 4(a/R)³. E3 has a **small
+probe q near a larger source sphere Q**. Different problem; the coefficient does
+not transfer. Deriving it directly — image charge q′ = −aq/d at a²/d, plus
+Q + aq/d at the centre to conserve the sphere's total charge:
+
+$$B = 1 + \rho x - \frac{\rho x}{(1-x^2)^2}, \qquad x = \frac{a}{d},\ \ \rho = \frac{q_{\text{probe}}}{Q_{\text{source}}}$$
+
+$$\text{small } x:\quad B \approx 1 - 2\rho x^3$$
+
+**The perturbation depends on the charge ratio, not on geometry alone** — which
+the earlier table wrongly implied.
+
+| a/d | q/Q | perturbation | earlier table claimed |
+|---|---|---|---|
+| 0.067 | 0.1 | **0.006%** | 0.12% |
+| 0.10 | 0.1 | **0.020%** | 0.40% |
+| 0.10 | 0.3 | **0.061%** | 0.40% |
+| 0.20 | 0.1 | **0.170%** | 3.2% |
+| 0.20 | 0.3 | **0.510%** | 3.2% |
+
+At any workable geometry this is **far below what a direction-only map could
+resolve** — the earlier figures were pessimistic by roughly an order of
+magnitude. Recorded as an assumption rather than dismissed, and it grows as ρ
+rises, so a probe carrying a sizeable fraction of the source's charge is the case
+to avoid.
 
 ⚠ **Status: preferred design, not a settled one, and not yet ruled as an
-interim.** A small sphere holds far less charge than a rod, so the force on the
-probe is correspondingly weaker. **Whether this is performable at all is an
-experimental question, not a design decision** — see §17.3 and the bench
-questions in §15.
+interim.** The proposed small sphere **may** retain substantially less usable
+charge than the rod of the earlier design, in which case the probe force is
+weaker — but that is an apparatus-specific empirical claim, not a general
+property of spheres versus rods, and **the bench decides it, not this document.**
+Logged as an empirical input. **Whether 5a is performable at all is an
+experimental question, not a design decision** — see §17.3.
 
 ## 5b · What cannot be done yet — the quantitative map
 
@@ -208,9 +247,10 @@ carry it only in the specification. E2 was corrected twice on exactly this.
 From 5a, honestly: **the arrows point away from the source everywhere, and get
 weaker further out.** That is all a direction map gives.
 
-⚠ `apparatus_failure_mode: silent-plausible` — inherited from E1 and E2. Humid
-air drains the rod mid-session, and the arrows quietly become shorter and more
-erratic while the student reads them as data.
+⚠ `apparatus_failure_mode: silent-plausible` — inherited from E1 and E2.
+Humidity drains charge from **both the source sphere and the probe** mid-session,
+and the arrows quietly become shorter and more erratic while the student reads
+them as data.
 
 **What the map does not show, and must not be claimed:** whether anything is
 present at the marked points when the test object is elsewhere. Every arrow was
@@ -275,15 +315,25 @@ whether or not anything is there to feel it. That is not the result of a vote
 taken after looking at six arrows. It is the framework that turned out to work,
 for reasons that arrive later than this lesson.
 
-> The map is called the **field**. Treating it as something present at every
-> point is a **choice of description** that electrostatics alone does not force —
-> and one that becomes far more than bookkeeping once charges move.
+> We describe this spatial pattern using the **electric field**. Treating it as
+> something present at every point is a **choice of description** that
+> electrostatics alone does not force — and one that becomes far more than
+> bookkeeping once charges move.
+
+*Not "the map is called the field", which sounds like physicists gave the arrows
+a name. It is a model, and saying so is the lesson.*
 
 The choice is not arbitrary, and the student is owed the reasons:
 
 1. **It is local.** Every object responds only to what is at its own position. Nothing has to reach across a gap.
 2. **It survives motion.** When charges move, the delay is real, measured, and the field account handles it without alteration. The other does not.
-3. **It carries energy.** Radio and light are this map, shaken loose and travelling on its own — with energy in it, after the charge that made it has stopped. That energy has to be somewhere.
+3. **It carries energy.** Later in the course: changing electric and magnetic fields can propagate through space and carry energy, after the charge that made them has stopped. That energy has to be somewhere.
+
+⚠ An earlier draft said *"radio and light are this map, shaken loose and
+travelling on its own."* Vivid, and wrong in three ways a student will
+literalise: a wave is not a static map set in motion, the electric and magnetic
+parts oscillate together, and the source need not still exist. The lesson does
+not need the metaphor to create the debt.
 
 **Reasons 2 and 3 are outside this lesson's evidence.** They are named as the
 reasons, and marked as promises the course will have to keep — not as things E3
@@ -387,7 +437,7 @@ Model: `electric-field` (`src/content/fields/electric-field/model.yaml`, exists,
    | 1 | How much charge does the source sphere retain, and for how long? |
    | 2 | How much does the probe retain? |
    | 3 | Does the probe keep its **sign** across all six readings? |
-   | 4 | Is the force large enough to beat the probe's weight and restoring torque? |
+   | 4 | Is the electric force large enough to produce a **repeatable deflection against the suspension's restoring force**? (Weight is not the competing force for a horizontal deflection — the restoring component is.) |
    | 5 | Is the response distinguishable from air currents? |
    | 6 | How fast does charge leak — the B3 question again, at smaller charge? |
    | 7 | Does bringing the probe close enough to see a deflection perturb the source? (§5a puts this under 0.5% at ≥10 source-radii — to be confirmed, not assumed) |

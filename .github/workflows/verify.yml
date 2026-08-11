@@ -19,5 +19,16 @@ jobs:
       - run: npm ci
       - name: Physics verification suite
         run: npm test
+
+      # Standalone derivations backing claims in docs/. Not part of the site, but
+      # a specification that quotes a number nobody can re-derive is prose.
+      - name: Finite-sphere correction, two independent routes
+        run: python3 scripts/verify-finite-sphere.py
+      - name: E3 probe perturbation, checked against the boundary condition
+        run: python3 scripts/verify-e3-probe.py
+
+      - name: Mutation testing — does the suite notice injected faults?
+        run: bash scripts/mutate.sh
+
       - name: Site builds
         run: npm run build
