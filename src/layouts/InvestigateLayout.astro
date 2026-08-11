@@ -52,6 +52,176 @@ const { title, strand } = Astro.props as Props;
     --ok-soft: #ecfdf5;
     --danger-soft: #fef2f2;
     --lock: #0f172a;
+
+    /* Added with E2. Carried over from the static tree so the figures render
+       with the palette they were drawn and reviewed against. */
+    --ink-2: #3d5259;
+    --brass: #c08a3e;
+    --kind-a: #d8452f;
+    --kind-b: #3a72c9;
+    --ok: #2f9e63;
+    --warn-bg: #fffbeb;
+    --warn-line: #fde68a;
+  }
+
+  /* ===================================================== E2 / E3 lessons ===
+     Ported from the static tree's style.css. The SVG rules in particular are
+     not cosmetic: the figures were drawn against these stroke widths and
+     sizes, and a preview built with a hand-copied stylesheet once rendered
+     threads invisible and captions oversized, sending half an hour into
+     "fixing" drawings that were never broken. */
+
+  .kicker { font-size: .72rem; text-transform: uppercase; letter-spacing: .1em;
+            color: var(--accent); font-weight: 600; margin: 0 0 .3rem; }
+  .lead { font-size: 1.12rem; color: var(--ink-2); }
+  .muted { color: var(--muted); }
+  .small { font-size: .87rem; }
+  .screen-of { font-size: .74rem; letter-spacing: .06em; text-transform: uppercase;
+               color: var(--muted); margin: 0 0 1rem; }
+
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+          padding: 1.4rem 1.5rem; margin: 1.1rem 0; }
+  .card.quiet  { background: #f7f9fa; }
+  .card.accent { border-color: #bfdbfe; background: var(--accent-soft); }
+  .card.warn   { border-color: var(--warn-line); background: var(--warn-bg); }
+
+  .choices { display: flex; flex-direction: column; gap: .55rem; margin: 1rem 0; }
+  .choice { border: 1.5px solid var(--line); border-radius: 10px; padding: .8rem .95rem;
+            cursor: pointer; background: #fff; font: inherit; font-size: .95rem;
+            text-align: left; width: 100%; color: var(--ink); line-height: 1.45;
+            transition: border-color .12s, background .12s; }
+  .choice:hover:not(:disabled) { border-color: var(--accent); }
+  .choice.on { border-color: var(--accent); background: var(--accent-soft); }
+  .choice:disabled { cursor: default; opacity: .75; }
+
+  .actions { display: flex; gap: .6rem; align-items: center; flex-wrap: wrap; margin-top: 1.2rem; }
+  .btn { font: inherit; font-size: .92rem; font-weight: 600; border: 1px solid var(--line);
+         background: #fff; color: var(--ink-2); border-radius: 9px; padding: .6rem 1.15rem;
+         cursor: pointer; text-decoration: none; display: inline-block; }
+  .btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn.primary:hover:not(:disabled) { background: #1741b6; color: #fff; }
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
+  .btn.ghost { border-color: transparent; color: var(--muted); }
+
+  .locked-note { border-left: 3px solid var(--lock); background: #f7f9fa; padding: .7rem .9rem;
+                 border-radius: 0 8px 8px 0; margin: 1rem 0; display: flex; flex-direction: column; gap: .15rem; }
+  .locked-note .lab { font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+
+  table.results { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: .95rem; }
+  table.results td { padding: .6rem .5rem; border-bottom: 1px solid #eef2f3; }
+  table.results th { text-align: left; padding: .5rem; border-bottom: 1.5px solid var(--line);
+                     font-size: .85rem; color: var(--muted); }
+  table.results td:last-child, table.results th:last-child { text-align: right; }
+  table.results td:last-child { font-weight: 650; }
+
+  .models { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.2rem 0; }
+  .model-card { border: 1.5px solid var(--line); border-radius: 12px; padding: 1rem;
+                background: #fff; text-align: left; cursor: pointer; font: inherit; }
+  .model-card:hover:not(:disabled) { border-color: var(--accent); }
+  .model-card.on { border-color: var(--accent); background: var(--accent-soft); }
+  .model-card:disabled { cursor: default; opacity: .8; }
+  .model-card .tag { font-size: .7rem; text-transform: uppercase; letter-spacing: .09em;
+                     color: var(--muted); font-weight: 700; display: block; margin-bottom: .3rem; }
+
+  .datasheet { border: 1px solid var(--line); border-radius: 12px; background: #fff;
+               padding: .5rem .9rem; margin: 1.1rem 0; }
+  .datarow { display: grid; grid-template-columns: 13rem 6.5rem auto 1fr; align-items: center;
+             gap: .6rem; padding: .55rem 0; border-bottom: 1px solid #eef2f3; }
+  .datarow:last-child { border-bottom: 0; }
+  .datarow label { font-size: .92rem; color: var(--ink-2); }
+  .datarow input { width: 100%; padding: .45rem .6rem; border: 1.5px solid var(--line);
+                   border-radius: 8px; font-size: .95rem; color: var(--ink); background: #fff; }
+  .datarow input:focus { outline: none; border-color: var(--accent); }
+  .datarow .unit { font-size: .85rem; color: var(--muted); }
+  .datarow .hint { font-size: .8rem; color: var(--muted); }
+
+  textarea { width: 100%; min-height: 4.5rem; padding: .6rem .7rem; border: 1.5px solid var(--line);
+             border-radius: 8px; font: inherit; font-size: .95rem; color: var(--ink); }
+  textarea:focus { outline: none; border-color: var(--accent); }
+
+  /* Simulation licence: anything computed rather than measured is marked as such,
+     visibly, and never appears before the judgment it would otherwise pre-empt. */
+  .computed { border: 2px dashed #c7b8e0; border-radius: 12px;
+              background: repeating-linear-gradient(135deg, #faf7ff, #faf7ff 10px, #f5f0fc 10px, #f5f0fc 20px);
+              padding: 1.1rem 1.3rem; margin: 1.2rem 0; }
+  .computed-flag { font-size: .84rem; color: #6b4e94; margin: 0 0 .8rem; }
+  .computed table.results th { color: #6b4e94; text-transform: uppercase; letter-spacing: .05em; }
+  .computed tr.yours td { background: #efe6fb; font-weight: 650; }
+
+  .ptag { font-size: .68rem; letter-spacing: .04em; padding: .1rem .45rem; border-radius: 5px;
+          text-transform: none; font-weight: 600; }
+  .ptag.test   { background: #e9f1fb; color: #1e5aa8; }
+  .ptag.reason { background: #f4f0fa; color: #6b4e94; }
+
+  .eq { text-align: center; font-size: 1.35rem; margin: 1.2rem 0;
+        font-family: "Iowan Old Style", Palatino, Georgia, serif; }
+  .eq .sub { font-size: .7em; vertical-align: -.25em; }
+
+  .threeway { display: grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; margin: 1.2rem 0; }
+  .tw { border: 1px solid var(--line); border-radius: 12px; padding: .9rem 1rem; background: #fff; }
+  .tw h4 { font-size: .78rem; text-transform: uppercase; letter-spacing: .05em; margin: 0 0 .5rem; }
+  .tw ul { margin: 0; padding-left: 1.1rem; font-size: .88rem; line-height: 1.5; }
+  .tw.measured  { border-color: #cdeadb; background: #f6fbf8; }
+  .tw.measured h4 { color: #1f6f46; }
+  .tw.elsewhere { border-color: #bfdbfe; background: var(--accent-soft); }
+  .tw.elsewhere h4 { color: #1741b6; }
+  .tw.open { border-color: var(--warn-line); background: var(--warn-bg); }
+  .tw.open h4 { color: #8a6d1f; }
+
+  .ledger { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .ledger ul { margin: .4rem 0 0; padding-left: 1.1rem; }
+  .ledger li { margin: .3rem 0; font-size: .95rem; }
+  .ledger .yes li::marker { color: var(--ok); }
+  .ledger .no  li::marker { color: var(--kind-a); }
+
+  /* ---- SVG figures. Drawn to scale; do not "tidy" these numbers. ---- */
+  .stage { display: grid; place-items: center; padding: .5rem 0 1.1rem; }
+  svg.scene { width: 100%; max-width: 440px; height: auto; }
+  svg.scene.wide { max-width: 520px; }
+  .stand-bar { stroke: #c8d3d7; stroke-width: 4; stroke-linecap: round; }
+  .pivot { fill: #a8b5ba; }
+  .divider { stroke: #e8eef0; stroke-width: 1.5; }
+  .thread { stroke: #b9c6cb; stroke-width: 1.2; }
+  .sphere { fill: #9aa7ad; stroke: #7d8a90; stroke-width: .8; }
+  .sphere.good { fill: #2f9e63; stroke: #217a4a; }
+  .sphere.bad  { fill: #d8452f; stroke: #a8341f; }
+  .handle { stroke: #c9a227; stroke-width: 4; stroke-linecap: round; }
+  .rod { fill: #d9b45a; stroke: #b8933d; stroke-width: 1; }
+  .knot { fill: #a8b5ba; }
+  .balloon-plain { fill: #e2695a; }
+  .axis { stroke: #c8d3d7; stroke-width: 1; stroke-dasharray: 4 3; }
+  .axisline { stroke: #dfe6e8; stroke-width: 2; }
+  .dim { stroke: #cfd8dc; stroke-width: 1; }
+  .dim-arrow { stroke: var(--brass); stroke-width: 1.4; }
+  .force { stroke: #3d5259; stroke-width: 2.2; fill: none; stroke-linecap: round; }
+  .flowarrow { stroke: var(--brass); stroke-width: 2; fill: none; }
+  .touch-arrow { stroke: #3d5259; stroke-width: 1.8; fill: none; stroke-linecap: round; }
+  .arrowhead { fill: #3d5259; }
+  .arrowhead-warm { fill: var(--brass); }
+
+  .scene-label-txt { font-size: 11px; fill: #7d949b; }
+  .dim-txt { font-size: 11px; fill: var(--brass); }
+  .seq-frac { font-size: 10px; fill: var(--ink-2); font-weight: 600; }
+  .fig-head { font-size: 11px; fill: var(--ink-2); font-weight: 600; }
+  .force-lab { font-size: 11px; fill: var(--ink-2); font-weight: 600; }
+  .good-txt { font-size: 10.5px; fill: #217a4a; font-weight: 600; }
+  .bad-txt  { font-size: 10.5px; fill: #a8341f; font-weight: 600; }
+  .lawtick { stroke-width: 2.5; }
+  .lawtick.n1 { stroke: #9aa7ad; }
+  .lawtick.n2 { stroke: var(--kind-b); }
+  .lawtick.n3 { stroke: #b07cc6; }
+  .lawlab { font-size: 11px; font-weight: 700; }
+  .lawlab.n1 { fill: #7d8a90; }
+  .lawlab.n2 { fill: var(--kind-b); }
+  .lawlab.n3 { fill: #8e57a8; }
+  .lawnum { font-size: 10px; fill: var(--muted); }
+  .youmark { fill: var(--brass); }
+  .youlab { font-size: 11px; fill: var(--brass); font-weight: 700; }
+
+  @media (max-width: 640px) {
+    .models, .threeway, .ledger { grid-template-columns: 1fr; }
+    .datarow { grid-template-columns: 1fr; gap: .25rem; }
   }
   * {
     box-sizing: border-box;

@@ -33,7 +33,7 @@ interface StandProps {
 function Stand({ y = susY, x1 = 120, x2 = 280, cx = susX, r = 3.5 }: StandProps) {
   return (
     <>
-      <line x1={x1} y1={y} x2={x2} y2={y} className="rail" />
+      <line x1={x1} y1={y} x2={x2} y2={y} className="stand-bar" />
       <circle cx={cx} cy={y} r={r} className="pivot" />
     </>
   );
