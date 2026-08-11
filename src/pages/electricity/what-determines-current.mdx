@@ -1,0 +1,78 @@
+---
+layout: ../../layouts/ConceptLayout.astro
+title: What determines the current?
+category: Electricity · Module 2
+summary: Current is still charge per time. In a simple wire model that rate equals n q A v_d — four factors together, so drift speed is only one of them.
+---
+
+import M2Factors from '../../components/physics/M2Factors.tsx';
+import M2Twin from '../../components/physics/M2Twin.tsx';
+import M2DriftEstimate from '../../components/physics/M2DriftEstimate.tsx';
+import ModelPanel from '../../components/ui/ModelPanel.astro';
+
+[Module 1](/electricity/what-is-current) answered *what current is*: the rate at which
+charge crosses a surface,
+
+$$
+I = \frac{\Delta Q}{\Delta t}.
+$$
+
+This module asks a different question: **what sets that rate** inside a simple model of
+a metal wire?
+
+## The product model
+
+In a steady, uniform wire with one kind of mobile carrier,
+
+$$
+I = n\, q\, A\, v_d
+$$
+
+| Symbol | Meaning |
+|--------|---------|
+| \(n\) | how many mobile carriers per cubic metre |
+| \(q\) | charge on each carrier (here \(e\)) |
+| \(A\) | cross-sectional area of the wire |
+| \(v_d\) | **net drift** speed of the carrier population along the wire |
+
+So current is large when any of these is large. **Speed alone does not tell the story.**
+
+## Four factors
+
+<M2Factors client:visible />
+
+Change one control at a time. The animation uses **aggregate** pictures (density bar,
+wire thickness, drift marker) on purpose. It is not a film of individual electrons
+marching down the wire — that picture is incomplete and belongs to a later repair
+(Module 3).
+
+## Same current, different mixes
+
+<M2Twin client:visible />
+
+If current were “just how fast charges move,” two wires with the same \(I\) would need
+the same drift speed. They do not. A thicker wire or a denser carrier gas can carry the
+same current with a **smaller** \(v_d\).
+
+## How small is drift speed?
+
+<M2DriftEstimate client:visible />
+
+Household currents are amperes; drift speeds in this model are often **millimetres per
+second or less**. That is not a paradox: \(n\) is enormous, so even a crawl of the
+*net* population moves a lot of charge per second.
+
+Remember: the number \(n\) you type is a **model input** (order-of-magnitude for copper),
+not a measurement performed on this page.
+
+## What this module does not tell you
+
+- What electrons are doing in detail (thermal motion + small drift) — **Module 3**
+- Where the electric field comes from in a circuit
+- Energy, power, or whether current is “used up”
+- Quantum structure of real metals
+
+The classical glide picture is a **model**. Module 3 exists because that model is easy
+to over-believe.
+
+<ModelPanel src="src/content/electricity/what-determines-current/model.yaml" />

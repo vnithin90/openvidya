@@ -1,0 +1,136 @@
+# PROVISIONAL SCHEMA — Module 2. Conductor product model; not a pure definition
+# like Module 1, not an ODE/field prototype.
+
+concept: What determines the current?
+slug: what-determines-current
+module: 2
+category: conductor-model
+prerequisite: what-is-current
+
+objective: >
+  Show that in a steady uniform-wire model the current is set by four factors
+  together (n, q, A, v_d), so drift speed is one factor among several.
+
+out_of_scope:
+  - thermal / random microscopic motion (Module 3)
+  - Fermi velocity and band structure
+  - circuit topology, Kirchhoff laws, field establishment
+  - energy, power, whether current is consumed
+  - AC and non-uniform conductors
+  - electrical hazard
+
+assumptions:
+  - Uniform carrier density, cross-section and drift speed along the segment.
+  - One mobile carrier species with charge q (school form uses |q| = e).
+  - Steady state: the same current through every cross-section.
+  - v_d is the net drift of the carrier population, not a thermal speed.
+  - The free-electron / single-fluid picture is a model, not a complete description of a metal.
+
+governing_statements:
+  - form: model-equation
+    statement: "I = n q A v_d"
+    latex: "I = n q A v_d"
+    note: >
+      Relates Module 1's rate I = ΔQ/Δt to four factors in a uniform conductor.
+      Not a second definition of current.
+  - form: rearrangement
+    statement: "v_d = I / (n q A)"
+    latex: "v_d = \\frac{I}{n q A}"
+    note: Used to estimate drift speed once I, n, q, A are given.
+
+parameters:
+  n:
+    label: Carrier number density
+    unit: m^-3
+    role: how many mobile charges per unit volume
+  q:
+    label: Charge per carrier
+    unit: C
+    default: e
+  A:
+    label: Cross-sectional area
+    unit: m^2
+  v_d:
+    label: Drift speed
+    unit: m/s
+    role: net advance of the carrier population along the wire
+
+empirical_values:
+  - symbol: e
+    value: 1.602176634e-19
+    unit: C
+    type: exact-by-definition
+    source: "SI, 2019 redefinition"
+  - symbol: n_Cu
+    value: 8.5e28
+    unit: m^-3
+    type: model-dependent
+    source: "⚠ UNSOURCED order-of-magnitude free-electron estimate for copper — cite before publication"
+    used_by: [scene-3-drift-estimate]
+
+implementation:
+  file: src/physics/current-factors/model.ts
+  method: direct-product
+  scheme: I = n * q * A * v_d
+  notes: >
+    Visualization uses aggregate representations (density bar, section width,
+    labelled drift) rather than swarms of gliding carriers, to limit the
+    crawl-to-the-bulb mental model (deferred repair: Module 3).
+
+verification:
+  - name: regrouped_product
+    method: algebraic-reassociation
+    independent_of: single_multiply_line
+    expected: "(n A)(q v_d) equals n q A v_d"
+  - name: factor_proportionality
+    method: scaling
+    independent_of: closed_form_table
+    expected: "doubling any one factor doubles I"
+  - name: twin_invariance
+    method: compensation
+    independent_of: UI
+    expected: "2A and v_d/2 leave I unchanged"
+  - name: inverse_drift
+    method: rearrangement
+    independent_of: forward_product_path_copy
+    expected: "v_d = I/(n q A) then product recovers I"
+  - name: flux_identity
+    method: Module-1-bridge
+    independent_of: product_implementation_alone
+    expected: "ΔQ = I Δt = n q A v_d Δt"
+  - name: copper_order_of_magnitude
+    method: declared-model-estimate
+    independent_of: animation
+    expected: "I=1 A, A=1 mm², n=n_Cu → v_d between 1e-5 and 1e-3 m/s"
+
+validity:
+  holds_when:
+    - Steady DC current in a roughly uniform metallic segment.
+    - One dominant carrier species; n and A well-defined averages.
+  breaks_when:
+    - Strong non-uniformity, contacts, or time-varying EM fields dominate.
+    - Quantum or many-body effects are the point of the lesson (use a different model).
+  not_modelled:
+    - random thermal motion
+    - mean free path / scattering mechanism
+    - magnetism and Hall effect
+    - superconductivity
+
+pedagogical_notes:
+  spec: docs/specs/module-2-what-determines-current.md
+  targeted_mental_models:
+    - id: B2a
+      model: current is just how fast charges move
+      countered_by: four-factor product and same-I different-v_d scene
+    - id: speed-only
+      model: larger current always means faster electrons
+      countered_by: twin configurations and large-n large-A estimates
+  conceptual_debt:
+    - what: "Electrons appear to glide steadily at v_d"
+      why_deferred: "Full thermal motion + small drift bias is Module 3"
+      lives_in: Module 3
+    - what: "Value of n for copper"
+      why_deferred: "Requires solid-state model and cited table; order-of-magnitude only here"
+  representation_choices:
+    - Aggregate density / area / drift indicators — not a particle swarm.
+    - Drift arrow means net population drift, not the speed of every charge at every instant.

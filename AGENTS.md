@@ -64,6 +64,23 @@ The unhelpful output is a checklist of ✓ marks.
    dissimilar examples and is explicitly provisional. See
    `docs/SCHEMA-COMPARISON.md`.
 
+10. **Anything expressible as a test must not be written as a checklist.** A
+    calibration table with "re-run this if you change X" is a regression test
+    that depends on someone remembering. If a claim can be executed, execute it.
+    Prose is for the reasoning behind a decision, never for the check itself.
+
+11. **Record external couplings in `model.yaml`.** `verification[]` protects
+    against the code being wrong. `external_couplings[]` protects against a
+    value being load-bearing for something outside the file — a spec, a printed
+    slide, a physical kit, a downstream module. Anything listed there needs a
+    conversation, not a commit. See
+    `src/content/electricity/what-is-current/model.yaml` for the pattern.
+
+12. **Defects go in `ISSUES.md`, new work goes in `BACKLOG.md`.** Not in a
+    commit message, not buried in a spec, not in a chat log. If you find
+    something and cannot fix it now, it is only recorded if it is in one of
+    those two files.
+
 ## Definition of done for a concept module
 
 - `model.yaml` declaring assumptions, governing law, implementation route,

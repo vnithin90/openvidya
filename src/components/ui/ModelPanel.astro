@@ -31,12 +31,29 @@ const m = YAML.parse(raw);
     </div>
 
     <div class="mp-card">
-      <h3>What law are we applying?</h3>
-      <p class="mp-eq">{m.governing_law?.statement}</p>
+      <h3>What law or definition are we applying?</h3>
+      {m.governing_law?.statement && <p class="mp-eq">{m.governing_law.statement}</p>}
       {m.governing_law?.equivalent_forms && (
         <>
           <p class="mp-sub">Equivalent statements of the same physics:</p>
           <ul>{m.governing_law.equivalent_forms.map((f: string) => <li><code>{f}</code></li>)}</ul>
+        </>
+      )}
+      {m.governing_statements && (
+        <ul>
+          {m.governing_statements.map((g: { statement?: string; form?: string; note?: string }) => (
+            <li>
+              <code>{g.statement}</code>
+              {g.form && <span class="mp-sub"> ({g.form})</span>}
+              {g.note && <div class="mp-exp">{g.note}</div>}
+            </li>
+          ))}
+        </ul>
+      )}
+      {m.out_of_scope && (
+        <>
+          <p class="mp-sub" style="margin-top:.75rem">Deliberately not modelled here:</p>
+          <p class="mp-tags">{m.out_of_scope.map((s: string) => <span class="mp-tag">{s}</span>)}</p>
         </>
       )}
     </div>

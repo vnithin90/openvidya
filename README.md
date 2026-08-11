@@ -50,10 +50,21 @@ the code agrees with itself. Every check here is derived by a **different route*
 | Projectile motion | numerical integration (RK4) | closed-form solution, energy conservation, symmetry |
 | Electric field | pointwise Coulomb sum | Gauss's law surface integral, ∮E·dl = 0, E = −∇V |
 
-The suite has been mutation-tested: deliberately breaking each implementation
-(wrong exponent, flipped sign, 1% error in the Coulomb constant, altered RK4
-weights) makes tests fail. One such mutant exposed a real defect, now fixed and
-guarded by a regression test.
+The suite is mutation-tested, and you can re-run that yourself:
+
+```bash
+bash scripts/mutate.sh     # 15 deliberate physics errors; all must be caught
+```
+
+Wrong exponents, flipped signs, a 1% error in the Coulomb constant, altered RK4
+weights, removed guards. Currently **15 mutants, 15 caught, 0 survived**. The
+script exits non-zero if any survives — a survivor means the suite cannot detect
+that class of error, and the response is to write the missing test.
+
+Two of these mutants exposed real defects during development, both now fixed and
+guarded by regression tests: the projectile integrator exhausting memory instead
+of failing when the acceleration sign was wrong, and a crossing-count search
+bound derived from the window length rather than its endpoints.
 
 **What tests cannot establish:** whether the chosen model is the right physics
 for a situation, and whether the animation builds the correct mental picture.

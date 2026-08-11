@@ -1,0 +1,277 @@
+# PROVISIONAL SCHEMA — third concept. This is the file that forced the quantity
+# and statement taxonomies into existence. Compare against
+# ../../mechanics/projectile-motion/model.yaml (evolution family) and
+# ../../fields/electric-field/model.yaml (field family) before generalising.
+
+concept: What is current?
+slug: what-is-current
+module: 1
+category: definition          # NEITHER an ODE nor a field. Third family.
+
+objective: >
+  Distinguish how much charge is transferred from how quickly it is
+  transferred.
+
+# ---------------------------------------------------------------------------
+# Scope control is a first-class part of this module. Everything listed here
+# has a home in a later module and is deliberately absent, not overlooked.
+# ---------------------------------------------------------------------------
+out_of_scope:
+  - which sign of carrier actually moves in a given material
+  - conventional current direction and the sign convention for I
+  - I = nqAv_d
+  - electron speed, drift velocity, Fermi velocity
+  - microscopic motion inside conductors
+  - carrier density and cross-section
+  - circuit response; electrons travelling from battery to bulb
+  - energy, power, whether current is consumed
+  - electrical hazard
+  - the mechanism of cloud electrification
+
+assumptions:
+  - Charge is quantised in units of the elementary charge.
+  - The surface through which charge is counted is chosen by the observer and
+    is not a physical object.
+  - Charge crossing the surface is counted; nothing about what carries it, how
+    fast it moves, or what it moves through is claimed.
+
+governing_statements:
+  - form: definition            # <- new in this concept; not "law", not "model"
+    statement: "I = ΔQ / Δt"
+    latex: "I = \\frac{\\Delta Q}{\\Delta t}"
+    note: >
+      A definition, not a law. Nothing is solved, integrated or derived. This
+      is why governing_law.form could not remain a single equation slot.
+  - form: definition
+    statement: "Q = N e,  where N = N₊ − N₋"
+    latex: "Q = N e, \\qquad N = N_+ - N_-"
+    note: >
+      The NET charge of a collection. Charge comes in two kinds: a proton
+      carries +e, an electron carries −e, and e itself is a positive number.
+      An earlier version of this module stated Q = Ne without signs and told
+      students the electron "carries e" — wrong by a sign, and it quietly
+      implied all charge is one kind. What is countable is the excess of one
+      kind over the other, not the number of charged particles present.
+
+  - form: conservation-principle
+    statement: "adding one +e and one −e changes nothing"
+    note: >
+      Stated here only as the algebra of cancellation, visible in Scene 1.
+      Charge conservation as source/sink bookkeeping stays out of scope.
+
+# ---------------------------------------------------------------------------
+# Every number carries a type. See docs/specs/module-1-what-is-current.md §5.
+# ---------------------------------------------------------------------------
+empirical_values:
+  - symbol: e
+    value: 1.602176634e-19
+    unit: C
+    type: exact-by-definition
+    uncertainty: 0
+    source: "SI, 2019 redefinition"
+    used_by: [scene-1, scene-2, scene-3]
+
+  - symbol: Q_lightning
+    range: [5, 20]
+    unit: C
+    type: measured
+    uncertainty: "range spans more than an order of magnitude; positive flashes far larger"
+    source: "⚠ UNSOURCED — must be cited before publication"
+    used_by: [comparison-panel]
+
+  - symbol: I_lightning_peak
+    value: 30000
+    unit: A
+    type: measured
+    source: "⚠ UNSOURCED — must be cited before publication"
+    used_by: [comparison-panel]
+
+  - symbol: C_cell
+    range: [2000, 3000]
+    unit: mAh
+    type: device-specific
+    conditions: "rated capacity under specified load; NOT 'the charge sitting inside the battery'"
+    source: "⚠ UNSOURCED — cite a manufacturer datasheet with load conditions"
+    used_by: [comparison-panel]
+
+# All three scenes rest on `e` alone, which is exact. Every unsourced value is
+# confined to the illustrative panel, where a range is the honest presentation.
+# Zero model-dependent quantities — down from three before the scope cut.
+
+# ---------------------------------------------------------------------------
+# Things whose change desynchronises something OUTSIDE this file.
+#
+# verification[] protects against the code being wrong. This block protects
+# against a value being load-bearing for something you cannot see from here —
+# a spec, a printed slide, a physical kit, a downstream module. Adopted from
+# the byoPhysics bench handover, §10, which is the best idea in that document.
+#
+# Anything listed here needs a conversation, not a commit.
+# ---------------------------------------------------------------------------
+external_couplings:
+  - item: "e = 1.602176634e-19 C"
+    coupled_to: "SI, 2019 redefinition"
+    if_changed: >
+      Not a project decision. If this number ever changes, the standard changed
+      and every module changes with it.
+
+  - item: "Scene 3 has no speed control"
+    coupled_to: "docs/specs/module-1-what-is-current.md, Scene 3 design constraints"
+    if_changed: >
+      Adding one re-introduces mental model B2a (current is determined by carrier
+      speed) before rate has been established. The absence is the design.
+
+  - item: "Scene 2 has no clock"
+    coupled_to: "docs/specs/module-1-what-is-current.md, Scene 2 design constraints"
+    if_changed: >
+      Showing elapsed time here hands the student both quantities before Scene 3
+      asks them to relate the two, and Scene 3's discovery collapses into
+      arithmetic already done.
+
+  - item: "Context panel slider ranges (stroke 1-60 C, cell 800-4000 mAh)"
+    coupled_to: "the module's central claim, that the two quantities rank the situations oppositely"
+    if_changed: >
+      Verified that the claim survives the entire current slider range: worst
+      case for the cell is 2880 C against a 60 C stroke, still 48x. Widen the
+      stroke range far enough and the conclusion inverts on screen. Re-check
+      before changing either bound.
+
+  - item: "The four acceptance questions"
+    coupled_to: "docs/specs/module-1-acceptance-questions.md and components/ui/SelfCheck.tsx"
+    if_changed: >
+      These are the acceptance criteria the module was specified against, and
+      they now also appear on the page. Changing a scene without re-checking it
+      against AT-2 and AT-3 means the module is no longer being judged by the
+      standard it was built to.
+
+  - item: "Scenes 2 and 3 count an unsigned packet"
+    coupled_to: "the out_of_scope list above, and Module 2"
+    if_changed: >
+      The markers crossing the surface are deliberately of one unstated kind.
+      Give them signs and the scene immediately raises which way each kind
+      moves and which direction the current points — conventional current,
+      which is explicitly deferred. Scene 1 is where sign belongs; Scenes 2
+      and 3 must stay silent about it.
+
+  - item: "This module claims nothing about carrier speed"
+    coupled_to: "Module 2, and the conceptual debt declared below"
+    if_changed: >
+      Module 2 assumes Module 1 introduced no carrier-motion picture. If a scene
+      here starts drawing carriers at a stated speed, Module 2's starting point
+      is no longer true and Module 3's debt falls due earlier.
+
+implementation:
+  file: src/physics/current/model.ts
+  method: direct-definition
+  scheme: >
+    Crossing counts by time-stepping with sign-change detection; rate by
+    division. No integration, no field evaluation.
+  notes: >
+    A marker is not an electron. 10 C is about 6.2e19 elementary charges and
+    cannot be drawn. Each marker represents a stated charge and the UI must
+    show that number on screen.
+
+verification:
+  - name: quantisation_roundtrip
+    method: inverse-operation
+    independent_of: forward_conversion
+    expected: "Q/e is a whole number of elementary charges"
+    tolerance: {relative: 1.0e-6}
+
+  - name: quantisation_requires_uncertainty
+    method: guard
+    independent_of: numerics
+    expected: >
+      Consistency with quantisation cannot be decided from a central value.
+      Same value, different uncertainty, opposite verdicts.
+
+  - name: dual_unit_agreement
+    method: independent-conversion
+    independent_of: model_constant
+    expected: "coulomb and elementary-charge displays never disagree"
+    tolerance: {relative: 1.0e-12}
+
+  - name: rate_recomputed
+    method: direct-quotient
+    independent_of: displayed_value
+    expected: "displayed rate equals ΔQ/Δt recomputed separately"
+    tolerance: {relative: 1.0e-12}
+
+  - name: surface_position_independence
+    method: invariance
+    independent_of: chosen_surface
+    expected: "counts agree to within one marker wherever the surface is drawn"
+
+  - name: crossing_count_vs_closed_form
+    method: closed-form-integer-count
+    independent_of: time_stepping
+    expected: "stepped sign-change count matches integers-in-an-interval count"
+
+  - name: panel_interval_arithmetic
+    method: interval-arithmetic
+    independent_of: midpoint_ratio
+    expected: "ratio range [360, 2160]; a point value would hide a factor-of-6 spread"
+    tolerance: {relative: 1.0e-6}
+
+# Charge conservation was REMOVED from this suite. It requires source/sink
+# bookkeeping that expands the module's conceptual scope, and Module 1 does not
+# teach it.
+
+validity:
+  holds_when:
+    - Charge is counted through a well-defined surface over a well-defined interval.
+  breaks_when:
+    - The interval shrinks toward instantaneous rates (needs the derivative form).
+  not_modelled:
+    - what carries the charge
+    - how fast it moves
+    - what medium it moves through
+
+# ---------------------------------------------------------------------------
+# Required block for this family. The module exists to shift a mental model,
+# so this content IS the specification, not a footnote.
+# ---------------------------------------------------------------------------
+pedagogical_notes:
+  spec: docs/specs/module-1-what-is-current.md
+  acceptance_questions: docs/specs/module-1-acceptance-questions.md
+
+  targeted_mental_models:
+    - id: A1
+      model: charge is a substance
+      countered_by: scene-1 counts individuals, never accumulates a pile
+    - id: A2
+      model: larger charge means a larger particle
+      countered_by: the symbol is drawn identically at every scale
+    - id: A3
+      model: (absence) charge is continuous
+      countered_by: the counter can only display integers
+    - id: A5
+      model: all charge is the same kind — usually "charge means electrons"
+      countered_by: >
+        scene-1 offers both kinds and shows them cancelling. Added after review
+        found the module had never mentioned positive or negative at all.
+    - id: A6
+      model: a neutral object contains no charged particles
+      countered_by: >
+        scene-1 net readout stays at zero with many particles present, and says
+        so: neutral means balanced, not empty.
+    - id: B1
+      model: current is the same thing as charge
+      countered_by: scene-3; the name arrives only after the ratio is formed
+
+  representation_choices:
+    - "● represents the particle; e represents the magnitude of its charge. Not a picture of an electron."
+    - "A marker stands for a stated quantity of charge, shown on screen. Individual electrons cannot be drawn."
+    - "The surface is transparent and observer-chosen. It is not a gate, and nothing intercepts anything."
+    - "Scale is shown on a labelled logarithmic axis: equal steps are ×1000, not +1000."
+
+  accepted_costs:
+    - "The particle symbol supports a billiard-ball ontology. Accepted at this level; declared on the page."
+
+  conceptual_debt:
+    - what: "What electrons are actually doing inside a conductor."
+      why_deferred: >
+        Module 1 never depicts a carrier moving at a stated speed, so it does
+        not create the crawling-electron model. It also does not remove any
+        prior belief about it.
+      lives_in: Module 3

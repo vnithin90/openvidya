@@ -1,0 +1,104 @@
+---
+layout: ../../layouts/ConceptLayout.astro
+title: What is current?
+category: Electricity · Module 1
+summary: Charge can be counted. Charge can cross a surface you choose. How quickly it crosses is a separate question from how much crosses — and that difference is what current means.
+---
+
+import Scene1Counting from '../../components/physics/Scene1Counting.tsx';
+import Scene2Surface from '../../components/physics/Scene2Surface.tsx';
+import Scene3Rate from '../../components/physics/Scene3Rate.tsx';
+import ChargeRatePanel from '../../components/physics/ChargeRatePanel.tsx';
+import SelfCheck from '../../components/ui/SelfCheck.tsx';
+import ModelPanel from '../../components/ui/ModelPanel.astro';
+
+This module has **one job**: separate two questions students often glue together.
+
+- *How much charge moved?*
+- *How quickly did it move?*
+
+The answer to one does **not** give you the other. Everything else about electricity —
+what carries the charge, how fast carriers go, what they travel through — is left out
+on purpose. Those are later modules.
+
+## Charge can be counted
+
+<Scene1Counting client:visible />
+
+A particle that *has* charge carries it in one fixed size, written $e$ — the
+**elementary charge**, and $e$ is a positive number. But charge comes in **two kinds**.
+A proton carries $+e$. An electron carries $-e$. Same size, opposite sign.
+
+So a large charge is not a large particle. It is a large number of particles — and,
+because the two kinds cancel, what counts is the *difference* between them:
+
+$$
+Q = N e, \qquad N = N_+ - N_-
+$$
+
+Add one of each and nothing changes. Balance them exactly and the object is
+**neutral** — which does not mean empty. A neutral object is full of charged
+particles; it simply has as many of one kind as the other.
+
+Then switch to the log axis for the huge numbers: each step is ×1000, because you
+cannot draw $10^{20}$ dots honestly.
+
+## Charge can cross a surface
+
+<Scene2Surface client:visible />
+
+Send a **packet** of charge past two counting places. The dashed lines are not doors —
+they are places *you* choose to stand and count, like counting people walking past a
+mark on the floor.
+
+Move place B. Both counters should agree on how much was in the packet (if the whole
+packet went past). You changed **where you counted**, not the charge itself.
+
+The two readouts (coulombs and number of elementary charges) are the same quantity in
+two units, because $Q = Ne$.
+
+One thing this scene deliberately does **not** say: which *kind* of charge is in the
+packet. Whether the movers are positive or negative — and which way each would go —
+decides the *direction* we assign to a current, and that is a later module. Here we
+are only counting how much crossed.
+
+## How long did it take?
+
+<Scene3Rate client:visible />
+
+This is the point of the module. **Run A** and **Run B** transfer the **same** charge
+($10\,\mathrm{C}$). Only the time is different.
+
+Watch the **clocks** and the **bars**. Both bars end at the same height. One clock
+finishes sooner. That larger “charge per second” is a different quantity from the charge
+itself.
+
+$$
+I = \frac{\Delta Q}{\Delta t}
+$$
+
+After you have seen the comparison, the page names it: **electric current**.
+
+## How much, and how fast
+
+<ChargeRatePanel client:visible />
+
+A AA cell can transfer **more total charge** over its life than a lightning stroke, while
+the stroke has a **far larger rate**. Both statements can be true. That is the module in
+one picture: amount and rate are different questions.
+
+<SelfCheck client:visible />
+
+## What this module does not tell you
+
+It says nothing about what carries the charge, how fast those carriers move, what they
+move through, or what happens when they arrive.
+
+In particular: **this page has not claimed how fast charge carriers move.** If you
+picture electrons racing through a wire, this module has neither confirmed nor corrected
+that picture.
+
+**Next:** [What determines the current?](/electricity/what-determines-current) — the
+product model \(I = n q A v_d\).
+
+<ModelPanel src="src/content/electricity/what-is-current/model.yaml" />

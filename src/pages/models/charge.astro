@@ -1,0 +1,57 @@
+---
+import InvestigateLayout from '../../layouts/InvestigateLayout.astro';
+---
+
+<InvestigateLayout title="Charge model" strand="Models">
+  <article class="inv-card">
+    <p class="inv-kicker">Model card · earned in E1</p>
+    <h1 class="inv-title">Charge</h1>
+    <p class="inv-lead">
+      Compact record of what the balloon investigation established — and what it did not.
+    </p>
+
+    <h2 class="sec">Established</h2>
+    <ul>
+      <li>two kinds of charge</li>
+      <li>like repels · unlike attracts</li>
+      <li>charge can transfer (working inference: rearranged, not created)</li>
+      <li>neutral means balanced, not empty</li>
+      <li>net ≠ total</li>
+    </ul>
+
+    <h2 class="sec">Representation</h2>
+    <div class="math-block">
+      Q<sub>net</sub> = Q<sub>+</sub> − Q<sub>−</sub>
+      <span class="sub">500 + 500 kinds → net 0, but 1000 units still present</span>
+    </div>
+
+    <h2 class="sec">Not yet established</h2>
+    <ul>
+      <li>microscopic carrier</li>
+      <li>quantisation</li>
+      <li>why particular materials exchange which way</li>
+    </ul>
+
+    <h2 class="sec">Used later by</h2>
+    <p class="note-soft">E2 · E3 · E4 · C1 · … (as those investigations are built)</p>
+
+    <div class="inv-actions">
+      <a href="/models" class="inv-btn">All models</a>
+      <a href="/learn/electricity/what-is-charge" class="inv-btn primary">Replay investigation</a>
+    </div>
+  </article>
+</InvestigateLayout>
+
+<style>
+  .sec {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--muted);
+    margin: 1.4rem 0 0.45rem;
+  }
+  ul {
+    margin: 0;
+    padding-left: 1.15rem;
+  }
+</style>

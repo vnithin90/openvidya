@@ -1,0 +1,73 @@
+---
+import InvestigateLayout from '../../layouts/InvestigateLayout.astro';
+---
+
+<InvestigateLayout title="Models you hold">
+  <section class="inv-card">
+    <p class="inv-kicker">Inventory</p>
+    <h1 class="inv-title">Models you hold</h1>
+    <p class="inv-lead">
+      Models are earned by finishing investigations — not by reading a glossary first.
+      They are reused later instead of being re-taught from zero.
+    </p>
+    <div id="model-list" class="model-list">
+      <p class="note-soft">Checking what you have earned…</p>
+    </div>
+    <div class="inv-actions" style="margin-top:1.25rem">
+      <a class="inv-btn primary" href="/learn/electricity/what-is-charge">Open: What is charge?</a>
+      <a class="inv-btn" href="/">Home</a>
+    </div>
+  </section>
+</InvestigateLayout>
+
+<script>
+  const KEY = 'openvidya-models-earned';
+  const el = document.getElementById('model-list');
+  if (el) {
+    let list = [];
+    try {
+      list = JSON.parse(localStorage.getItem(KEY) || '[]');
+    } catch {
+      list = [];
+    }
+    if (!list.length) {
+      el.innerHTML =
+        '<p class="note-soft">No models earned yet. Complete <a href="/learn/electricity/what-is-charge">What is charge?</a> to earn <strong>Charge</strong>.</p>';
+    } else {
+      el.innerHTML = list
+        .map((id) => {
+          if (id === 'charge') {
+            return `<a class="model-link" href="/models/charge"><strong>Charge</strong><span>Two kinds · transfer · like/unlike · net ≠ total</span></a>`;
+          }
+          return `<div class="model-link"><strong>${id}</strong></div>`;
+        })
+        .join('');
+    }
+  }
+</script>
+
+<style>
+  .model-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+  .model-link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 0.9rem 1rem;
+    text-decoration: none;
+    color: inherit;
+    background: #fff;
+  }
+  .model-link:hover {
+    border-color: var(--accent);
+  }
+  .model-link span {
+    font-size: 0.88rem;
+    color: var(--muted);
+  }
+</style>

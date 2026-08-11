@@ -1,59 +1,107 @@
 ---
-import ConceptLayout from '../layouts/ConceptLayout.astro';
+import InvestigateLayout from '../layouts/InvestigateLayout.astro';
 ---
 
-<ConceptLayout
-  title="OpenVidya"
-  summary="Interactive physics documentation where the model, the code, the verification and the limits of validity are all part of the material."
->
-  <p>
-    Two prototype slices, chosen to be structurally as different as possible.
-    They exist to answer one question before any general architecture is
-    designed: <b>what does a physics concept module actually need to declare?</b>
-  </p>
+<InvestigateLayout title="OpenVidya">
+  <section class="inv-card hero">
+    <p class="inv-kicker">Grades 8–12 · Electricity & magnetism</p>
+    <h1 class="inv-title">OpenVidya</h1>
+    <p class="inv-lead">
+      Don’t tell me what happens. Make me commit to what I think will happen.
+    </p>
+    <p class="inv-lead" style="margin-top:-0.4rem">
+      Observe · Compare · Judge · Then model
+    </p>
+  </section>
 
-  <div class="cards">
-    <a href="/mechanics/projectile-motion" class="card">
-      <span class="tag">dynamical system · ODE</span>
-      <h3>Projectile Motion</h3>
-      <p>A trajectory through time. Initial conditions, numerical integration, closed-form validation.</p>
+  <section class="inv-card">
+    <p class="inv-kicker">Electricity</p>
+    <h2 class="inv-title" style="font-size:1.3rem">Where to start</h2>
+    <a class="start-card" href="/learn/electricity/what-is-charge">
+      <span class="tag">Investigation · E1</span>
+      <strong>What is charge?</strong>
+      <span class="desc">
+        Predict, try balloons, face a conflict, judge competing explanations — then earn the charge
+        model. No particle names. No formula dump.
+      </span>
+      <span class="go">Begin →</span>
     </a>
-    <a href="/fields/electric-field" class="card">
-      <span class="tag">field · electrostatics</span>
-      <h3>Electric Field of Point Charges</h3>
-      <p>A vector at every point of space. No initial conditions, no time evolution, validated by Gauss's law.</p>
-    </a>
-  </div>
+    <p class="note-soft">
+      You will need two balloons, thread, and dry hair or wool. Commitments lock until you observe.
+    </p>
+  </section>
 
-  <h2>The working principle</h2>
-  <blockquote>
-    Humans define the physical model and the educational intent. Agents implement
-    and challenge it. Executable tests verify what can be verified. Humans judge
-    what cannot. Git records the resulting knowledge.
-  </blockquote>
+  <section class="inv-card">
+    <p class="inv-kicker">Your models</p>
+    <p class="inv-lead" style="margin-bottom:0.75rem">
+      Models you earn stay available for later investigations.
+    </p>
+    <a class="inv-btn" href="/models">Open model inventory</a>
+  </section>
 
-  <p>
-    One distinction does most of the work here. A test that recomputes what the
-    implementation already computed proves only that the code agrees with itself.
-    Every check in these two modules is derived by a <b>different route</b> from
-    the implementation — closed-form solutions against numerical integration,
-    Gauss's law against pointwise superposition. That is why the checks carry
-    information.
-  </p>
+  <section class="inv-card muted-card">
+    <p class="inv-kicker">What comes next</p>
+    <p class="note-soft" style="margin-top:0">
+      E1 is the first investigation in the electricity sequence. The rest are being built the
+      same way — question first, prediction before answer, model last.
+    </p>
+    <div class="legacy">
+      <span>E2 · What decides how hard two charges push? — in review</span>
+      <span>E3 · How does one charge know the other is there? — planned</span>
+    </div>
+  </section>
+</InvestigateLayout>
 
-  <p>
-    The thing tests <em>cannot</em> establish is whether the chosen model is the
-    right one for a given situation, or whether the animation builds the correct
-    mental picture. Those remain human judgments, and the material says so
-    openly rather than hiding it.
-  </p>
-
-  <style>
-    .cards { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); margin: 2rem 0; }
-    .card { display: block; border: 1px solid #e5e7eb; border-radius: 12px; padding: 1.25rem; text-decoration: none; color: inherit; transition: border-color .15s, transform .15s; }
-    .card:hover { border-color: #1d4ed8; transform: translateY(-2px); }
-    .card h3 { margin: .5rem 0 .4rem; }
-    .card p { margin: 0; color: #6b7280; font-size: .9rem; line-height: 1.5; }
-    .tag { font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; color: #1d4ed8; }
-  </style>
-</ConceptLayout>
+<style>
+  .hero {
+    background: linear-gradient(165deg, #eff6ff 0%, #fff 55%);
+  }
+  .start-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    border: 2px solid #bfdbfe;
+    border-radius: 14px;
+    padding: 1.1rem 1.15rem;
+    text-decoration: none;
+    color: inherit;
+    background: #f8fbff;
+    margin: 0.75rem 0;
+  }
+  .start-card:hover {
+    border-color: var(--accent);
+  }
+  .start-card .tag {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .start-card strong {
+    font-size: 1.2rem;
+  }
+  .start-card .desc {
+    font-size: 0.92rem;
+    color: #4b5563;
+    line-height: 1.45;
+  }
+  .start-card .go {
+    margin-top: 0.35rem;
+    font-weight: 600;
+    color: var(--accent);
+  }
+  .muted-card {
+    opacity: 0.95;
+  }
+  .legacy {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-top: 0.6rem;
+  }
+  .legacy span {
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+</style>
