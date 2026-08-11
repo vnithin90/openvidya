@@ -87,12 +87,6 @@ work done in the wrong order.
 where the repository currently contradicts its own stated rules — which matters
 disproportionately for a project asking a co-creator to follow those rules.
 
-## 4 · Extract `analytical.ts`, document the softening, fix the licence — **S**
-
-`ISSUES.md` #1, #3, #7 together. Small, mechanical, and they are the three items
-where the repository currently contradicts its own stated rules — which matters
-disproportionately for a project asking a co-creator to follow those rules.
-
 ## 5 · Module 3 — "What are electrons doing?" — **L**
 
 Thermal motion, drift as a small bias, repair of the crawling-electron picture.
