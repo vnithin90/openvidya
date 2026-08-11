@@ -165,3 +165,24 @@ interactions are not. No live regions on readouts that change. Not audited.
 - Fixing `g = 9.81`'s typing in isolation — it lands with the taxonomy pass across all modules, or not at all.
 - `npm audit fix --force`, which wants a major Astro upgrade to patch build-time-only advisories.
 - Adding scenes to cover mental models discovered during review. A discovered model does not automatically belong in the current lesson.
+
+## 11 · A smoke test that loads a page in a real browser — **S, and it would have caught a shipped break**
+
+Every check in this repository operates on source or on static markup. None of
+them loads a page. On 12 Aug an Astro 7 upgrade left `@astrojs/react` two majors
+behind, hydration failed on every route, and **the build passed and all 184
+tests passed** while nothing on the site was clickable. `ISSUES.md` #12.
+
+The gap is precise: the build emits islands, `component-url` and `renderer-url`
+for a renderer that will throw in the browser, and is satisfied. A green build
+is not a working page.
+
+Smallest thing that closes it — for each route:
+
+1. serve the built `dist/`,
+2. load it in a headless browser,
+3. assert the console is free of errors,
+4. click one control and assert the DOM changed.
+
+Step 4 is the one that matters. Steps 1–3 would pass on a page whose buttons do
+nothing, which is exactly what shipped.
