@@ -21,11 +21,18 @@ we cannot support. *Medium* — real defect, contained, no reader is misled.
 | **7** | Low | **Licence field disagrees with `CONTRIBUTING.md`.** `package.json` says `"CC-BY-4.0"`; `CONTRIBUTING.md` says code MIT, content CC BY 4.0. | `package.json` | Use an SPDX expression, e.g. `"MIT AND CC-BY-4.0"`. |
 | **8** | Low | **Astro content-collection warning on every build.** `src/content/*` holds `model.yaml` files and no `.md`/`.mdx`, so Astro auto-generates empty collections and warns. | build output | Add `src/content.config.ts` defining the collections explicitly, or move the YAML outside Astro's content root. |
 | **9** | Low | **8 npm advisories** (1 critical, 3 high), all transitive through `sharp`/libvips. | `package-lock.json` | Build-time image tooling only; no runtime exposure on a static site. `npm audit fix --force` wants Astro 7 — do it deliberately, not reflexively. |
-| **10** | Low | **A stale `.git/index.lock` blocks committing.** Only one commit exists (`4c97ab7`); everything since Module 1 is uncommitted. | `.git/` | Delete the file from Windows Explorer — the Linux sandbox mount denies unlink. |
+| ~~10~~ | ~~Low~~ | ~~A stale `.git/index.lock` blocks committing.~~ **FIXED** 11 Aug. Both `.git/index.lock` and `.git/HEAD.lock` were timestamped `2026-08-09 10:51` — the same minute as the only commit, so a git process died mid-commit and every operation for two days failed silently. All 35 files committed as `217b50d`. | `.git/` | Severity was wrong. Filed Low; it was the reason Modules 1 and 2, both test files, `mutate.sh`, this file and `docs/specs/` existed on one machine with no commit and no remote. A lock file that blocks all recording is High. |
+| **11** | **High** | **E1 is implemented twice, in two stacks.** `E1Investigation.tsx` (903 lines, here) and `e1.js` (845 lines, static tree). Same question, same lesson, two independent implementations. A correction to E1 currently has to be made twice or the two silently diverge. | `src/components/investigate/E1Investigation.tsx` · `../openvidya-repo/e1.js` | Resolves when E2 is ported and the static tree is retired. Until then, **edit neither without editing the other**. See `docs/D1_REPOSITORY_DECISION.md` §4.1. |
+| **12** | **High** | **E2's apparatus has never been built** (blocker B3). Whether the pair settles faster than it leaks is pass/fail for the entire lesson, and E2 is deployed to students' reach. No amount of review settles it. | `docs/LESSON_E2_AMENDMENTS.md` B3 | Pass criterion must be **derived and written down before the first measurement** — settling short enough that charge lost during it is small against the precision with which r can be read. Not chosen after seeing the data. |
 | **Info** | — | The two galvanometer-style needle widgets in the sibling `byoPhysics` bench and OpenVidya's simulations solve overlapping problems with no shared code. Not a defect; a signal that the two projects need a reconciliation decision. | — | See `BACKLOG.md` §6. |
 
 ## Verified state at time of writing
 
-- **78 tests pass** across 4 files (projectile 28, electric-field 20, current 20, current-factors 10).
+- **86 tests pass** across 4 files (projectile 28, electric-field 20, current 28, current-factors 10).
+  *Corrected 11 Aug: this line said 78, and `current` 20. Re-counted by running the
+  suite on a fresh install, not by reading it. A stale number in the file whose
+  header promises everything was "verified against the working tree" is the exact
+  failure the file exists to prevent.*
+- **Mutation run: 15 injected faults, 15 caught, 0 survived.**
 - Site builds: 5 pages, no errors.
 - Module 2 (`what-determines-current`) shipped **with** a test file and a `model.yaml` — the methodology held across a change of author, which is the first real evidence it transfers.

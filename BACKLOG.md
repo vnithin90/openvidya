@@ -33,12 +33,59 @@ because at least six design assumptions are currently guesses. The sharpest
 open question: **can a student hold the drift and random-motion pictures
 together**, given Module 2 now shows drift?
 
-## 3 · Commit `scripts/mutate.sh` — **S**
+## 2a · Build the E2 apparatus — blocker **B3**, **S to build, and it may invalidate a shipped lesson**
 
-Closes `ISSUES.md` #6. The mutation exercise found a real defect (the projectile
-integrator exhausting memory instead of failing) and that finding became a test.
-The rest stayed prose. Make the whole exercise re-runnable, then the README's
-claim is checkable rather than trusted.
+Same class as §2: only physical reality settles it. Two threads, two light
+conducting balls, a charging rod, a timer.
+
+**The decisive question is whether the pair settles faster than it leaks.** If
+the separation is still drifting when the charge has already gone, the halving
+sequence measures nothing and E2's central experiment does not work — as
+deployed, to students.
+
+Pre-register the pass criterion **before the first measurement**, and derive it
+rather than choosing it: settling must be short enough that the charge lost
+during it is small compared with the precision to which r can be read, which the
+apparatus already fixes. A threshold chosen after seeing the timings is not a
+test, and it is the exact move E2 forbids its own students.
+
+Depends on nothing in this repository. Can start today. Everything in §3a is
+downstream of the answer.
+
+## ~~3 · Commit `scripts/mutate.sh`~~ — **DONE 11 Aug**
+
+Committed in `217b50d` and re-run on a fresh install: 15 mutants, 15 caught,
+0 survived. `ISSUES.md` #6 closed.
+
+## 3a · Port E2 into this repository — **L, and it unblocks retiring the second tree**
+
+E2 (*what decides how hard they push*) is 16 screens and is the only lesson
+currently deployed. It lives in the archived static tree and must move here, or
+the project keeps two implementations of the same curriculum. See
+`docs/D1_REPOSITORY_DECISION.md` §5 Option 1 and §7.
+
+What moves and how:
+
+| Piece | Route |
+|---|---|
+| 16 screens, `e2.js` 1,163 lines | → React component + `model.yaml`. Content ports readily; it is mostly prose and SVG |
+| physics assertions in `check-e2.js` — `predicted(n,k)`, `ballPositions`, geometry | → vitest, near-directly. These are pure functions |
+| content rules — no `F = k` on screen, no result before prediction, `BENCH_ACTIONS` §B | → vitest against rendered output. **Do not port as prose** (hard rule 10) |
+| `verify-finite-sphere.py` | **already moved**, `scripts/`, runs unchanged and passes |
+| `preview-figures.js` | does not port — it extracts paint rules from `style.css`. Rework or drop |
+
+Closes `ISSUES.md` #11 (E1 built twice) as a side effect: once E2 is here, the
+static tree is archived for good and `e1.js` stops being a second source of truth.
+
+**Not started, and it should not start before `BACKLOG.md` §1 and §2.** Porting a
+lesson nobody has tested on a student, whose apparatus has never been built, is
+work done in the wrong order.
+
+## 4 · Extract `analytical.ts`, document the softening, fix the licence — **S**
+
+`ISSUES.md` #1, #3, #7 together. Small, mechanical, and they are the three items
+where the repository currently contradicts its own stated rules — which matters
+disproportionately for a project asking a co-creator to follow those rules.
 
 ## 4 · Extract `analytical.ts`, document the softening, fix the licence — **S**
 

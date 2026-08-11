@@ -8,6 +8,40 @@ add another agent, give it an explicit pointer to this file through whatever
 instruction mechanism it natively reads. Do not assume any tool picks this up
 automatically.
 
+**This is the only `AGENTS.md` in the project.** Two others existed until
+11 Aug 2026 — one at the Course Material root, one here — and they did not know
+about each other. See the amendment log.
+
+---
+
+## Amendment log
+
+| Date | Change | Why |
+|---|---|---|
+| 11 Aug 2026 | §0 human authority stated explicitly. | It was assumed everywhere and written down nowhere. |
+| 11 Aug 2026 | §A roles and lenses added. | A proposed five-agent architecture treated role separation as a source of independent evidence. It is not. Recorded here so the mistake is not made twice. |
+| 11 Aug 2026 | §B single-conversation table added. | Names which properties are lost when one model plays every role, and the mitigation for each. |
+| 11 Aug 2026 | Hard rule 13 added — sourcing register. | Empirical sourcing is one of four evidence classes and had no owner. Four ⚠ values are unsourced today because of it. |
+| 11 Aug 2026 | §C architecture acceptance test added. | The lens structure is a hypothesis about our own process. It gets tested like any other. |
+| 11 Aug 2026 | Hard rules 1–12 kept verbatim. | They are checkable, and every one was earned. `AGENTS_REVIEW.md` §"load-bearing" gives the evidence. |
+
+---
+
+## §0 · Human authority — constitutional, not a lens
+
+A human makes the final decision on physics, pedagogy, scope, and empirical
+claims. An agent may recommend, reject, implement, or test. It may not silently
+settle a disputed physical or pedagogical question.
+
+This is not one perspective among several and does not belong in the list of
+review lenses below. It is the rule the rest of the file operates under.
+
+Where a dispute cannot be settled by an independent calculation, a test, an
+experiment, an external source, or student observation, it goes to the human.
+Preserve both positions; do not average them.
+
+---
+
 ## What agents may and may not establish
 
 You may **propose, implement, refactor, and inspect**.
@@ -25,6 +59,71 @@ If asked to review, the useful outputs are:
 - experiments that could falsify the implementation
 
 The unhelpful output is a checklist of ✓ marks.
+
+---
+
+## §A · Two operating roles, three review lenses
+
+Not five agents. The distinction is load-bearing.
+
+**Operating roles** — these do work:
+
+| Role | Does |
+|---|---|
+| **Lead / Architect** | Decomposes the request, protects scope, keeps `BACKLOG.md` and `ISSUES.md` coherent, preserves disagreements. |
+| **Implementation** | Builds the approved specification. Stops and reports if implementing it exposes a specification problem, rather than quietly changing the model to make coding easier. |
+
+**Review lenses** — these direct attention:
+
+| Lens | Looks for |
+|---|---|
+| **Physics** | Signs, limiting cases, hidden assumptions, model-versus-reality confusion, whether the experiment can actually produce the claimed observation, empirical values needing sourcing. |
+| **Pedagogy** | Conceptual sequence, prerequisites actually taught earlier, prediction-before-reveal present, formula-proofness, where a student could get the right answer for the wrong reason. **Structural properties only** — see below. |
+| **Verification / Red team** | Runs and adds tests, recomputes independently, attacks boundaries, asks what implementation could pass the tests while still being physically wrong. |
+
+> **The lenses improve coverage and direct attention. They do not produce
+> independent evidence.** Multiple outputs from the same model, the same context,
+> or the same reasoning chain are one route wearing several hats. A common-mode
+> error is invisible to all of them at once.
+
+Independence comes from exactly six places, and nowhere else:
+
+an independent calculation · an executable test by a different route ·
+an actual experiment · an external source · student observation · the human.
+
+**The pedagogy lens may not issue a verdict on whether something teaches.** That
+is validation, it requires students, and no agent can supply it. It may report on
+the structural properties above, which are checkable — several already are.
+
+---
+
+## §B · What is lost when one model plays every role
+
+The normal case is a single conversation. These are the properties that do not
+survive it, and what to do instead.
+
+| Mechanism | Single-conversation mode | Mitigation |
+|---|---|---|
+| Hard rules 1–13 | **Retained** — discipline works single-threaded | this file |
+| Specification before implementation | **Degrades badly.** The session that writes the spec then implements it, and implementation convenience leaks backwards into the model | commit `model.yaml` **before** code; the leak then has to appear as an edit |
+| Physics lens | attention retained, **independence absent** | independent calculation or external source |
+| Pedagogy lens | attention retained, **student validation absent** | student testing; nothing else discharges it |
+| Executable verification | **Retained, if genuinely a different route** | hard rule 2, and `verification[].independent_of` |
+| Disagreement between two roles | **Not independent evidence.** One model sampled twice | escalate under §0 |
+| Red-team independence | **Degrades strongly** | external review, experiment, or independent route |
+| Human authority | **Retained, and final** | §0 |
+
+Never write, in any form:
+
+```
+[PHYSICS]  I think X.
+[RED TEAM] I disagree; perhaps Y.
+[LEAD]     Two roles considered it, so it has been reviewed.
+```
+
+That is the failure this section exists to prevent.
+
+---
 
 ## Hard rules
 
@@ -81,6 +180,46 @@ The unhelpful output is a checklist of ✓ marks.
     something and cannot fix it now, it is only recorded if it is in one of
     those two files.
 
+13. **The physics lens owns the sourcing register.** Every empirical value
+    reaching a reader is either sourced — value or range, uncertainty,
+    conditions, citation — or carries ⚠ and an entry in `BACKLOG.md`.
+    **Identifying that a source is needed is not itself evidence, and neither is
+    supplying a remembered number.** The evidence is the external source. An
+    agent may not close a sourcing item from its own knowledge.
+
+---
+
+## §C · The lens structure is a hypothesis, and gets tested
+
+This architecture is a claim about our own process: that lenses catch things a
+single ordinary session would miss. Untested, it is a preference.
+
+It is tested on the next full lesson, under the rule the lessons themselves use —
+**commit before you see the result.**
+
+Before the multi-role run, and frozen in `docs/specs/`:
+
+1. **The baseline.** One ordinary session, fixed prompt and context. Its output
+   is written down and locked.
+2. **What counts as a substantive finding.** Defined in advance. A wording
+   improvement is not one; a wrong sign, an unsupported claim, an unperformable
+   instruction, or a missing prerequisite is.
+3. **What makes the lesson an adequate test.** Also in advance — at minimum one
+   novel physical model, one apparatus claim, and one empirical value needing
+   sourcing. This exists so that a null result cannot be explained away
+   afterwards as *"that lesson was too easy."*
+
+Then run the lenses without exposing the baseline, and compare only once both are
+frozen.
+
+**The consequence, pre-registered:** if the multi-role run produces no substantive
+finding the locked baseline missed, the architecture has not demonstrated value.
+Do not expand it. Check the adequacy criterion from step 3 — if the lesson met it,
+simplify or abandon the multi-role process and keep §B and the hard rules, which
+stand on their own.
+
+---
+
 ## Definition of done for a concept module
 
 - `model.yaml` declaring assumptions, governing law, implementation route,
@@ -90,3 +229,7 @@ The unhelpful output is a checklist of ✓ marks.
   implementation route
 - an MDX page that explains the idea and renders `<ModelPanel>`
 - captions naming the representational choices
+- every empirical value sourced or carrying ⚠ with a `BACKLOG.md` entry (rule 13)
+
+None of the above is satisfied by a page rendering, a suite passing, or an agent
+saying it looks correct.
