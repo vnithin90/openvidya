@@ -108,17 +108,72 @@ something on it before meeting the answer.
 
 # 5 · Activity
 
-## 5a · What can be done now — direction only
+## 5a · Direction only — **preferred design, feasibility not yet established**
 
-A charged rod and a light suspended object (foil strip or pith ball). Move the
-suspended object to each of the six marked positions and record **which way it is
+**Source: a small charged conducting sphere** — one of E2's own balls, fixed in
+place. **Probe: a second small sphere carrying charge of known sign**, suspended.
+Move the probe to each of the six marked positions and record **which way it is
 pushed**. Direction only. No magnitudes, no numbers.
 
-This produces a real, student-made map of directions around a source.
+The six positions are arranged **symmetrically**, and must include **two at equal
+distance in different directions** and **two in the same direction at different
+distances**. Without the first pair the student cannot see that direction does
+*not* matter; without the second, that distance does.
 
-⚠ **This interim is proposed, not ruled.** It follows the precedent of E2's
-ruling 6, which gave E2 a two-minute qualitative demonstration while its
-quantitative claim stayed blocked. **It requires an authority decision — §17.3.**
+### Why not a charged rod — computed, not assumed
+
+An earlier draft of this specification used a charged rod. The field of a rod is
+not radial, and the error is large enough to destroy the inference the lesson
+depends on. Rod of length L = 0.30 m, **centred at the origin** (tips at ±0.15 m);
+six positions on a circle of radius 0.25 m **about that centre**, clear of both
+tips:
+
+| position | misalignment from radial | \|E\| relative to weakest |
+|---|---|---|
+| 0° (on axis) | 0.0° | **1.82** |
+| 30° | 10.4° | 1.43 |
+| 60° | 7.4° | 1.09 |
+| 90° (broadside) | 0.0° | 1.00 |
+
+The student would find the push **1.8× stronger along the axis than broadside at
+the same distance** — comparable to the distance effect the lesson exists to
+show — and would map the rod's *shape* while believing they had mapped a law.
+
+For **an isolated charged conducting sphere, at points outside it and at equal
+radial distance from its centre**, spherical symmetry gives equal magnitude and
+radial direction. That qualification matters: it is a property of that geometry,
+not a general fact about fields.
+
+### Why the probe must be charged
+
+⚠ **A neutral probe measures a different experiment.** A neutral foil strip or
+pith ball is polarisable, so in the non-uniform field near any charged source it
+is drawn toward the stronger field — **toward the source, whatever the source's
+sign.** The resulting map points inward everywhere and is identical for a
+positive and a negative source. That is not a degraded map, it is an inverted
+one, and it is **E4's phenomenon** (*why does a charged comb attract neutral
+paper?*). E3 would demonstrate E4 while claiming to map E3.
+
+### Probe assumptions, stated rather than assumed away
+
+- `q_probe ≪ q_source`, so the probe does not appreciably alter the source.
+- The probe's presence induces some redistribution on a *conducting* source sphere. The leading correction has the same (a/d)³ form verified two independent ways in `scripts/verify-finite-sphere.py`:
+
+  | source radius | probe distance | perturbation |
+  |---|---|---|
+  | 10 mm | 150 mm | 0.12% |
+  | 10 mm | 100 mm | 0.40% |
+  | 20 mm | 100 mm | 3.2% |
+
+  At 10 mm and 100–150 mm this is **well below what a direction-only map could
+  resolve**. It is recorded as an assumption, not dismissed — and it becomes
+  significant if the probe is brought closer than about 5 source-radii.
+
+⚠ **Status: preferred design, not a settled one, and not yet ruled as an
+interim.** A small sphere holds far less charge than a rod, so the force on the
+probe is correspondingly weaker. **Whether this is performable at all is an
+experimental question, not a design decision** — see §17.3 and the bench
+questions in §15.
 
 ## 5b · What cannot be done yet — the quantitative map
 
@@ -140,7 +195,7 @@ Template v1 §B. Every screen describing a physical action is declared, and a
 | P1 empty point | `none` | thought experiment, explicitly |
 | P2 six-position sketch | `performable` | paper and pencil; means already held |
 | P3 timing | `none` | explicitly asked and explicitly not answered here |
-| 5a direction mapping | `performable` *(pending §17.3)* | rod and suspended object; E1's means |
+| 5a direction mapping | **`deferred`** *(was `performable`)* | **When: once the bench session confirms a charged probe reliably shows direction near a small charged sphere. Why held: the rod design it was written for produces a non-radial field that contradicts §6, and the sphere replacement has never been tried. §17.3.** |
 | **5b strength mapping** | **`deferred`** | **When: once B3 confirms the hanging pair settles faster than it leaks. Why held: the measurement needs a precision no one has yet demonstrated, and E3 will not describe a procedure whose feasibility is unverified.** |
 | Judgment J1 | `none` | — |
 | Simulation | `none` | computed, and marked as computed |
@@ -189,9 +244,19 @@ Then the second half, which is what separates E3 from a debate:
 
 The target answer, in the student's own terms: *something involving movement and
 timing.* If the first charge is jiggled and the second reacts **after a delay**,
-something had to travel — and something that travels has to be somewhere in
-between while it travels, which is A's account. If the reaction is **instant**,
-B's account survives.
+then the influence is **not instantaneous** — something about the electric state
+has to propagate from one place to the other, and a description that assigns a
+condition to each position handles that without alteration.
+
+**That is weaker than "A wins", deliberately.** A measured delay establishes
+finite-speed local propagation. It does not by itself establish that the field is
+a thing occupying the space, and an earlier draft of this specification said it
+did — *"something that travels has to be somewhere in between while it travels"* —
+which a student converts in one step into **an invisible fluid filling space**.
+That is exactly the ontology this lesson exists to avoid planting.
+
+The honest form: **the timing result decides whether the influence is
+instantaneous. It does not decide everything P1 asks.**
 
 **Nothing in this course measures that delay.** It is r/c — **3.3 nanoseconds
 across a metre**, computed, not recalled. Naming the criterion is the
@@ -199,11 +264,20 @@ achievement; reaching it is not.
 
 # 8 · Explanation
 
-Physicists chose **A**, and the honest form of that sentence at this level is:
+**Two separate things, and §8 must not merge them.**
+
+*What E3 established:* a reproducible pattern of force around a source, and that
+this pattern does not decide between the two accounts.
+
+*What modern physics does anyway:* **electromagnetism describes the interaction
+using electric and magnetic fields** — a condition assigned to every position,
+whether or not anything is there to feel it. That is not the result of a vote
+taken after looking at six arrows. It is the framework that turned out to work,
+for reasons that arrive later than this lesson.
 
 > The map is called the **field**. Treating it as something present at every
-> point — whether or not anything is there to feel it — is a **choice of
-> description** that electrostatics alone does not force.
+> point is a **choice of description** that electrostatics alone does not force —
+> and one that becomes far more than bookkeeping once charges move.
 
 The choice is not arbitrary, and the student is owed the reasons:
 
@@ -306,7 +380,22 @@ Model: `electric-field` (`src/content/fields/electric-field/model.yaml`, exists,
 
 1. ~~**What may E3 assert about the field's status?**~~ **RULED 11 Aug 2026: a judgment, left open with stated criteria.** Mirrors M3. The criteria are named in §7 and the debt recorded in §8.
 2. ~~**Does E3's activity inherit B3?**~~ **RULED 11 Aug 2026: declared `deferred` under template §B**, with when-and-why stated to the student.
-3. **Is the 5a qualitative direction map approved as an interim?** Follows E2 ruling 6's precedent but has not itself been ruled. **If refused, E3 has no bench action at all** and becomes a pure reasoning lesson — which is a defensible reading of `internal_to_theory`, and would make it the first such lesson in the course.
+3. **Is the 5a qualitative direction map performable at all?** No longer a design question — an experimental one, added to the B3 bench session. Eight things must hold, and any one can sink it:
+
+   | # | Question |
+   |---|---|
+   | 1 | How much charge does the source sphere retain, and for how long? |
+   | 2 | How much does the probe retain? |
+   | 3 | Does the probe keep its **sign** across all six readings? |
+   | 4 | Is the force large enough to beat the probe's weight and restoring torque? |
+   | 5 | Is the response distinguishable from air currents? |
+   | 6 | How fast does charge leak — the B3 question again, at smaller charge? |
+   | 7 | Does bringing the probe close enough to see a deflection perturb the source? (§5a puts this under 0.5% at ≥10 source-radii — to be confirmed, not assumed) |
+   | 8 | Are the six positions repeatable? |
+
+   **⚠ If 5a fails, this is not a small edit.** §6 and §7 both presuppose that six arrows exist — J1 opens *"two students look at the same six arrows."* With no measurement there are no arrows, and the only other source is the simulation, which the licence forbids as evidence. **J1 would need redesigning, not deleting**, and the honest fallback is a hypothetical framing (*"suppose you measured…"*) which is materially weaker. Costed here so the pure-reasoning branch is not mistaken for a cheap one.
+
+   That said: if the bench says no, a pure reasoning lesson **is** the scientifically honest outcome of an `internal_to_theory` node, not a failure.
 4. **Faraday history unsourced.** Same debt E2 §8a still carries. Neither should reach a student until traced.
 5. **Are field lines deferred to a later node, or is the deferral permanent at school level?** §9 defers them without saying where they land.
 6. **Does the cohort meet E3 before or after the magnetism strand?** M2's six-compass move and P2 are the same instrument. Whichever comes second gains a powerful "you have done this before"; whichever comes first pays for it. Currently unspecified, and it is a sequencing decision, not a content one.
