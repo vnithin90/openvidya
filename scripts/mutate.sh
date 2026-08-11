@@ -26,18 +26,40 @@ mutate () {
     printf "  %-46s \033[33mSED DID NOT APPLY\033[0m\n" "$name"
     mv "$file.bak" "$file"; return
   fi
-  local out
-  out=$(npx vitest run 2>&1 | grep -E "Tests +[0-9]" | tail -1)
+  local raw rc summary
+  raw=$(npx vitest run 2>&1); rc=$?
   mv "$file.bak" "$file"
 
-  if echo "$out" | grep -q "failed"; then
-    printf "  %-46s \033[32mcaught\033[0m   %s\n" "$name" "$out"
+  # Decide on the EXIT CODE, never on parsed prose.
+  #
+  # An earlier version grepped the summary line for the word "failed". It worked
+  # under vitest 2 and broke silently under vitest 4, which emits ANSI colour
+  # even when piped — so "Tests" and the number are separated by escape
+  # sequences and the pattern stopped matching. Every mutant was then reported
+  # as SURVIVED while the suite was in fact killing all fifteen.
+  #
+  # The instrument that measures whether the tests work must not itself depend
+  # on the shape of a human-readable line.
+  summary=$(printf '%s' "$raw" | sed 's/\x1b\[[0-9;]*m//g' | grep -E "Tests +[0-9]" | tail -1)
+
+  if [ "$rc" -ne 0 ]; then
+    printf "  %-46s \033[32mcaught\033[0m   %s\n" "$name" "$summary"
     PASS=$((PASS+1))
   else
-    printf "  %-46s \033[31mSURVIVED\033[0m %s\n" "$name" "${out:-no result}"
+    printf "  %-46s \033[31mSURVIVED\033[0m %s\n" "$name" "${summary:-no result}"
     FAIL=$((FAIL+1))
   fi
 }
+
+# Guard against the inverse failure: if the suite does not pass BEFORE any
+# mutation, every "caught" below would be meaningless.
+echo "baseline — the suite must be green before anything is broken on purpose"
+if ! npx vitest run >/dev/null 2>&1; then
+  echo "  baseline FAILED. Fix the suite before mutation testing means anything."
+  exit 1
+fi
+echo "  ok"
+echo
 
 PR=src/physics/projectile/model.ts
 EF=src/physics/electric-field/model.ts
@@ -72,4 +94,4 @@ if [ "$FAIL" -gt 0 ]; then
 fi
 
 echo "Restoring and confirming a clean run…"
-npx vitest run 2>&1 | grep -E "Tests +[0-9]|Test Files" | tail -2
+npx vitest run 2>&1 | sed 's/\x1b\[[0-9;]*m//g' | grep -E "Tests +[0-9]|Test Files" | tail -2
