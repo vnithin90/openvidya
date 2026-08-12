@@ -5,6 +5,7 @@
  */
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import DevJump from './DevJump';
 import {
   ApparatusScene,
   CancellationScene,
@@ -979,6 +980,22 @@ export default function E1Investigation() {
 
   return (
     <div>
+      <DevJump
+        label="E1"
+        steps={STEPS}
+        current={run.step}
+        onJump={go}
+        onSeed={() =>
+          setRun((r) => ({
+            ...r,
+            p1: 'attract', p1Locked: true, o1: 'repel',
+            p2: 'repel', p2Locked: true, o2: 'attract', o3: 'attract',
+            judge: 'B', judgeLocked: true,
+            falsify: 'both-at-once',
+            franklin: 'theory', franklinLocked: true,
+          }))
+        }
+      />
       {run.step !== 'entry' && <EpistemicStrip step={run.step} />}
       {run.step !== 'entry' && (
         <p className="note-soft" style={{ marginTop: '-0.75rem', marginBottom: '1rem' }}>

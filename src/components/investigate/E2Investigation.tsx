@@ -19,6 +19,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { predicted } from '../../physics/coulomb-force/model';
+import DevJump from './DevJump';
 import {
   ChargingFigure,
   ConductionFigure,
@@ -1224,6 +1225,23 @@ export default function E2Investigation() {
   const n = STEPS.indexOf(step);
   return (
     <div className="inv-card">
+      <DevJump
+        label="E2"
+        steps={[...STEPS, 'coulomb' as Step]}
+        current={step}
+        onJump={go}
+        onSeed={() =>
+          setRun((r) => ({
+            ...r,
+            p1: 'quarter', p1locked: true,
+            p2: 'big', p2locked: true,
+            p3: 'twice', p3locked: true,
+            r0: '200', r1: '126', r2: '79', r3: '52',
+            j1: 'B', j1locked: true,
+            j2: 'same', j2locked: true,
+          }))
+        }
+      />
       <Rail step={step} />
       {n >= 0 && (
         <p className="screen-of" aria-live="polite">

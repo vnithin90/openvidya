@@ -32,3 +32,8 @@ jobs:
 
       - name: Site builds
         run: npm run build
+
+      # A green build is not a working page, and a build that ships development
+      # tooling is not a shippable page. Both learned the hard way.
+      - name: Build ships nothing it should not
+        run: node scripts/check-build-clean.mjs
