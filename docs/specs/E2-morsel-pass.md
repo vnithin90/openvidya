@@ -34,7 +34,13 @@ problem in the middle and an *attention* problem at the end:
 | Passive stretch | Cost |
 |---|---|
 | `conduction → method → spares` | 718 words, 5.5 min, no student action — the technique-heavy run right before the bench |
-| **`model → history → ledger`** | **1,001 words, 30% of the lesson, 7.7 min with nothing to do — arriving *after* the bench work** |
+| **`model → history → ledger`** | **1,001 words of *mostly* passive post-bench material, 30% of the lesson, arriving when attention is spent** |
+
+⚠ *"Mostly", not "wholly" — an earlier draft called this a "1,001-word passive
+tail", which implies all of it should be converted. It should not.* `history` is
+a narrative and narratives do not survive chopping; it is labelled `KEEP` in the
+table below, and the summary language must not contradict the table. The
+convertible part is `model` + `ledger` = 673 words.
 
 ---
 
@@ -87,33 +93,81 @@ Three such beats already exist and must be protected:
 | 16 | `coulomb` | 292 | KEEP | Already optional and off-spine. Correctly placed. |
 | 17 | **`ledger`** | **243** | **CONVERT** | Currently tells the student what they established and did not. **Make them sort the claims first**, then reveal. Sorting your own evidence is harder and more revealing than reading someone else's summary — and it converts the lesson's last passive screen into its final judgment. |
 
-**Totals:** KEEP 10 · SPLIT 4 · DELAY 2 · CONVERT 2 · MERGE 0.
+### Totals — corrected 12 Aug
 
-Ten of seventeen screens are already one student-sized thought. The problem is
-concentrated in **`entry`, `encounter`, `method`, `model`, `ledger`** — five
-screens holding 1,588 words, 44% of the lesson.
+The first version of this table gave *"KEEP 10 · SPLIT 4 · DELAY 2 · CONVERT 2 ·
+MERGE 0"*, which sums to 18 labels across 17 screens. Review caught it. The
+cause was treating five labels as mutually exclusive when two of them are
+**modifiers**, not classes.
+
+**Primary action** — every screen gets exactly one:
+
+| | count |
+|---|---|
+| `KEEP` | **12** |
+| `SPLIT` | 4 |
+| `CONVERT` | 1 |
+| `MERGE` | 0 |
+| | **17** ✓ |
+
+**Secondary modifier** — applied on top:
+
+`DELAY` ×2 (`encounter`, `method`) · `CONVERT` ×1 (`model`)
+
+So: `encounter` = SPLIT + DELAY · `method` = SPLIT + DELAY ·
+`model` = SPLIT + CONVERT · `ledger` = CONVERT.
+
+**Twelve** of seventeen screens are already one student-sized thought — not ten.
+The correction strengthens the finding rather than weakening it: even more of E2
+is fine as it stands, and the problem is more concentrated than first stated.
+
+It sits in **`entry`, `encounter`, `method`, `model`, `ledger`** — five screens
+holding **1,548 words, about 43%** of the lesson.
+
+*(An earlier draft said 1,588 and 44%. 321+178+376+430+243 = 1,548. A
+transposition, in the summary line of a document whose whole argument is that
+measurement beats impression. Left visible.)*
 
 ---
 
 ## Two decisions this pass cannot make
 
 **D-a · Does the equilibrium insight move after the charge insight?**
-The review's chain runs *we can change q* → *equilibrium gives us F*. E2 runs the
+**RESOLVED — keep E2's current order.** Recorded here with the argument, and
+subject to the human authority under rule 1.
+
+The proposed chain ran *we can change q* → *equilibrium gives us F*. E2 runs the
 reverse: `encounter` establishes that the gap is the reading before any charge is
-touched.
+touched. The deciding argument is experimental design, not pacing:
 
-- **Review's order** is better by the morsel test: wanting to change q creates
-  the need for a way to see the effect.
-- **E2's order** avoids a student changing a quantity whose effect they cannot
-  yet read.
+> **Dependent variable first, then the manipulation.** E2 currently says *"we
+> have a measurable outcome; now we need a controlled way of changing something
+> that might cause it."* The alternative says *"we're changing charge and
+> watching something happen"* — which is a weaker description of what an
+> experiment is.
 
-Both defensible. This is a physics-authority decision, not a formatting one.
+**But make the causal link explicit**, which E2 currently leaves implicit. At the
+seam between `encounter` and `conduction`:
+
+> *"This angle is our way of seeing the force. Now we need a way to change the
+> charge without destroying that measurement."*
+
+That sentence is the morsel test applied to the seam itself: it gives the student
+a reason to want the next screen.
 
 **D-b · Do morsels become more screens, or cards within a screen?**
-Cards keep the click count down, but every reveal mechanism is a place where
-prediction-before-reveal can quietly break. A card that expands on request is
-fine. A card that shows its answer on scroll is not. **If cards are used, the
-reveal must be an action, never a scroll position.**
+**Leaning: cards, and few new screens.** A morsel is *one unresolved student
+need at a time* — which is not the same as *one screen per idea*. Turning 17
+screens into 25–30 trades a cognitive-load problem for a click-fatigue problem.
+
+`method` is the test case: three cards — *how do we get charge on?* · *why don't
+we need to know how much?* · *how do we deliberately halve it?* — can plausibly
+live in one screen.
+
+**Constraint, non-negotiable:** every reveal must be triggered by an **action**,
+never by scroll position. A card that expands on request is fine. A card that
+shows its answer because the student scrolled past it has broken
+prediction-before-reveal without anyone editing a word of prose.
 
 ---
 
@@ -126,6 +180,55 @@ this lesson has, and it is one experienced reader.
 
 **`BACKLOG.md` §2 — four to six students — is what settles it**, and this pass
 should be checked against them rather than shipped on confidence.
+
+---
+
+## Implementation order
+
+**1 · `ledger` — first, lowest risk, highest value.** Converts the author's
+judgment into the student's. Touches no apparatus and no lesson logic.
+
+**2 · `model` — second.** Split its five jobs. P1 and P3 are the best candidates
+for active recall because the student already committed to them — but do **not**
+turn every paragraph into an interaction.
+
+**3 · `method` — last, and only after students have been watched.** It contains
+the actual bench protocol. Making a procedure interactive for engagement risks
+making it *harder to execute at the bench*, which is a different and worse
+failure than being boring to read.
+
+### Designing the ledger sort — two traps
+
+**Trap 1 · the bins must not name what the lesson refuses to name.**
+A proposed claim list included *"the constant k was measured."* **E2 never
+introduces `k`.** The relation is shown as `F ∝ q₁q₂/r²` and §9 says the constant
+is *"missing on purpose"*. A sorting card that says "k" introduces `k` in order
+to sort it — the same species of error as the "source" morsel below, and it
+breaks *nothing is named before it is earned*.
+
+Phrase it without the symbol: **"the number that would turn the proportionality
+into an equation."**
+
+**Trap 2 · the bins must match the distinction the lesson taught.**
+Four bins — *established · supported but not established · known from elsewhere ·
+not determined* — asks the student to separate "supported but not established"
+from "not determined", which E2 never draws. What E2 **did** teach, at J1 and
+again in the ledger, is the difference between *fits everything I tried* and
+*is the law*. Three bins, matching that:
+
+| bin | the lesson's own words |
+|---|---|
+| My experiment established this | — |
+| My measurements fit this, but did not establish it | the J1 lesson, reused |
+| This came from somewhere else | Priestley, Cavendish, two centuries |
+
+**And keep it short.** Six claims × four bins, at the very end, after the bench,
+is a lot to ask of a tired student — and a tired student clicks through a sort
+just as readily as they click through prose. That would convert a passive screen
+into a **pseudo-active** one, which is worse, because it looks like engagement in
+the analytics and in the classroom.
+
+Three or four claims. Not six.
 
 ---
 
