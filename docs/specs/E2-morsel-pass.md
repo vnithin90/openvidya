@@ -193,19 +193,34 @@ should be checked against them rather than shipped on confidence.
 | `model` | SPLIT + CONVERT | ✅ built — split into `model` + `recall1` + `recall3` |
 | `entry` | SPLIT | — |
 | `encounter` | SPLIT + DELAY | — |
-| `method` | SPLIT + DELAY | held, deliberately, until students are watched |
+| `method` | SPLIT + DELAY | ✅ built — split into `charging` + `ratios` + `halving`, table delayed to `judge2`, and two commitments added |
 
 Measured after both changes:
 
 | | before | after |
 |---|---|---|
-| screens | 16 | 18 |
-| largest screen | 430 w | **376 w** |
-| screens with a student action | 6 of 16 | **9 of 18** |
-| longest passive stretch | 1,001 w | **718 w** |
+| screens | 16 | 21 |
+| largest screen | 430 w | **341 w** |
+| screens with a student action | 6 of 16 | **11 of 21** |
+| longest passive stretch | 1,001 w | **499 w** |
 
-The remaining 718-word stretch is `conduction → method → spares`, which is the
-concurrency problem the pass named — and it is untouched by design.
+**The concurrency run is done.** `conduction → method → spares` was 718 words
+across three screens with nothing to do. It is now six screens with two
+commitments, and neither touches the bench protocol — `charging` and `halving`
+are still plain instructions, because making a procedure interactive for
+engagement risks making it harder to *perform*.
+
+The two commitments were already latent in the prose:
+
+- **`sharing`** — E2 used to assert the equal split and then admit, in the very
+  next card, that it is a symmetry argument nobody has measured. Asking first
+  costs one screen and turns that admission into the payoff.
+- **`ratios`** — the student has just been told to rub a rod an unspecified
+  number of times. *"What if you rubbed twice as hard?"* is the question they
+  already have, and the answer is the screen's own point.
+
+The longest remaining passive stretch is now **`entry → encounter`, 499 words**
+at the very start — which is `entry`'s SPLIT, still outstanding.
 
 **A leak found while doing this, not by review.** `model` carried a three-way
 panel headed *your experiment established · established by other evidence ·

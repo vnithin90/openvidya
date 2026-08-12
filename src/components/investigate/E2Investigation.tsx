@@ -36,6 +36,8 @@ type P2 = 'big' | 'small' | 'equal';
 type P3 = 'same' | 'twice' | 'four' | 'other';
 type J1 = 'A' | 'B';
 type J2 = 'bigout' | 'smallout' | 'same';
+type Share = 'all' | 'half' | 'most' | 'depends';
+type Ratio = 'double' | 'unchanged' | 'half' | 'unsure';
 
 /**
  * The closing ledger, as a judgment rather than a summary.
@@ -111,7 +113,7 @@ export const CLAIMS: { id: string; text: string; answer: Bin; why: string }[] = 
 type Step =
   | 'entry' | 'encounter'
   | 'predict1' | 'predict2' | 'predict3'
-  | 'conduction' | 'method' | 'spares'
+  | 'conduction' | 'sharing' | 'charging' | 'ratios' | 'halving' | 'spares'
   | 'observe' | 'compare'
   | 'judge1' | 'explore'
   | 'judge2' | 'model' | 'recall1' | 'recall3' | 'history' | 'ledger'
@@ -122,7 +124,7 @@ type Step =
 const STEPS: Step[] = [
   'entry', 'encounter',
   'predict1', 'predict2', 'predict3',
-  'conduction', 'method', 'spares',
+  'conduction', 'sharing', 'charging', 'ratios', 'halving', 'spares',
   'observe', 'compare',
   'judge1', 'explore',
   'judge2', 'model', 'recall1', 'recall3', 'history', 'ledger',
@@ -140,7 +142,10 @@ export const BENCH_ACTIONS: Record<Step, 'none' | 'performable' | 'deferred'> = 
   predict2: 'deferred',
   predict3: 'deferred',
   conduction: 'performable',
-  method: 'performable',
+  sharing: 'none',
+  charging: 'performable',
+  ratios: 'none',
+  halving: 'performable',
   spares: 'performable',
   observe: 'performable',
   compare: 'none',
@@ -167,6 +172,11 @@ interface RunState {
   /** Active recall of P1 and P3, derived from the relation rather than told. */
   recall1?: P1; recall1locked: boolean;
   recall3?: P3; recall3locked: boolean;
+  /* Two commitments added to break up the technique run, which was 718 words
+   * across three screens with nothing to do. Neither touches the bench
+   * protocol — they are about understanding it, not performing it. */
+  share?: Share; sharelocked: boolean;
+  ratio?: Ratio; ratiolocked: boolean;
 }
 
 const STORAGE_KEY = 'openvidya-e2-run-v1';
@@ -185,6 +195,8 @@ function defaultRun(): RunState {
     sortLocked: false,
     recall1locked: false,
     recall3locked: false,
+    sharelocked: false,
+    ratiolocked: false,
   };
 }
 
@@ -552,6 +564,10 @@ export default function E2Investigation() {
         );
 
       /* -------------------------------------------------------- conduction */
+      /* KEEP — one thought: metal shares, rubber does not, therefore you have
+       * an instrument. It used to go on and give away the equal split as well,
+       * which is the best prediction available in this whole run. That moved to
+       * `sharing`. */
       case 'conduction':
         return (
           <>
@@ -561,28 +577,77 @@ export default function E2Investigation() {
             <ConductionFigure />
             <p>Touch a charged metal ball once, anywhere, and it loses everything — the pair drops straight down. Touch one patch of a rubbed balloon and the rest carries on attracting.</p>
             <div className="card accent">
-              <p style={{ marginTop: 0 }}><strong>In metal, charge moves freely. In rubber it does not.</strong></p>
-              <p style={{ marginBottom: 0 }}>
-                Which gives you an instrument. Touch a charged metal ball to an identical uncharged one.
-                The two are the same size, the same metal, in the same situation — so there is nothing
-                to make the charge prefer one over the other. It ends up <strong>split equally</strong>.
-                Each carries half.
-              </p>
+              <p style={{ margin: 0 }}><strong>In metal, charge moves freely. In rubber it does not.</strong> Which is about to give you an instrument.</p>
             </div>
-            <div className="card warn">
-              <p style={{ margin: 0 }}>
-                <strong>Being straight with you about that last step.</strong> The equal split is a{' '}
-                <em>symmetry argument</em>, not something you have measured. Nothing you do today tests
-                it — and it turns out nothing you <em>could</em> do with this apparatus would test it
-                either. We are asking you to take it, and telling you that we are.
-              </p>
-            </div>
-            <div className="actions"><Back to="predict3" /><Next to="method" label="How the measurement works" /></div>
+            <div className="actions"><Back to="predict3" /><Next to="sharing" label="An instrument?" /></div>
           </>
         );
 
-      /* ------------------------------------------------------------ method */
-      case 'method':
+      /* NEW COMMITMENT. E2 used to assert the equal split and then admit, in the
+       * next card, that it is a symmetry argument nobody has measured. Asking
+       * first costs one screen and turns that admission into the payoff: the
+       * student has staked something, and is then told the evidence does not
+       * exist. That is the lesson's whole posture, applied to its own method. */
+      case 'sharing': {
+        const right = run.share === 'half';
+        return (
+          <>
+            <p className="kicker">Before you can measure</p>
+            <h2 style={{ marginTop: '.2rem' }}>Two identical balls touch. Then what?</h2>
+            <p>
+              One is charged. The other is identical to it in every way you can check — same size,
+              same metal, same weight — and carries nothing. You touch them together, then separate
+              them again.
+            </p>
+            <p><strong>How much charge does each one have afterwards?</strong></p>
+            <Choices
+              options={[
+                { id: 'all' as Share, label: 'The first one keeps it all' },
+                { id: 'half' as Share, label: 'Half each' },
+                { id: 'most' as Share, label: 'Most stays on the first, a little moves across' },
+                { id: 'depends' as Share, label: 'It depends how long they touch' },
+              ]}
+              value={run.share}
+              locked={run.sharelocked}
+              onPick={(v) => set('share', v)}
+            />
+            {run.sharelocked ? (
+              <>
+                <div className={`card ${right ? 'accent' : 'warn'}`}>
+                  <p style={{ marginTop: 0 }}>
+                    <strong>Half each.</strong> The two are the same size, the same metal, in the
+                    same situation — so there is nothing to make the charge prefer one over the
+                    other. It ends up split equally.
+                  </p>
+                  <p style={{ marginBottom: 0 }}>
+                    That is your instrument. You cannot move the balls, but you can now{' '}
+                    <strong>halve the charge on one, exactly, whenever you like.</strong>
+                  </p>
+                </div>
+                <div className="card warn">
+                  <p style={{ margin: 0 }}>
+                    <strong>Being straight with you about that answer.</strong> The equal split is a{' '}
+                    <em>symmetry argument</em>, not something anyone has measured. Nothing you do
+                    today tests it — and it turns out nothing you <em>could</em> do with this
+                    apparatus would test it either. We are asking you to take it, and telling you
+                    that we are.
+                  </p>
+                </div>
+                <div className="actions"><Next to="charging" label="First, get charge onto them" /></div>
+              </>
+            ) : (
+              <div className="actions">
+                <button className="btn primary" disabled={!run.share} onClick={() => set('sharelocked', true)}>Commit</button>
+              </div>
+            )}
+          </>
+        );
+      }
+
+      /* SPLIT 1 of 3 — the charging procedure, alone. Deliberately still a plain
+       * instruction: this is the bench protocol, and making a procedure
+       * interactive for engagement risks making it harder to execute. */
+      case 'charging':
         return (
           <>
             <p className="kicker">The method</p>
@@ -591,53 +656,91 @@ export default function E2Investigation() {
             <ChargingFigure />
             <p>
               <strong>Do it while they are still touching.</strong> Uncharged, the two hang straight
-              down — against each other. So charge arriving finds two identical balls in contact: the
-              situation you just met, with the same answer. They share it evenly, push apart, and
-              separating breaks the contact, which fixes the split.
+              down — against each other. So charge arriving finds two identical balls in contact:
+              the situation you just met, with the same answer. They share it evenly, push apart,
+              and separating breaks the contact, which fixes the split.
             </p>
-            <div className="card accent">
-              <p style={{ marginTop: 0 }}><strong>You will never find out how much charge you put on. You do not need to.</strong></p>
-              <p style={{ marginBottom: 0 }}>
-                Every number here is a <em>ratio</em> — one separation compared with the one before it.
-                Rub the rod twice as hard and both grow together; the ratio does not move. A measurement
-                that does not depend on a quantity you cannot control is a much better measurement than
-                one that does.
-              </p>
-            </div>
-            <div className="card quiet">
-              <p style={{ marginTop: 0 }}><strong>Three different “the same” — worth keeping apart.</strong></p>
-              <table className="results">
-                <tbody>
-                  <tr><td>The two balls must have <strong>the same mass</strong></td><td>required</td></tr>
-                  <tr><td>Contact must split charge <strong>into two equal halves</strong></td><td>required</td></tr>
-                  <tr><td>The two balls must start with <strong>the same amount of charge</strong></td><td>not required</td></tr>
-                </tbody>
-              </table>
-              <p style={{ marginBottom: 0 }}>
-                The last one surprises people. Halving <em>both</em> divides the product of the two
-                charges by four every round, whatever the two started at — so every ratio comes out the
-                same either way. The first two you cannot do without.
-              </p>
-            </div>
-            <h2>Now: you cannot move them, so change the charge instead.</h2>
+            <div className="actions"><Back to="sharing" /><Next to="ratios" label="But how much did I put on?" /></div>
+          </>
+        );
+
+      /* SPLIT 2 of 3 + NEW COMMITMENT. This morsel answers a question the student
+       * now definitely has, having just been told to rub a rod an unspecified
+       * number of times. The prediction is the screen's own point. */
+      case 'ratios': {
+        const right = run.ratio === 'unchanged';
+        return (
+          <>
+            <p className="kicker">The method</p>
+            <h2 style={{ marginTop: '.2rem' }}>You have no idea how much charge you just put on.</h2>
+            <p>
+              No dial, no reading, no way to check. Rub harder and you get more; rub on a damp day
+              and you get less. Two students following the same instructions will not have the same
+              amount.
+            </p>
+            <p><strong>Suppose you rubbed the rod twice as hard. What happens to the separations you are about to measure?</strong></p>
+            <Choices
+              options={[
+                { id: 'double' as Ratio, label: 'Every separation doubles' },
+                { id: 'unchanged' as Ratio, label: 'They all get bigger, but the ratio between them does not change' },
+                { id: 'half' as Ratio, label: 'The separations get smaller' },
+                { id: 'unsure' as Ratio, label: 'No way to tell without knowing the charge' },
+              ]}
+              value={run.ratio}
+              locked={run.ratiolocked}
+              onPick={(v) => set('ratio', v)}
+            />
+            {run.ratiolocked ? (
+              <>
+                <div className={`card ${right ? 'accent' : 'warn'}`}>
+                  <p style={{ marginTop: 0 }}>
+                    <strong>The ratio does not move.</strong> Every number in this experiment is one
+                    separation compared with the one before it. Rub the rod twice as hard and both
+                    grow together; the comparison is untouched.
+                  </p>
+                  <p style={{ marginBottom: 0 }}>
+                    <strong>You will never find out how much charge you put on, and you do not need
+                    to.</strong> A measurement that does not depend on a quantity you cannot control
+                    is a much better measurement than one that does.
+                  </p>
+                </div>
+                <div className="actions"><Next to="halving" label="Now change the charge" /></div>
+              </>
+            ) : (
+              <div className="actions">
+                <button className="btn primary" disabled={!run.ratio} onClick={() => set('ratiolocked', true)}>Commit</button>
+              </div>
+            )}
+          </>
+        );
+      }
+
+      /* SPLIT 3 of 3 — the halving operation and looking after a spare. The
+       * three-kinds-of-"same" table used to sit in this run; it moved to judge2,
+       * where the lopsided pair finally gives the student a reason to ask
+       * whether the two balls must start equal. */
+      case 'halving':
+        return (
+          <>
+            <p className="kicker">The method</p>
+            <h2 style={{ marginTop: '.2rem' }}>You cannot move them, so change the charge instead.</h2>
             <p>The separation is a reading. But the <em>charge</em> is something you can change, and now you know how: touch each hanging ball with a fresh uncharged sphere, and it keeps half.</p>
             <HalvingFigure />
             <p><strong>Both balls, every round</strong>, each with its own <em>uncharged</em> sphere. A spare that has just been used is carrying half of what it took; put it straight back and it averages two charged balls instead of halving one.</p>
             <div className="card quiet">
               <p style={{ marginTop: 0 }}><strong>You can reuse a spare — reset it first.</strong></p>
               <p style={{ marginBottom: 0 }}>
-                Touch it properly with your hand. You saw a moment ago what that does to a charged piece
-                of metal: it loses the lot. Then put it back through the spare-check below before it goes
-                near the experiment again. The method only ever needs two clean spares at once — six
-                means you are rarely waiting for one, and the later parts of the investigation need
-                spares too.
+                Touch it properly with your hand. You saw a moment ago what that does to a charged
+                piece of metal: it loses the lot. Then put it back through the spare-check below
+                before it goes near the experiment again. The method only ever needs two clean
+                spares at once — six means you are rarely waiting for one, and the later parts of
+                the investigation need spares too.
               </p>
             </div>
-            <div className="actions"><Back to="conduction" /><Next to="spares" label="One thing left to check" /></div>
+            <div className="actions"><Back to="ratios" /><Next to="spares" label="One thing left to check" /></div>
           </>
         );
 
-      /* ------------------------------------------------------------ spares */
       case 'spares':
         return (
           <>
@@ -657,7 +760,7 @@ export default function E2Investigation() {
                 that always says yes is not a test.
               </p>
             </div>
-            <div className="actions"><Back to="method" /><Next to="observe" label="Record my measurements" /></div>
+            <div className="actions"><Back to="halving" /><Next to="observe" label="Record my measurements" /></div>
           </>
         );
 
@@ -929,6 +1032,25 @@ export default function E2Investigation() {
                 <p>Set up two arrangements: both balls halved once, and one ball halved twice with the other untouched. Very different-looking pairs.</p>
                 <ProductFigure />
                 <p>They hang at <strong>the same separation</strong>. What the two charges are, individually, turns out not to matter — only what you get when you multiply them.</p>
+                {/* DELAYED here from the old `method` screen. At `method` the
+                    student had no reason to wonder whether the two balls must
+                    start equal — the question does not exist until the lopsided
+                    pair puts it in front of them. It exists now. */}
+                <div className="card quiet">
+                  <p style={{ marginTop: 0 }}><strong>Which "the same" did you actually need?</strong> Three of them get confused, and only two are required.</p>
+                  <table className="results">
+                    <tbody>
+                      <tr><td>The two balls must have <strong>the same mass</strong></td><td>required</td></tr>
+                      <tr><td>Contact must split charge <strong>into two equal halves</strong></td><td>required</td></tr>
+                      <tr><td>The two balls must start with <strong>the same amount of charge</strong></td><td>not required</td></tr>
+                    </tbody>
+                  </table>
+                  <p style={{ marginBottom: 0 }}>
+                    The last one surprises people, and you have just watched why. Halving <em>both</em>
+                    divides the product by four every round, whatever the two started at — so every
+                    ratio comes out the same either way. The first two you cannot do without.
+                  </p>
+                </div>
                 <div className="actions"><Next to="model" label="Write it down" /></div>
               </>
             ) : (
@@ -1338,6 +1460,8 @@ export default function E2Investigation() {
             j2: 'same', j2locked: true,
             recall1: 'quarter', recall1locked: true,
             recall3: 'four', recall3locked: true,
+            share: 'half', sharelocked: true,
+            ratio: 'unchanged', ratiolocked: true,
           }))
         }
       />
