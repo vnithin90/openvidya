@@ -219,9 +219,85 @@ const { title, strand } = Astro.props as Props;
   .youmark { fill: var(--brass); }
   .youlab { font-size: 11px; fill: var(--brass); font-weight: 700; }
 
+  /* ======================================================== E1 figures ===
+     Restored 12 Aug. The Astro port had shipped with one CSS div balloon where
+     the static tree had seven SVG scenes across nineteen call sites. */
+
+  /* THE ONE RULE THAT MUST NOT BE TIDIED.
+     The swinging groups rotate about the point where the thread meets the rail,
+     which is local (0, 14) — the top of the group's own box. `fill-box` makes
+     the percentage resolve against that box. Without it the percentage resolves
+     against the whole viewBox instead and the threads tear away from the rail
+     the moment a balloon swings. */
+  .swing { transform-box: fill-box; transform-origin: 50% 0; transition: transform .5s ease; }
+
+  .stand-bar.thin { stroke-width: 2.4; }
+  .stage.tight { padding: .2rem 0 .4rem; }
+  svg.scene.narrow { max-width: 330px; }
+  svg.mini { width: 100%; max-width: 176px; height: auto; }
+
+  .skin { fill: #f2d6bd; stroke: #d9b394; stroke-width: 1; }
+  .eye { fill: #3d5259; }
+  /* Hair is a covering MASS with strands pulled out of it. A bare scalp with
+     spikes reads as a cartoon electrocution, which is the wrong idea entirely —
+     the hair is being pulled, not shocked. */
+  .hair-mass { fill: #6b4f3a; }
+  .hair { stroke: #6b4f3a; stroke-width: 1.9; fill: none; stroke-linecap: round; }
+  .hair.thin { stroke-width: 1.4; }
+  .hairset .hair { transition: d .5s ease; }
+
+  .pairline { stroke: #dfe6e8; stroke-width: 1.4; }
+  .kind-pos { fill: var(--kind-b); }
+  .kind-neg { fill: var(--kind-a); }
+  .glyph { fill: #fff; font-size: 13px; font-weight: 700; }
+  .boxframe { fill: #fff; stroke: var(--line); stroke-width: 2; }
+  .reel { fill: #c8d3d7; }
+  .reel-core { fill: #e8eef0; }
+
+  svg.portrait { width: 100%; max-width: 190px; height: auto; display: block; margin: 0 auto; }
+  .fr-coat { fill: #4a5b6b; }
+  .fr-fur { fill: #8b8377; }
+  .fr-hair { fill: #cfd4d8; }
+  .fr-strand { stroke: #cfd4d8; stroke-width: 2.2; fill: none; stroke-linecap: round; }
+  .fr-line { stroke: #b08d70; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+  .fr-spec ellipse { fill: none; stroke: #3d5259; stroke-width: 1.6; }
+  .fr-spec line { stroke: #3d5259; stroke-width: 1.6; }
+  .figure-inline { display: grid; place-items: center; margin: 1rem 0; }
+  .figure-inline .note-soft { text-align: center; margin-top: .4rem; }
+
+  .limb { stroke: #4a5b6b; stroke-width: 3; stroke-linecap: round; }
+  .floorline { stroke: var(--line); stroke-width: 2; }
+  .wax { fill: #e8dfc8; stroke: #cbbf9e; stroke-width: 1; }
+  .wax-txt { font-size: 9px; fill: #8a7a52; }
+  .tube { fill: #d6e9f5; stroke: #9cc2d8; stroke-width: 1.2; }
+  .spark { stroke: var(--brass); stroke-width: 2; fill: none; stroke-linecap: round; }
+  .flow { stroke: var(--brass); stroke-width: 1.8; fill: none; stroke-dasharray: 5 4; }
+  .flow-txt { font-size: 10.5px; fill: var(--brass); font-weight: 600; }
+  .pill { fill: #eef2f3; }
+  .pill.plus { fill: #e3edfa; }
+  .pill.minus { fill: #fbe7e3; }
+  .pill-txt { font-size: 11px; font-weight: 700; fill: var(--ink-2); }
+  .pill-txt.plus { fill: var(--kind-b); }
+  .pill-txt.minus { fill: var(--kind-a); }
+
+  /* The three-result summary. Rows 1 and 3 are near-identical pictures with
+     opposite outcomes — the captions have to carry that, not the drawing. */
+  .triad { display: grid; grid-template-columns: repeat(3, 1fr); gap: .7rem; margin: 1.2rem 0; }
+  .triad-cell { border: 1px solid var(--line); border-radius: 12px; padding: .6rem; background: #fff;
+                display: flex; flex-direction: column; align-items: center; gap: .4rem; }
+  .triad-out { font-size: .72rem; font-weight: 700; letter-spacing: .05em; text-align: center;
+               padding: .25rem .5rem; border-radius: 6px; width: 100%; }
+  .triad-out.repel { background: #fbe7e3; color: var(--kind-a); }
+  .triad-out.attract { background: #e3edfa; color: var(--kind-b); }
+
   @media (max-width: 640px) {
     .models, .threeway, .ledger { grid-template-columns: 1fr; }
     .datarow { grid-template-columns: 1fr; gap: .25rem; }
+    .triad { grid-template-columns: 1fr; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .swing, .hairset .hair { transition: none; }
   }
   * {
     box-sizing: border-box;

@@ -5,6 +5,15 @@
  */
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  ApparatusScene,
+  CancellationScene,
+  FranklinExperiment,
+  FranklinPortrait,
+  HairScene,
+  MiniScene,
+  PairScene,
+} from './scenes/E1Scenes';
 
 type Trio = 'attract' | 'repel' | 'nothing';
 type JudgePick = 'A' | 'B' | 'both' | 'neither';
@@ -255,6 +264,7 @@ export default function E1Investigation() {
                 About 20–30 minutes with real objects. Humidity can kill the effect — a dry day
                 helps.
               </p>
+              <ApparatusScene />
             </div>
             <div className="inv-actions">
               <button type="button" className="inv-btn primary" onClick={() => go('encounter')}>
@@ -273,7 +283,8 @@ export default function E1Investigation() {
               Rubbing something, then it pulls hair or paper. We will use two balloons — but before
               we name anything, we need your expectations.
             </p>
-            <BalloonStage caption="Two balloons — result not shown yet" />
+            {/* Hanging straight down: the result is not shown before the prediction. */}
+            <PairScene angle={0} leftLabel="rubbed" rightLabel="rubbed" />
             <div className="inv-actions">
               <button type="button" className="inv-btn primary" onClick={() => go('predict1')}>
                 Continue
@@ -347,6 +358,14 @@ export default function E1Investigation() {
                 <li>Let go. Watch for a few seconds.</li>
               </ol>
             </div>
+            {/* Draws what the student reports, after they report it — never before. */}
+            {run.o1 && (
+              <PairScene
+                angle={run.o1 === 'repel' ? 17 : run.o1 === 'attract' ? -9 : 0}
+                leftLabel="rubbed"
+                rightLabel="rubbed"
+              />
+            )}
             <p className="inv-lead">What happened?</p>
             <ChoiceList
               options={[
@@ -386,6 +405,9 @@ export default function E1Investigation() {
               Take one rubbed balloon. Bring it near your hair (gently). What do you think will
               happen?
             </p>
+            {/* lift = 0: the hair is drawn hanging, so the picture states the setup
+                and not the outcome. */}
+            <HairScene lift={0} />
             {!run.p2Locked ? (
               <>
                 <ChoiceList
@@ -433,6 +455,7 @@ export default function E1Investigation() {
             <div className="inv-proto">
               Bring the rubbed balloon near your hair. Watch what happens.
             </div>
+            {run.o2 && <HairScene lift={run.o2 === 'attract' ? 1 : 0} />}
             <p className="inv-lead">What happened?</p>
             <ChoiceList
               options={[
@@ -468,6 +491,15 @@ export default function E1Investigation() {
               Rub <strong>only one</strong> balloon. Bring it near a balloon you did{' '}
               <strong>not</strong> rub.
             </div>
+            {/* Same picture as observe1 but for the labels — which is the point.
+                Nothing visible distinguishes a rubbed balloon from an unrubbed one. */}
+            {run.o3 && (
+              <PairScene
+                angle={run.o3 === 'attract' ? -11 : run.o3 === 'repel' ? 17 : 0}
+                leftLabel="rubbed"
+                rightLabel="straight from the packet"
+              />
+            )}
             <p className="inv-lead">What do you see?</p>
             <ChoiceList
               options={[
@@ -496,6 +528,24 @@ export default function E1Investigation() {
           <div className="inv-card">
             <p className="inv-kicker">Conflict</p>
             <h2 className="inv-title">Three rows. One story has to change.</h2>
+            {/* The SAME rubbed balloon is on the left in all three. Only the partner
+                changes — so rows 1 and 3 are near-identical pictures with opposite
+                outcomes, which is exactly the point. The captions carry it, because
+                nothing visible distinguishes a rubbed balloon from an unrubbed one. */}
+            <div className="triad">
+              <div className="triad-cell">
+                <MiniScene kind="pair" />
+                <div className="triad-out repel">PUSHED APART</div>
+              </div>
+              <div className="triad-cell">
+                <MiniScene kind="hair" />
+                <div className="triad-out attract">PULLED TOGETHER</div>
+              </div>
+              <div className="triad-cell">
+                <MiniScene kind="plain" />
+                <div className="triad-out attract">PULLED TOGETHER</div>
+              </div>
+            </div>
             <table className="conflict-table">
               <thead>
                 <tr>
@@ -714,6 +764,14 @@ export default function E1Investigation() {
                 Benjamin Franklin also found that rubbing could leave bodies in different electrical
                 states. He chose temporary names: plus and minus.
               </p>
+              {/* Drawn, not photographed: the site ships no binary assets and makes
+                  no network requests. Not a likeness, and the caption says so. */}
+              <div className="figure-inline">
+                <FranklinPortrait />
+                <p className="note-soft">
+                  An illustration, not a likeness — drawn in the site’s own line style.
+                </p>
+              </div>
               <blockquote>
                 “These Terms we may use till your Philosophers give us better.”
                 <br />
@@ -721,6 +779,14 @@ export default function E1Investigation() {
                   — Franklin to Collinson, 1747
                 </span>
               </blockquote>
+              {/* The quotation says "B … positively; A negatively" and the prose never
+                  says who A and B are. The diagram names them. */}
+              <FranklinExperiment />
+              <p className="note-soft">
+                Fire leaves <strong>A</strong>, who rubs the tube, and collects in{' '}
+                <strong>B</strong>, who draws it off. <strong>C</strong>, standing on the floor,
+                passes it back along: B → C → A.
+              </p>
               <p className="inv-lead">What do you think he meant by “better”?</p>
               {!run.franklinLocked ? (
                 <>
@@ -813,6 +879,13 @@ export default function E1Investigation() {
                 Example: 500 of each kind → Q<sub>net</sub> = 0, but 1000 units are still present.
               </span>
             </div>
+            {/* Ten pairs standing in for 500 of each. Every pair cancels and nothing
+                is removed, so the box stays visibly full while the net reads zero. */}
+            <CancellationScene />
+            <p className="note-soft">
+              Ten pairs are drawn, standing in for five hundred of each kind. The scale is a
+              stand-in; the cancelling is not.
+            </p>
             <p className="inv-lead">
               <strong>Zero net charge does not mean zero charge.</strong>
             </p>
@@ -885,9 +958,24 @@ export default function E1Investigation() {
     }
   }, [run, go]);
 
-  if (!hydrated) {
-    return <p className="note-soft">Loading investigation…</p>;
-  }
+  /* No "Loading…" gate here, deliberately.
+   *
+   * This component used to return `<p>Loading investigation…</p>` until the
+   * hydration effect had run. The guard existed for a real reason — `loadRun()`
+   * reads localStorage, which the server cannot see, so rendering the stored
+   * step on the server would mismatch the client.
+   *
+   * But it made the entire lesson depend on JavaScript succeeding. On 12 Aug an
+   * Astro upgrade broke hydration and E1 showed "Loading investigation…"
+   * forever, with no content in the served HTML at all. E2, which renders its
+   * screens server-side, showed screen 1 and merely failed to advance — the
+   * same fault, far more diagnosable.
+   *
+   * So: server and first client render both use `defaultRun()`, which match, and
+   * the stored run is applied by the effect afterwards. A student on a slow
+   * connection sees the first screen instead of a spinner, and a broken build
+   * degrades to a readable page rather than a blank one.
+   */
 
   return (
     <div>
