@@ -114,7 +114,7 @@ type Step =
   | 'conduction' | 'method' | 'spares'
   | 'observe' | 'compare'
   | 'judge1' | 'explore'
-  | 'judge2' | 'model' | 'history' | 'ledger'
+  | 'judge2' | 'model' | 'recall1' | 'recall3' | 'history' | 'ledger'
   | 'coulomb';
 
 /** The spine. `coulomb` is deliberately absent — it is optional, and must not
@@ -125,7 +125,7 @@ const STEPS: Step[] = [
   'conduction', 'method', 'spares',
   'observe', 'compare',
   'judge1', 'explore',
-  'judge2', 'model', 'history', 'ledger',
+  'judge2', 'model', 'recall1', 'recall3', 'history', 'ledger',
 ];
 
 /**
@@ -148,6 +148,8 @@ export const BENCH_ACTIONS: Record<Step, 'none' | 'performable' | 'deferred'> = 
   explore: 'none',
   judge2: 'performable',
   model: 'none',
+  recall1: 'none',
+  recall3: 'none',
   history: 'none',
   ledger: 'none',
   coulomb: 'none',
@@ -162,6 +164,9 @@ interface RunState {
   j1?: J1; j1locked: boolean;
   j2?: J2; j2locked: boolean;
   sort: Record<string, Bin>; sortLocked: boolean;
+  /** Active recall of P1 and P3, derived from the relation rather than told. */
+  recall1?: P1; recall1locked: boolean;
+  recall3?: P3; recall3locked: boolean;
 }
 
 const STORAGE_KEY = 'openvidya-e2-run-v1';
@@ -178,6 +183,8 @@ function defaultRun(): RunState {
     j2locked: false,
     sort: {},
     sortLocked: false,
+    recall1locked: false,
+    recall3locked: false,
   };
 }
 
@@ -933,6 +940,18 @@ export default function E2Investigation() {
         );
 
       /* ------------------------------------------------------------- model */
+      /* SPLIT, per docs/specs/E2-morsel-pass.md. This screen carried five jobs
+       * in 430 words: the relation, a three-way ledger, why the constant is
+       * absent, P1 answered, P3 answered. It now carries one — the compression
+       * and what is deliberately missing from it. P1 and P3 became recall1 and
+       * recall3, where the student derives them instead of being told.
+       *
+       * THE THREE-WAY PANEL WAS DELETED, not moved, and that fixed a leak I had
+       * introduced. Its columns were "your experiment established / established
+       * by other evidence / still open" — which is the ledger sort's three bins,
+       * displayed four screens before the student is asked to classify anything.
+       * The sort was being answered in advance by a panel written long before
+       * the sort existed. */
       case 'model':
         return (
           <>
@@ -940,36 +959,6 @@ export default function E2Investigation() {
             <h2 style={{ marginTop: '.2rem' }}>All of that, in one line.</h2>
             <p>Two things came out of the bench. The push depends on <strong>both</strong> charges, and your measurements fit their product. And it falls off with distance <strong>faster than simple proportion</strong> — that much your halvings did settle, because the 1/r tick was never close.</p>
             <div className="eq">F &nbsp;∝&nbsp; q<span className="sub">1</span> q<span className="sub">2</span> / r²</div>
-            <p className="small muted" style={{ textAlign: 'center', marginTop: '-.6rem' }}>
-              <strong>Your experiment did not establish the r².</strong> Here is who established what.
-            </p>
-            <div className="threeway">
-              <div className="tw measured">
-                <h4>Your experiment established</h4>
-                <ul>
-                  <li>the push depends on <strong>both</strong> charges — and everything you measured fits their <strong>product</strong></li>
-                  <li>each object feels the same size of push, however unequal the charges</li>
-                  <li>the falloff is steeper than simple proportion</li>
-                </ul>
-              </div>
-              <div className="tw elsewhere">
-                <h4>Established by other evidence — and you have met it</h4>
-                <ul>
-                  <li>the <strong>r²</strong> itself</li>
-                  <li>Cavendish bounded the exponent to within one part in fifty of 2, from a question whose answer was nothing</li>
-                  <li>two centuries of work since</li>
-                </ul>
-              </div>
-              <div className="tw open">
-                <h4>Still open after today</h4>
-                <ul>
-                  <li>the exponent, from <em>your</em> measurements</li>
-                  <li>the constant in front</li>
-                  <li>whether contact really splits charge equally</li>
-                  <li>how the push crosses the gap</li>
-                </ul>
-              </div>
-            </div>
             <div className="card quiet">
               <p style={{ marginTop: 0 }}>
                 <strong>Read the symbol in the middle carefully.</strong> It says <em>proportional to</em>,
@@ -979,24 +968,132 @@ export default function E2Investigation() {
               </p>
               <p style={{ marginBottom: 0 }}>You will meet it when something gives you a reason for its size. Writing it here would be handing you a number and calling it a result.</p>
             </div>
-            <h3>Your first prediction, finally answered</h3>
-            <p>You were asked, right at the start, what doubling the distance would do to the push — and told in the same breath that you would never be doing it. You never did. You never moved them, never held them, never felt anything. You changed the charge and read a gap.</p>
-            <p>And yet the line above answers it. <strong>An r² underneath means that doubling the distance quarters the push.</strong> That is a claim about an experiment nobody performed, reached through measurements that never went near it — which is not a trick, but the main thing a model is <em>for</em>. It connects what you could do to what you wanted to know.</p>
-            <p className="small muted">With the honest caveat you already committed to: your own halvings could not sharply separate r² from r³. What they did settle is that the falloff is steeper than simple proportion — so <em>half as strong</em> is ruled out, whatever else stays open.</p>
-            <h3>Your third prediction, settled by reasoning</h3>
-            <p>You said doubling both charges would make the push <strong>{run.p3 ? P3_LABEL[run.p3] : 'not recorded'}</strong>.</p>
-            <p>The line above answers it. Double q<span className="sub">1</span>, and the product doubles. Double q<span className="sub">2</span> as well, and it doubles again. <strong>Four times the push</strong>, from doubling each of two things once.</p>
-            {run.p3 === 'twice' && (
-              <div className="card accent">
-                <p style={{ margin: 0 }}>Twice is the natural answer, and it is the one most people give. It comes from tracking one change when there are two. Nothing about it is careless — it is just a step short.</p>
-              </div>
-            )}
             <p className="small muted">You have earned the <strong>force model</strong>. It stays available.</p>
-            <div className="actions"><Next to="history" label="Who else has stood here?" /></div>
+            <div className="actions"><Next to="recall1" label="Now use it" /></div>
           </>
         );
 
-      /* ----------------------------------------------------------- history */
+      /* CONVERT. These two used to be paragraphs on `model` telling the student
+       * what their locked predictions came to. They have the relation in front
+       * of them and the derivation is one step, so they do it. The payoff is
+       * seeing their own answer then against their answer now. */
+      case 'recall1': {
+        const right = run.recall1 === 'quarter';
+        return (
+          <>
+            <p className="kicker">Your first prediction, revisited</p>
+            <h2 style={{ marginTop: '.2rem' }}>You have the relation. Use it.</h2>
+            <p>
+              Right at the start you were asked what doubling the distance would do to the push —
+              and told in the same breath that you would never be doing it. You never did. You
+              never moved them, never held them, never felt anything. You changed the charge and
+              read a gap.
+            </p>
+            <p><strong>So work it out. Twice as far apart, same charges. What happens to the push?</strong></p>
+            <Choices
+              options={[
+                { id: 'half' as P1, label: 'Half as strong' },
+                { id: 'quarter' as P1, label: 'A quarter as strong' },
+                { id: 'eighth' as P1, label: 'An eighth as strong' },
+                { id: 'same' as P1, label: 'No change' },
+              ]}
+              value={run.recall1}
+              locked={run.recall1locked}
+              onPick={(v) => set('recall1', v)}
+            />
+            {run.recall1locked ? (
+              <>
+                <div className={`card ${right ? 'accent' : 'warn'}`}>
+                  <p style={{ marginTop: 0 }}>
+                    <strong>{right ? 'Yes — a quarter.' : 'A quarter.'}</strong> An r² underneath
+                    means doubling the distance quarters the push. That is a claim about an
+                    experiment nobody performed, reached through measurements that never went near
+                    it — which is not a trick, but the main thing a model is <em>for</em>. It
+                    connects what you could do to what you wanted to know.
+                  </p>
+                  <p style={{ marginBottom: 0 }} className="small muted">
+                    With the caveat you already committed to: your own halvings could not sharply
+                    separate r² from r³. What they did settle is that the falloff is steeper than
+                    simple proportion — so <em>half as strong</em> is ruled out, whatever else
+                    stays open.
+                  </p>
+                </div>
+                <div className="then-now">
+                  <div><span className="lab">At the start you said</span><strong>{run.p1 ? P1_LABEL[run.p1] : 'not recorded'}</strong></div>
+                  <div><span className="lab">Now you say</span><strong>{run.recall1 ? P1_LABEL[run.recall1] : '—'}</strong></div>
+                </div>
+                <div className="actions"><Next to="recall3" label="And the third one" /></div>
+              </>
+            ) : (
+              <div className="actions">
+                <button className="btn primary" disabled={!run.recall1} onClick={() => set('recall1locked', true)}>
+                  Commit
+                </button>
+                <span className="small muted">Your original answer stays locked either way.</span>
+              </div>
+            )}
+          </>
+        );
+      }
+
+      case 'recall3': {
+        const right = run.recall3 === 'four';
+        return (
+          <>
+            <p className="kicker">Your third prediction, revisited</p>
+            <h2 style={{ marginTop: '.2rem' }}>Double both charges at once.</h2>
+            <p>
+              The apparatus could never do this — there is no move on that bench that multiplies.
+              But the line you just wrote down can answer it.
+            </p>
+            <p><strong>Double q<span className="sub">1</span> and double q<span className="sub">2</span>. What happens to the push?</strong></p>
+            <Choices
+              options={[
+                { id: 'same' as P3, label: 'Unchanged' },
+                { id: 'twice' as P3, label: 'Twice as strong' },
+                { id: 'four' as P3, label: 'Four times as strong' },
+                { id: 'other' as P3, label: 'Something else' },
+              ]}
+              value={run.recall3}
+              locked={run.recall3locked}
+              onPick={(v) => set('recall3', v)}
+            />
+            {run.recall3locked ? (
+              <>
+                <div className={`card ${right ? 'accent' : 'warn'}`}>
+                  <p style={{ margin: 0 }}>
+                    <strong>{right ? 'Yes — four times.' : 'Four times.'}</strong> Double
+                    q<span className="sub">1</span> and the product doubles. Double
+                    q<span className="sub">2</span> as well and it doubles again. Four times the
+                    push, from doubling each of two things once.
+                  </p>
+                </div>
+                {run.recall3 === 'twice' && (
+                  <div className="card quiet">
+                    <p style={{ margin: 0 }}>
+                      Twice is the natural answer and the one most people give. It comes from
+                      tracking one change when there are two. Nothing about it is careless — it is
+                      just a step short.
+                    </p>
+                  </div>
+                )}
+                <div className="then-now">
+                  <div><span className="lab">At the start you said</span><strong>{run.p3 ? P3_LABEL[run.p3] : 'not recorded'}</strong></div>
+                  <div><span className="lab">Now you say</span><strong>{run.recall3 ? P3_LABEL[run.recall3] : '—'}</strong></div>
+                </div>
+                <div className="actions"><Next to="history" label="Who else has stood here?" /></div>
+              </>
+            ) : (
+              <div className="actions">
+                <button className="btn primary" disabled={!run.recall3} onClick={() => set('recall3locked', true)}>
+                  Commit
+                </button>
+              </div>
+            )}
+          </>
+        );
+      }
+
       case 'history':
         return (
           <>
@@ -1239,6 +1336,8 @@ export default function E2Investigation() {
             r0: '200', r1: '126', r2: '79', r3: '52',
             j1: 'B', j1locked: true,
             j2: 'same', j2locked: true,
+            recall1: 'quarter', recall1locked: true,
+            recall3: 'four', recall3locked: true,
           }))
         }
       />

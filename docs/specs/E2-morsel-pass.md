@@ -185,6 +185,38 @@ should be checked against them rather than shipped on confidence.
 
 ## Implementation order
 
+### Status — 12 Aug
+
+| screen | planned | done |
+|---|---|---|
+| `ledger` | CONVERT | ✅ built — four claims, three bins, reveal after commitment |
+| `model` | SPLIT + CONVERT | ✅ built — split into `model` + `recall1` + `recall3` |
+| `entry` | SPLIT | — |
+| `encounter` | SPLIT + DELAY | — |
+| `method` | SPLIT + DELAY | held, deliberately, until students are watched |
+
+Measured after both changes:
+
+| | before | after |
+|---|---|---|
+| screens | 16 | 18 |
+| largest screen | 430 w | **376 w** |
+| screens with a student action | 6 of 16 | **9 of 18** |
+| longest passive stretch | 1,001 w | **718 w** |
+
+The remaining 718-word stretch is `conduction → method → spares`, which is the
+concurrency problem the pass named — and it is untouched by design.
+
+**A leak found while doing this, not by review.** `model` carried a three-way
+panel headed *your experiment established · established by other evidence ·
+still open*. Those are the ledger sort's three bins, displayed four screens
+before the student is asked to classify anything — so the sort built the day
+before was being answered in advance by a panel written weeks earlier. The panel
+is deleted, not moved: the sort does its job, actively. **Adding an activity can
+turn existing prose into an answer key, and nothing flagged it.**
+
+---
+
 **1 · `ledger` — first, lowest risk, highest value.** Converts the author's
 judgment into the student's. Touches no apparatus and no lesson logic.
 

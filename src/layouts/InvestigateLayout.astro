@@ -186,6 +186,12 @@ const { title, strand } = Astro.props as Props;
   .bin:disabled { cursor: default; }
   .claim-why { margin: .7rem 0 0; font-size: .89rem; line-height: 1.5; color: var(--ink-2); }
 
+  /* "You said X then, you say Y now" — the point of the recall screens. */
+  .then-now { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; margin: 1.1rem 0; }
+  .then-now > div { border: 1px solid var(--line); border-radius: 10px; padding: .7rem .85rem;
+                    background: #f7f9fa; display: flex; flex-direction: column; gap: .15rem; }
+  .then-now .lab { font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+
   .ledger { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
   .ledger ul { margin: .4rem 0 0; padding-left: 1.1rem; }
   .ledger li { margin: .3rem 0; font-size: .95rem; }
