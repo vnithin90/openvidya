@@ -39,7 +39,7 @@ type Decide = 'closer' | 'stronger' | 'moving' | 'bigger';
 type Step =
   | 'entry' | 'encounter'
   | 'p1' | 'p2' | 'p3'
-  | 'deferred' | 'observe'
+  | 'observe'
   | 'judge' | 'criterion'
   | 'explain' | 'math' | 'ledger'
   | 'faraday';
@@ -47,7 +47,7 @@ type Step =
 const STEPS: Step[] = [
   'entry', 'encounter',
   'p1', 'p2', 'p3',
-  'deferred', 'observe',
+  'observe',
   'judge', 'criterion',
   'explain', 'math', 'ledger',
 ];
@@ -63,8 +63,18 @@ export const BENCH_ACTIONS: Record<Step, 'none' | 'performable' | 'deferred'> = 
   p1: 'none',        // thought experiment, explicitly
   p2: 'performable', // paper and pencil; the means is already held
   p3: 'none',        // asked and explicitly not answered here
-  deferred: 'deferred',
-  observe: 'none',
+  /* §B lives on `observe` now. The deferral used to be a screen of its own and
+   * was cut: 211 words, a third of them explaining why a ROD is the wrong
+   * source — to a student who has never been offered a rod. That is a design
+   * post-mortem, it belongs in the spec (which has it in full), and it landed
+   * between the timing question and the map, right across the argument.
+   *
+   * §B is not satisfied by silence, but it never required a screen. It requires
+   * that the lesson say when the action becomes possible and why it is held.
+   * Two sentences do that, on the screen where the student is looking at the
+   * map they drew and wondering whether it is right — which is where the
+   * question actually exists. */
+  observe: 'deferred',
   judge: 'none',
   criterion: 'none',
   explain: 'none',
@@ -345,7 +355,7 @@ export default function E3Investigation() {
                     before finding that out.
                   </p>
                 </div>
-                <div className="actions"><Next to="deferred" label="To the bench — almost" /></div>
+                <div className="actions"><Next to="observe" label="So what have we got?" /></div>
               </>
             ) : (
               <div className="actions">
@@ -355,48 +365,22 @@ export default function E3Investigation() {
           </>
         );
 
-      /* TEMPLATE §B — the deferred screen must say WHEN and WHY, in the
-       * student's own words, not merely in the specification. */
-      case 'deferred':
-        return (
-          <>
-            <p className="kicker">What you would do next, and cannot yet</p>
-            <h2 style={{ marginTop: '.2rem' }}>The measurement that is not ready.</h2>
-            <p>
-              Here is what should happen now. Fix a small charged ball. Hang a second small ball
-              carrying charge of a known kind, bring it to each of your six positions in turn, and
-              record which way it is pushed. That is your map, measured instead of imagined.
-            </p>
-            <div className="card warn">
-              <p style={{ marginTop: 0 }}>
-                <strong>You cannot do it yet, and you are owed the reason.</strong>
-              </p>
-              <p style={{ margin: '0 0 .5rem' }}>
-                The first version of this experiment used a charged <em>rod</em> as the source. That
-                was wrong. A rod's push does not point straight out from its middle — near one at
-                these distances the direction is off by up to ten degrees, and the strength varies
-                by nearly a factor of two around a circle where it should not vary at all. A student
-                doing it would have mapped the shape of the rod and believed they had found a law.
-              </p>
-              <p style={{ margin: 0 }}>
-                <strong>When:</strong> once someone has built the corrected version — a small sphere
-                as the source — and shown that a charged probe reliably shows direction near it,
-                holds its charge long enough, and does not simply blow about the room.
-                <strong> Why we are telling you rather than quietly leaving it out:</strong> because
-                a page that hands you a procedure nobody has tried is doing the thing this whole
-                course exists to argue against.
-              </p>
-            </div>
-            <div className="actions"><Next to="observe" label="So what have we got?" /></div>
-          </>
-        );
-
       case 'observe':
         return (
           <>
             <p className="kicker">What the map is, and is not</p>
             <h2 style={{ marginTop: '.2rem' }}>Look at what you drew.</h2>
             <MapScene choices={run.map} caption="your map" />
+            <div className="card warn">
+              <p style={{ margin: 0 }}>
+                <strong>Nobody has measured this — not you, and not us.</strong> The bench version
+                exists: fix a charged ball, carry a small charged probe to each position, record
+                which way it is pushed. It is not ready, because the apparatus has never been
+                built and checked. We are telling you rather than leaving it out, because a page
+                that hands you a procedure nobody has tried is doing the thing this course exists
+                to argue against.
+              </p>
+            </div>
             <p>
               Almost everyone draws the same thing: arrows pointing away from the ball everywhere,
               shorter further out. Whether that is right is a question for the bench. But suppose

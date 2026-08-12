@@ -22,9 +22,17 @@ const SRC = readFileSync('src/components/investigate/E3Investigation.tsx', 'utf8
 /** Prose only — comments explain the rules and would otherwise trip them. */
 const PROSE = SRC.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\{\/\*[\s\S]*?\*\/\}/g, '');
 
+/**
+ * Source is wrapped at 100 columns, so any phrase longer than a few words is
+ * split across a line break and an indent. Three tests in this project have now
+ * failed on that — matching a proxy (the exact byte sequence) instead of the
+ * property (does the lesson say this). Collapse whitespace once, here.
+ */
+const FLAT = PROSE.replace(/\s+/g, ' ');
+
 describe('1. §17.1 — the judgment stays open', () => {
   it('J1 offers "neither" as an option at all', () => {
-    expect(PROSE).toMatch(/Neither — the map cannot tell them apart/);
+    expect(FLAT).toMatch(/Neither — the map cannot tell them apart/);
   });
 
   it('and the reveal says neither, not one of the two accounts', () => {
@@ -71,8 +79,11 @@ describe('1. §17.1 — the judgment stays open', () => {
 });
 
 describe('2. §17.2 — the deferral is declared, and stated to the student', () => {
-  it('the deferred screen is declared in BENCH_ACTIONS', () => {
-    expect(BENCH_ACTIONS.deferred).toBe('deferred');
+  it('exactly one screen is declared deferred', () => {
+    // It used to be a screen of its own and is now a card on `observe`. §B
+    // requires the declaration, never a particular container.
+    const deferred = Object.entries(BENCH_ACTIONS).filter(([, v]) => v === 'deferred');
+    expect(deferred.map(([k]) => k)).toEqual(['observe']);
   });
 
   it('every screen has a declaration — none may be silently absent', () => {
@@ -81,17 +92,23 @@ describe('2. §17.2 — the deferral is declared, and stated to the student', ()
     }
   });
 
-  it('the deferred screen says WHEN it becomes possible', () => {
-    expect(PROSE).toMatch(/<strong>When:<\/strong>/);
+  it('says plainly that nobody has measured it', () => {
+    expect(FLAT).toMatch(/Nobody has measured this — not you, and not us/);
   });
 
-  it('and WHY it is being held', () => {
-    expect(PROSE).toMatch(/Why we are telling you/);
+  it('says WHY it is not available', () => {
+    expect(FLAT).toMatch(/never been built and checked/);
   });
 
-  it('the reason given is the real one — the rod was wrong', () => {
-    expect(PROSE).toMatch(/rod/);
-    expect(PROSE).toMatch(/does not point straight out/);
+  it('and why it is being said at all rather than left out', () => {
+    expect(FLAT).toMatch(/hands you a procedure nobody has tried/);
+  });
+
+  it('but does NOT explain the rod — a design post-mortem is not a lesson', () => {
+    // 211-word screen, a third of it about an apparatus the student was never
+    // offered. Cut. The full reasoning lives in docs/LESSON_E3 §5a.
+    expect(PROSE).not.toMatch(/does not point straight out/);
+    expect(PROSE).not.toMatch(/The first version of this experiment/);
   });
 });
 
@@ -125,12 +142,12 @@ describe('4. the timing question is asked and deliberately not answered', () => 
   });
 
   it('and the screen says this lesson will not answer it', () => {
-    expect(PROSE).toMatch(/Nothing in this lesson answers that/);
+    expect(FLAT).toMatch(/Nothing in this lesson answers that/);
   });
 
   it('the delay is quoted as ~3 ns, the figure that was computed', () => {
     // An earlier draft of the spec said 0.3 ns. 1 m / c = 3.34 ns.
-    expect(PROSE).toMatch(/three\s+nanoseconds/);
+    expect(FLAT).toMatch(/three nanoseconds/);
     expect(PROSE).not.toMatch(/0\.3 nanosecond/);
   });
 });
@@ -147,7 +164,7 @@ describe('5. the history is quarantined until it is sourced', () => {
   });
 
   it('which says the course does not ship unsourced history as fact', () => {
-    expect(PROSE).toMatch(/does not put unsourced history in front of/);
+    expect(FLAT).toMatch(/does not put unsourced history in front of/);
   });
 });
 
