@@ -180,3 +180,33 @@ Smallest thing that closes it — for each route:
 
 Step 4 is the one that matters. Steps 1–3 would pass on a page whose buttons do
 nothing, which is exactly what shipped.
+
+## 12 · E2 morsel redesign — **M, and it needs D-a settled first**
+
+Dr. Vadaparty's review: E2 is excellent and demands too much attention at once.
+Labelling pass done — `docs/specs/E2-morsel-pass.md`. **Not started.**
+
+The diagnosis is concurrency, not length: ten open questions live at the peak,
+every screen individually understandable, working memory saturating anyway. The
+target is **less simultaneous physics, not less physics**.
+
+Ten of seventeen screens are already one student-sized thought. The work is
+concentrated in five screens holding 44% of the lesson:
+
+| Screen | Action |
+|---|---|
+| `entry` 321w | split framing from equipment; keep B3 before any commitment |
+| `encounter` 178w | split; delay "never touch a charged ball" to `method` |
+| `method` 376w | split ×3; delay the three-kinds-of-"same" table to `judge2` |
+| `model` 430w | split ×3; make the student derive P1 and P3 rather than be told |
+| `ledger` 243w | student sorts the claims before the answer is shown |
+
+Highest value first: **`ledger` and `model`**. Between them they are the
+1,001-word passive tail that lands after the bench work, when attention is
+spent, and both convert to activities rather than needing to be cut.
+
+**Do not merge `observe` and `compare`** despite both being under 70 words. The
+split is what stops the chart appearing before the data is committed.
+
+Blocked on **D-a**: whether the equilibrium insight moves after the charge
+insight. Physics-authority decision, stated in the spec.
