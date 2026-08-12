@@ -200,6 +200,13 @@ the earlier table wrongly implied.
 | 0.20 | 0.1 | **0.170%** | 3.2% |
 | 0.20 | 0.3 | **0.510%** | 3.2% |
 
+**Checked, not asserted: `scripts/verify-e3-probe.py`** regenerates every row.
+It verifies the image construction *not* by the force expression — that would be
+circular — but against the boundary condition the construction exists to
+satisfy: the sphere surface must be an equipotential, tested at 13 angles to
+1e-12. The coefficient 2 is extracted from the small-x behaviour rather than
+assumed. Runs in CI.
+
 At any workable geometry this is **far below what a direction-only map could
 resolve** — the earlier figures were pessimistic by roughly an order of
 magnitude. Recorded as an assumption rather than dismissed, and it grows as ρ
