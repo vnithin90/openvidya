@@ -52,6 +52,63 @@ test, and it is the exact move E2 forbids its own students.
 Depends on nothing in this repository. Can start today. Everything in §3a is
 downstream of the answer.
 
+### Room conditions — and the trap in "use an air-conditioned room"
+
+**Humidity, not temperature, is the operative variable.** Adsorbed water raises
+the surface conductivity of the insulators and drains the charge. Target
+**RH ≤ 45%**; above roughly 60% expect the sequence to fail outright.
+
+**But air conditioning cuts both ways, and the conflict is B3 itself.**
+
+| | effect |
+|---|---|
+| AC **dries** the air | lengthens leak time — helps |
+| AC **moves** the air | lengthens settle time — hurts |
+
+B3 is precisely the contest between those two times, so *the environmental fix
+for one half of the blocker makes the other half worse.* At L = 300 mm the
+pendulum period is 1.10 s and the pair is badly underdamped; twenty swings to
+settle within 2 mm is ~22 s per reading, four readings, with charge leaking
+throughout. A vent blowing on the apparatus does not slow that down — it
+prevents settling altogether, and an infinite settle time fails B3 by definition.
+
+**Resolution, in order of preference:**
+
+1. Enclosure — already bench item 8, *"draft sensitivity, with and without"*.
+2. Failing that, run the AC hard **before** the session and switch it off during.
+3. Never site the apparatus in the airflow.
+
+### Record RH and temperature at every reading
+
+The best idea in the reviewed comment, and it should be stronger than stated:
+**at every reading, not once per session.** A session is twenty minutes or more
+and an AC unit cycles, so one reading at the start describes conditions that no
+longer hold by the fourth measurement.
+
+This converts humidity from a nuisance into data. If the same charging procedure
+gives a different starting separation on two days, that is a result about
+humidity rather than a failed session.
+
+**State it in millimetres, not degrees.** The student never reads an angle — the
+reading is a separation. The comment's own example, converted:
+
+| | r | as a fraction of the ruled r₀ |
+|---|---|---|
+| 19.5° — the ruled start | **200 mm** | 1.00 |
+| 15° | 155 mm | 0.78 |
+| 5° | 52 mm | 0.26 |
+
+And what that costs: with r ∝ q^(2/3), a drop from 155 mm to 52 mm means the
+**charge is 20% of the drier day's — a factor of five.** Worth putting to a
+student in those terms, because "humidity matters" is forgettable and "the damp
+day cost you four-fifths of your charge" is not.
+
+⚠ **RH ≤ 45% may not be reachable** in a coastal or monsoon classroom, where
+70–85% is ordinary and an AC room may still sit above 55%. The protocol must say
+what to do then: **record what you actually got, and expect the halving sequence
+to fail.** A target nobody can meet is worse than no target, because it turns a
+predictable environmental limit into an apparent experimental failure.
+
 ## ~~3 · Commit `scripts/mutate.sh`~~ — **DONE 11 Aug**
 
 Committed in `217b50d` and re-run on a fresh install: 15 mutants, 15 caught,

@@ -119,10 +119,42 @@ validity:
     - charge leakage rate
     - the constant of proportionality
 
+  environment:
+    relative_humidity:
+      target: "≤ 45%"
+      fails_above: "~60%"
+      why: >
+        Adsorbed water raises the surface conductivity of the insulators and
+        drains the charge. Humidity, not temperature, is the operative variable.
+      record: >
+        At EVERY reading, not once per session. A session runs twenty minutes or
+        more and an air conditioner cycles, so a single reading at the start
+        describes conditions that no longer hold by the fourth measurement.
+      sensitivity: >
+        With r ∝ q^(2/3), a start of 155 mm instead of 200 mm means about 60% of
+        the charge; 52 mm instead of 155 mm means 20% of it — a factor of five
+        between a dry day and a damp one.
+    airflow:
+      requirement: "shielded from any direct draught"
+      why: >
+        ⚠ Air conditioning DRIES the air, which lengthens leak time and helps,
+        and MOVES the air, which lengthens settle time and hurts. B3 is the
+        contest between exactly those two times, so the environmental fix for
+        one half of the blocker makes the other half worse. At L = 300 mm the
+        period is 1.10 s and the pair is badly underdamped; a vent on the
+        apparatus does not slow settling, it prevents it.
+      resolution: "enclosure (bench item 8); failing that, cool the room before the session and switch the unit off during it"
+    lighting:
+      requirement: none
+      note: "electrostatics is not light-sensitive; a darkened room is not a requirement and should not be specified as one"
+
 pedagogical_notes:
   common_misconceptions:
-    - "The bigger charge pushes harder." The forces are equal and opposite however unequal the charges.
-    - "Twice as far, half the push." The falloff is steeper than proportional.
+    # Quoted in full. An earlier version opened a quote, closed it mid-line and
+    # continued in bare text, which is not valid YAML — and nothing noticed,
+    # because until tests/model-yaml.test.ts nothing parsed these files.
+    - '"The bigger charge pushes harder." The forces are equal and opposite however unequal the charges.'
+    - '"Twice as far, half the push." The falloff is steeper than proportional.'
   representation_choices:
     - Figures are drawn to scale at a/r₀ = 1/20, so the spheres look as small relative to their separation as they really are.
     - The law comparison chart plots ratios, not forces — the student never measures a force.
