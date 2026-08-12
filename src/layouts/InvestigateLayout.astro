@@ -186,6 +186,25 @@ const { title, strand } = Astro.props as Props;
   .bin:disabled { cursor: default; }
   .claim-why { margin: .7rem 0 0; font-size: .89rem; line-height: 1.5; color: var(--ink-2); }
 
+  /* ---- E3: the six-position map ---- */
+  .guide { fill: none; stroke: #e8eef0; stroke-width: 1; stroke-dasharray: 3 4; }
+  .sphere.source { fill: #7d8a90; stroke: #5e696e; }
+  .probe { fill: #fff; stroke: #b9c6cb; stroke-width: 1.5; }
+  .probe.set { fill: var(--accent-soft); stroke: var(--accent); }
+  .probe-arrow { stroke: var(--accent); stroke-width: 2; fill: none; stroke-linecap: round; }
+  .probe-lab { font-size: 10px; fill: var(--muted); font-weight: 700; }
+  .gapline { stroke: #dfe6e8; stroke-width: 1; stroke-dasharray: 2 5; }
+  .shake { stroke: var(--brass); stroke-width: 2; fill: none; stroke-linecap: round; }
+  .bigq { font-size: 34px; fill: #cfd8dc; font-weight: 700; }
+
+  .mapgrid { display: flex; flex-direction: column; gap: .4rem; margin: 1rem 0; }
+  .maprow { display: grid; grid-template-columns: 1.4rem 7rem 1fr; align-items: center; gap: .5rem;
+            border: 1px solid var(--line); border-radius: 10px; padding: .45rem .6rem; background: #fff; }
+  .mapid { font-weight: 700; color: var(--muted); }
+  .maplab { font-size: .82rem; color: var(--ink-2); }
+  .mapdirs { display: grid; grid-template-columns: repeat(3, 1fr); gap: .35rem; }
+  .threeway.two { grid-template-columns: 1fr 1fr; }
+
   /* "You said X then, you say Y now" — the point of the recall screens. */
   .then-now { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; margin: 1.1rem 0; }
   .then-now > div { border: 1px solid var(--line); border-radius: 10px; padding: .7rem .85rem;
