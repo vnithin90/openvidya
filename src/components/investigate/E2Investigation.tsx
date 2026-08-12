@@ -36,6 +36,77 @@ type P3 = 'same' | 'twice' | 'four' | 'other';
 type J1 = 'A' | 'B';
 type J2 = 'bigout' | 'smallout' | 'same';
 
+/**
+ * The closing ledger, as a judgment rather than a summary.
+ *
+ * It used to tell the student what they had established. That is backwards: the
+ * student did the work, so the student should classify it, and only then see
+ * whether they agree with us.
+ *
+ * DESIGN CONSTRAINTS, each of which was arrived at the hard way:
+ *
+ *  · THREE bins, not four. A fourth ("supported but not established" as distinct
+ *    from "not determined") asks for a distinction E2 never draws. These three
+ *    are the distinction J1 taught, reused.
+ *
+ *  · FOUR claims, not six. A six-item sort at the very end, after the bench, is
+ *    something a tired student clicks through — which converts a passive screen
+ *    into a pseudo-active one, worse because it looks like engagement.
+ *
+ *  · EVERY claim is in E2's existing vocabulary. An earlier draft included "the
+ *    constant k was measured". E2 never introduces k — §9 says the constant is
+ *    missing on purpose — so that card would have introduced k in order to sort
+ *    it. The interaction must be built from the lesson's vocabulary, never add
+ *    vocabulary for the interaction's sake.
+ *
+ *  · The claims form TWO PAIRS. Within each pair the physics is the same and the
+ *    epistemic status differs, which is the whole point:
+ *      – falloff steeper than proportional (established) vs exactly inverse
+ *        square (from elsewhere);
+ *      – equal and opposite forces (established) vs the product form (fits, but
+ *        not established).
+ *    A student who sorts both members of a pair into the same bin has missed J1.
+ *
+ *  · Placing a card correctly is not the outcome. The REASONING is, so each
+ *    reveal carries the argument the student should be able to give.
+ */
+type Bin = 'mine' | 'fits' | 'elsewhere';
+
+export const BINS: { id: Bin; label: string }[] = [
+  { id: 'mine', label: 'My experiment established this' },
+  { id: 'fits', label: 'My measurements fit this, but did not establish it' },
+  // Not "came from somewhere else" — that could mean "a teacher told me".
+  // The distinction E2 wants is independent evidence.
+  { id: 'elsewhere', label: 'Established by other evidence' },
+];
+
+export const CLAIMS: { id: string; text: string; answer: Bin; why: string }[] = [
+  {
+    id: 'equal',
+    text: 'Each ball feels the same size of push, however unequal the charges.',
+    answer: 'mine',
+    why: 'You hung a lopsided pair and both threads made the same angle. Equal angles on equal weights means equal forces — you watched it, and nothing else was needed.',
+  },
+  {
+    id: 'product',
+    text: 'The push depends on the two charges multiplied together.',
+    answer: 'fits',
+    why: 'The lopsided pair and the balanced pair hung at the same separation, which fits the product. But you compared four charge states along one line and one arrangement off it — and “fits everything I tried” is not “is the law”. That is the same distinction you drew for the exponent in J1, and it applies here too.',
+  },
+  {
+    id: 'steeper',
+    text: 'The push falls off with distance faster than simple proportion.',
+    answer: 'mine',
+    why: 'The 1/r tick was never close to your measurement. Whatever else stayed open, your own halvings ruled out “half as strong”.',
+  },
+  {
+    id: 'square',
+    text: 'The push falls off as one over the distance squared.',
+    answer: 'elsewhere',
+    why: 'Your measurement could not cleanly separate square from cube — that was J1. Priestley argued it from a null result, and Cavendish bounded the exponent to within one part in fifty of 2 by measuring something that was supposed to be, and was, exactly zero.',
+  },
+];
+
 type Step =
   | 'entry' | 'encounter'
   | 'predict1' | 'predict2' | 'predict3'
@@ -89,6 +160,7 @@ interface RunState {
   r0: string; r1: string; r2: string; r3: string;
   j1?: J1; j1locked: boolean;
   j2?: J2; j2locked: boolean;
+  sort: Record<string, Bin>; sortLocked: boolean;
 }
 
 const STORAGE_KEY = 'openvidya-e2-run-v1';
@@ -103,6 +175,8 @@ function defaultRun(): RunState {
     r0: '', r1: '', r2: '', r3: '',
     j1locked: false,
     j2locked: false,
+    sort: {},
+    sortLocked: false,
   };
 }
 
@@ -1002,11 +1076,90 @@ export default function E2Investigation() {
         );
 
       /* ------------------------------------------------------------ ledger */
-      case 'ledger':
+      case 'ledger': {
+        const allPlaced = CLAIMS.every((c) => run.sort[c.id]);
+        const score = CLAIMS.filter((c) => run.sort[c.id] === c.answer).length;
         return (
           <>
             <p className="kicker">Investigation complete</p>
             <h2 style={{ marginTop: '.2rem' }}>What do we know now?</h2>
+
+            {/* The student classifies before being told. Nothing below this
+                block reveals an answer until sortLocked is true. */}
+            <p>
+              You did the work, so you make the call. <strong>Four claims. Where does each
+              one belong?</strong>
+            </p>
+            <div className="sorter">
+              {CLAIMS.map((c) => {
+                const picked = run.sort[c.id];
+                const right = run.sortLocked && picked === c.answer;
+                return (
+                  <div key={c.id} className={`claim ${run.sortLocked ? (right ? 'right' : 'wrong') : ''}`}>
+                    <p className="claim-txt">{c.text}</p>
+                    <div className="bins">
+                      {BINS.map((b) => (
+                        <button
+                          key={b.id}
+                          type="button"
+                          className={`bin ${picked === b.id ? 'on' : ''} ${
+                            run.sortLocked && b.id === c.answer ? 'answer' : ''
+                          }`}
+                          aria-pressed={picked === b.id}
+                          disabled={run.sortLocked}
+                          onClick={() => setRun((r) => ({ ...r, sort: { ...r.sort, [c.id]: b.id } }))}
+                        >
+                          {b.label}
+                        </button>
+                      ))}
+                    </div>
+                    {run.sortLocked && (
+                      <p className="claim-why">
+                        <strong>{right ? 'Yes.' : 'Not quite.'}</strong> {c.why}
+                      </p>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+
+            {!run.sortLocked ? (
+              <div className="actions">
+                <button
+                  className="btn primary"
+                  disabled={!allPlaced}
+                  onClick={() => setRun((r) => ({ ...r, sortLocked: true }))}
+                >
+                  Commit my classification
+                </button>
+                <span className="small muted">
+                  {allPlaced ? 'Locks permanently.' : 'Place all four first.'}
+                </span>
+              </div>
+            ) : (
+              <div className={`card ${score === 4 ? 'accent' : 'warn'}`}>
+                <p style={{ margin: 0 }}>
+                  {score === 4 ? (
+                    <>
+                      <strong>All four.</strong> Notice that two pairs of claims are about the
+                      same physics — the falloff, and the two charges — and land in different
+                      bins. Which bin a claim belongs in depends on how sharp the claim is, not
+                      on what it is about.
+                    </>
+                  ) : (
+                    <>
+                      <strong>{score} of four.</strong> The two pairs are the thing to look at:
+                      “falls off faster than proportional” and “falls off as one over distance
+                      squared” are about the same behaviour, and they do not belong in the same
+                      bin. Neither do the two claims about the charges. How sharp a claim is
+                      decides what it takes to establish it.
+                    </>
+                  )}
+                </p>
+              </div>
+            )}
+
+            <h3>The full picture</h3>
             <div className="card">
               <div className="ledger">
                 <div>
@@ -1059,6 +1212,7 @@ export default function E2Investigation() {
             </div>
           </>
         );
+      }
     }
   };
 

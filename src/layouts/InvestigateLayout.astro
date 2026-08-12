@@ -169,6 +169,23 @@ const { title, strand } = Astro.props as Props;
   .tw.open { border-color: var(--warn-line); background: var(--warn-bg); }
   .tw.open h4 { color: #8a6d1f; }
 
+  /* The closing sort. Three bins, four claims — see the comment on CLAIMS. */
+  .sorter { display: flex; flex-direction: column; gap: .8rem; margin: 1.1rem 0; }
+  .claim { border: 1.5px solid var(--line); border-radius: 12px; padding: .9rem 1rem; background: #fff; }
+  .claim.right { border-color: #cdeadb; background: #f6fbf8; }
+  .claim.wrong { border-color: var(--warn-line); background: var(--warn-bg); }
+  .claim-txt { margin: 0 0 .6rem; font-weight: 600; }
+  .bins { display: grid; grid-template-columns: repeat(3, 1fr); gap: .45rem; }
+  .bin { font: inherit; font-size: .8rem; line-height: 1.35; text-align: left;
+         border: 1.5px solid var(--line); border-radius: 9px; padding: .5rem .6rem;
+         background: #fff; color: var(--ink-2); cursor: pointer; }
+  .bin:hover:not(:disabled) { border-color: var(--accent); }
+  .bin.on { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+  .bin.answer { border-color: var(--ok); }
+  .bin.answer::after { content: ' ✓'; color: var(--ok); font-weight: 700; }
+  .bin:disabled { cursor: default; }
+  .claim-why { margin: .7rem 0 0; font-size: .89rem; line-height: 1.5; color: var(--ink-2); }
+
   .ledger { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
   .ledger ul { margin: .4rem 0 0; padding-left: 1.1rem; }
   .ledger li { margin: .3rem 0; font-size: .95rem; }
