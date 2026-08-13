@@ -216,8 +216,7 @@ export default function Scene1Counting() {
           ))
         ) : (
           <p className="s1-uncountable">
-            Too many to draw as dots. The <b>number</b> still means a count of particles —
-            drawing more circles would only fill the screen, not show 10<sup>{logN}</sup>.
+            Too many to draw as dots. The number still means a count of particles. Drawing more circles would only fill the screen. It would not show 10<sup>{logN}</sup>.
           </p>
         )}
       </div>

@@ -369,10 +369,10 @@ export default function E2Investigation() {
                 <li>A dry day. Damp air drains the charge away while you are still measuring.</li>
               </ul>
               <p className="small muted" style={{ marginBottom: 0 }}>
-                <strong>One setup rule that matters more than it looks:</strong> the starting
-                separation must be no more than <strong>0.68 × the thread length</strong> — about
-                20 cm on 30 cm threads. Beyond that the arithmetic this page does stops being accurate
-                enough to answer the question. You will see why at the end.
+                <strong>One setup rule matters more than it looks.</strong> The starting separation
+                must be no more than 0.68 times the thread length. On 30 cm threads that is about
+                20 cm. Beyond that, the arithmetic this page does stops being accurate enough to
+                answer the question. You will see why at the end.
               </p>
             </div>
             <div className="card warn">
@@ -380,11 +380,8 @@ export default function E2Investigation() {
               <p style={{ marginBottom: 0 }}>
                 Nobody has built this apparatus yet. The separations this page predicts come from the
                 physics, not from anyone having stood at a bench and measured them. We think it will
-                work; we have not watched it work. If you build it, the most useful thing you can send
-                back is not whether you got the “right” answer — it is <em>how long the balls took to
-                stop swinging, and how fast the charge drained away while you waited</em>. If those two
-                times turn out to be similar, this experiment cannot be done as described, and we would
-                rather find that out from you than pretend otherwise.
+                work; we have not watched it work. If you build it, send something back. Not whether you got the “right” answer. Send two times: <em>how long the balls took to
+                stop swinging, and how fast the charge drained away while you waited</em>. If those two times turn out to be similar, this experiment cannot be done as described. We would rather find that out from you than pretend otherwise.
               </p>
             </div>
             <p className="small muted">Your predictions lock once you commit them.</p>
@@ -403,7 +400,7 @@ export default function E2Investigation() {
               Getting charge onto them takes a rod and a knack, and you will be shown exactly how
               before you need to do it. For now, just look at what happens once they are charged.
             </p>
-            <p>They stop somewhere. Not touching, not flying off — a particular gap, and the same gap every time you set it up the same way.</p>
+            <p>They stop somewhere. Not touching. Not flying off. They settle at a particular gap. It is the same gap every time you set it up the same way.</p>
             <p><strong>That gap is a measurement.</strong> A bigger push holds them further apart, so the separation tells you about the force without your ever having to feel it.</p>
             <div className="card accent">
               <p style={{ marginTop: 0 }}>Two things to be clear about before you start, because between them they decide what you can and cannot do.</p>
@@ -483,8 +480,7 @@ export default function E2Investigation() {
               </p>
               <p className="small" style={{ margin: 0 }}>
                 What you do not have yet is any way to put <em>different</em> amounts of charge on two
-                balls. That comes later, and it turns out to be the same trick the whole experiment runs
-                on — so it would spoil things to hand it over now. Commit your answer; you will come
+                balls. That comes later. It turns out to be the same trick the whole experiment runs on. Handing it over now would spoil the discovery. Commit your answer; you will come
                 back and check it near the end.
               </p>
             </div>
@@ -532,13 +528,10 @@ export default function E2Investigation() {
             <div className="card quiet">
               <p className="small" style={{ marginTop: 0 }}><strong>Why “imagine”.</strong> Two separate reasons, and the second is the interesting one.</p>
               <p className="small" style={{ margin: '0 0 .5rem' }}>
-                First, the separation is a reading, not a dial — change the charges and the balls move,
-                so “everything else the same” never happens.
+                First, the separation is a reading, not a dial. Change the charges and the balls move. So “everything else the same” never happens.
               </p>
               <p className="small" style={{ margin: 0 }}>
-                <strong>Second, and worse: you cannot double the charge at all.</strong> The only tool
-                you have for changing it is letting two identical balls touch, and that always leaves
-                each with the <em>average</em> of what they had. An average never exceeds the larger of
+                <strong>Second, and worse: you cannot double the charge at all.</strong> You have one tool for changing charge: letting two identical balls touch. That always leaves each with the <em>average</em> of what they had. An average never exceeds the larger of
                 the two numbers. So contact can halve, and thirds, and quarters — but there is no move
                 on this bench that multiplies. Doubling would need a supply of charge the apparatus does
                 not have.
@@ -595,8 +588,7 @@ export default function E2Investigation() {
             <p className="kicker">Before you can measure</p>
             <h2 style={{ marginTop: '.2rem' }}>Two identical balls touch. Then what?</h2>
             <p>
-              One is charged. The other is identical to it in every way you can check — same size,
-              same metal, same weight — and carries nothing. You touch them together, then separate
+              One is charged. The other is identical in every way you can check. Same size, same metal, same weight. And it carries nothing. You touch them together, then separate
               them again.
             </p>
             <p><strong>How much charge does each one have afterwards?</strong></p>
@@ -615,9 +607,7 @@ export default function E2Investigation() {
               <>
                 <div className={`card ${right ? 'accent' : 'warn'}`}>
                   <p style={{ marginTop: 0 }}>
-                    <strong>Half each.</strong> The two are the same size, the same metal, in the
-                    same situation — so there is nothing to make the charge prefer one over the
-                    other. It ends up split equally.
+                    <strong>Half each.</strong> The two are the same size, the same metal, in the same situation. Nothing makes the charge prefer one over the other. It ends up split equally.
                   </p>
                   <p style={{ marginBottom: 0 }}>
                     That is your instrument. You cannot move the balls, but you can now{' '}
@@ -627,8 +617,7 @@ export default function E2Investigation() {
                 <div className="card warn">
                   <p style={{ margin: 0 }}>
                     <strong>Being straight with you about that answer.</strong> The equal split is a{' '}
-                    <em>symmetry argument</em>, not something anyone has measured. Nothing you do
-                    today tests it — and it turns out nothing you <em>could</em> do with this
+                    <em>symmetry argument</em>, not something anyone has measured. Nothing you do today tests it. Nothing you <em>could</em> do with this
                     apparatus would test it either. We are asking you to take it, and telling you
                     that we are.
                   </p>
@@ -724,17 +713,15 @@ export default function E2Investigation() {
           <>
             <p className="kicker">The method</p>
             <h2 style={{ marginTop: '.2rem' }}>You cannot move them, so change the charge instead.</h2>
-            <p>The separation is a reading. But the <em>charge</em> is something you can change, and now you know how: touch each hanging ball with a fresh uncharged sphere, and it keeps half.</p>
+            <p>The separation is a reading. But the charge is something you can change, and now you know how. Touch each hanging ball with a fresh uncharged sphere. It keeps half.</p>
             <HalvingFigure />
-            <p><strong>Both balls, every round</strong>, each with its own <em>uncharged</em> sphere. A spare that has just been used is carrying half of what it took; put it straight back and it averages two charged balls instead of halving one.</p>
+            <p><strong>Both balls, every round</strong>, each with its own <em>uncharged</em> sphere. A spare that has just been used is carrying half of what it took. Put it straight back and it averages two charged balls instead of halving one.</p>
             <div className="card quiet">
               <p style={{ marginTop: 0 }}><strong>You can reuse a spare — reset it first.</strong></p>
               <p style={{ marginBottom: 0 }}>
                 Touch it properly with your hand. You saw a moment ago what that does to a charged
                 piece of metal: it loses the lot. Then put it back through the spare-check below
-                before it goes near the experiment again. The method only ever needs two clean
-                spares at once — six means you are rarely waiting for one, and the later parts of
-                the investigation need spares too.
+                before it goes near the experiment again. The method only ever needs two clean spares at once. Six means you are rarely waiting for one. The later parts of the investigation need spares too.
               </p>
             </div>
             <div className="actions"><Back to="ratios" /><Next to="spares" label="One thing left to check" /></div>
@@ -746,7 +733,7 @@ export default function E2Investigation() {
           <>
             <p className="kicker">The method · trusting a spare</p>
             <h2 style={{ marginTop: '.2rem' }}>How do you know a spare is really uncharged?</h2>
-            <p>Everything above rests on the fresh sphere being clean. One that has picked up a little charge from your hands does not halve — it does something else, and it does it invisibly.</p>
+            <p>Everything above rests on the fresh sphere being clean. One that has picked up a little charge from your hands does not halve. It does something else, and it does it invisibly.</p>
             <p>You can find out using nothing but the apparatus already in front of you:</p>
             <NullTestFigure />
             <p>Bring the spare to <strong>5 cm from the nearer ball, on the line joining the two, outside the pair</strong>. Watch the separation. Take it away. If it moved by more than about 2 mm while the spare was there, that spare is not clean enough.</p>
@@ -755,7 +742,7 @@ export default function E2Investigation() {
               <NullTestFigure wrong />
               <p style={{ marginBottom: 0 }}>
                 Held below the pair, or off to one side, the push is sideways rather than along the gap.
-                The balls swing together instead of apart, the separation barely changes, and{' '}
+                The balls swing together instead of apart. The separation barely changes. And{' '}
                 <strong>every spare passes — including one that is nowhere near clean</strong>. A test
                 that always says yes is not a test.
               </p>
@@ -903,23 +890,18 @@ export default function E2Investigation() {
                     <>
                       <p style={{ marginTop: 0 }}>
                         <strong>B, and this is the point of the investigation.</strong> “My data cannot
-                        settle this” is a real scientific conclusion. It is not what you say when the
-                        experiment failed — it is what you say when you have understood what your
-                        measurement is worth.
+                        settle this” is a real scientific conclusion. It is not what you say when the experiment failed. It is what you say when you understand what your measurement is worth.
                       </p>
-                      <p style={{ marginBottom: 0 }}>A student who lands on the right exponent by luck has done worse physics than one who says they cannot tell and can say why.</p>
+                      <p style={{ marginBottom: 0 }}>Landing on the right exponent by luck is worse physics than saying you cannot tell and knowing why.</p>
                     </>
                   ) : (
                     <>
                       <p style={{ marginTop: 0 }}>
                         <strong>Look at the size of that gap again.</strong> The two ticks are {gap}{' '}
-                        points apart. Now think about your own run: how accurately did you read the
-                        ruler, how long did the charge sit there leaking, how sure are you the spares
-                        were clean?
+                        points apart. Now think about your own run. How accurately did you read the ruler? How long did the charge sit there leaking? How sure are you the spares were clean?
                       </p>
                       <p style={{ marginBottom: 0 }}>
-                        If those could add up to more than the gap, then landing nearer one tick than the
-                        other has not told you which law is right. You cannot change your answer now —
+                        Suppose those add up to more than the gap. Then landing nearer one tick than the other has not told you which law is right. You cannot change your answer now —
                         but you can see it.
                       </p>
                     </>
@@ -970,15 +952,13 @@ export default function E2Investigation() {
                 </tbody>
               </table>
               <p style={{ marginBottom: 0 }}>
-                The gap widens every round. So the answer to “how do I tell?” is partly <em>keep going</em>{' '}
-                — except that each round also costs you charge, and the separations shrink toward the size
-                of the balls themselves, where a ruler stops meaning much. That trade-off is not a flaw in
+                The gap widens every round. So the answer to “how do I tell?” is partly this: <em>keep going</em>{' '}
+                . But each round costs you charge. And the separations shrink toward the size of the balls themselves, where a ruler stops meaning much. That trade-off is not a flaw in
                 your apparatus. It <strong>is</strong> your apparatus.
               </p>
             </div>
             <p>
-              There is another way out, and it is worth holding on to: instead of measuring a difference
-              more and more carefully, find a situation where the right answer is <strong>nothing at
+              There is another way out, and it is worth holding on to. Instead of measuring a difference more and more carefully, find a situation where the right answer is <strong>nothing at
               all</strong>. You already used one today — the spare-sphere check. Nothing moved, and that
               told you more than a careful reading would have.
             </p>
@@ -1047,7 +1027,7 @@ export default function E2Investigation() {
                   </table>
                   <p style={{ marginBottom: 0 }}>
                     The last one surprises people, and you have just watched why. Halving <em>both</em>
-                    divides the product by four every round, whatever the two started at — so every
+                    divides the product by four every round, whatever the two started at. So every
                     ratio comes out the same either way. The first two you cannot do without.
                   </p>
                 </div>
@@ -1079,7 +1059,7 @@ export default function E2Investigation() {
           <>
             <p className="kicker">Compression</p>
             <h2 style={{ marginTop: '.2rem' }}>All of that, in one line.</h2>
-            <p>Two things came out of the bench. The push depends on <strong>both</strong> charges, and your measurements fit their product. And it falls off with distance <strong>faster than simple proportion</strong> — that much your halvings did settle, because the 1/r tick was never close.</p>
+            <p>Two things came out of the bench. The push depends on <strong>both</strong> charges, and your measurements fit their product. And it falls off with distance <strong>faster than simple proportion</strong> . Your halvings did settle that much, because the 1/r tick was never close.</p>
             <div className="eq">F &nbsp;∝&nbsp; q<span className="sub">1</span> q<span className="sub">2</span> / r²</div>
             <div className="card quiet">
               <p style={{ marginTop: 0 }}>
@@ -1106,8 +1086,7 @@ export default function E2Investigation() {
             <p className="kicker">Your first prediction, revisited</p>
             <h2 style={{ marginTop: '.2rem' }}>You have the relation. Use it.</h2>
             <p>
-              Right at the start you were asked what doubling the distance would do to the push —
-              and told in the same breath that you would never be doing it. You never did. You
+              Right at the start you were asked what doubling the distance would do to the push. You were told in the same breath that you would never be doing it. You never did. You
               never moved them, never held them, never felt anything. You changed the charge and
               read a gap.
             </p>
@@ -1128,15 +1107,12 @@ export default function E2Investigation() {
                 <div className={`card ${right ? 'accent' : 'warn'}`}>
                   <p style={{ marginTop: 0 }}>
                     <strong>{right ? 'Yes — a quarter.' : 'A quarter.'}</strong> An r² underneath
-                    means doubling the distance quarters the push. That is a claim about an
-                    experiment nobody performed, reached through measurements that never went near
-                    it — which is not a trick, but the main thing a model is <em>for</em>. It
+                    means doubling the distance quarters the push. That is a claim about an experiment nobody performed. You reached it through measurements that never went near it. That is not a trick. It is the main thing a model is <em>for</em>. It
                     connects what you could do to what you wanted to know.
                   </p>
                   <p style={{ marginBottom: 0 }} className="small muted">
                     With the caveat you already committed to: your own halvings could not sharply
-                    separate r² from r³. What they did settle is that the falloff is steeper than
-                    simple proportion — so <em>half as strong</em> is ruled out, whatever else
+                    separate r² from r³. What they did settle is that the falloff is steeper than simple proportion. So <em>half as strong</em> is ruled out, whatever else
                     stays open.
                   </p>
                 </div>
@@ -1223,7 +1199,7 @@ export default function E2Investigation() {
             <h2 style={{ marginTop: '.2rem' }}>The difficulty you hit is <em>the</em> difficulty.</h2>
             <p>You have just concluded that measuring this force directly is delicate, and that your numbers cannot cleanly separate the candidates. That is not a beginner’s problem. Two people got past it, and neither did it by measuring more carefully.</p>
             <h3>Priestley, 1767 — who did not measure it at all</h3>
-            <p>Franklin had noticed that small corks lowered inside a highly electrified metal can are neither pulled nor pushed. <strong>Nothing happens.</strong> Joseph Priestley repeated it and recognised the shape of the result: Newton had shown that inside a hollow shell, gravity also does nothing — and that this follows from its being an inverse-square law.</p>
+            <p>Franklin had noticed that small corks lowered inside a highly electrified metal can are neither pulled nor pushed. <strong>Nothing happens.</strong> Joseph Priestley repeated it and recognised the shape of the result. Newton had shown that inside a hollow shell, gravity also does nothing. Newton had also shown that this follows from gravity being an inverse-square law.</p>
             <p>So he ran the argument backwards. Nothing inside the can, therefore the electrical force must be inverse-square too. No delicate measurement. A null result and an argument.</p>
             <h3>Cavendish, about 1773 — who turned nothing into a number</h3>
             <p>Henry Cavendish built that into a real experiment and asked how well it held. His answer: <strong>the exponent cannot differ from 2 by more than about one part in fifty.</strong></p>
@@ -1259,7 +1235,7 @@ export default function E2Investigation() {
           <>
             <p className="kicker">Optional · 1785</p>
             <h2 style={{ marginTop: '.2rem' }}>Coulomb, and three numbers that are still being argued about.</h2>
-            <p>Coulomb measured the force directly, with a <strong>torsion balance</strong>: a fine wire that twists by an amount you can read, letting you weigh a push far too small to feel.</p>
+            <p>Coulomb measured the force directly, with a <strong>torsion balance</strong>: It is a fine wire that twists by an amount you can read. That lets you weigh a push far too small to feel.</p>
             <p>He did not build it for this. He had developed it for compass needles, and worked out how twisted wire behaves, years before he ever pointed it at charge. The instrument came first and the question came to it.</p>
             <p>His paper reports <strong>three measurements</strong>.</p>
             <table className="results">
@@ -1275,19 +1251,17 @@ export default function E2Investigation() {
               <p style={{ marginTop: 0 }}><strong>You have spent an afternoon on an apparatus like this. Look at that table again.</strong></p>
               <p style={{ marginBottom: 0 }}>
                 Three readings. No repeats, no scatter, no stated uncertainty, agreeing with the answer
-                almost exactly. Peter Heering rebuilt the instrument and found it so unruly — the ball
-                drifting two or three degrees every few seconds — that he concluded Coulomb cannot have
-                obtained those numbers by measuring. Alberto Martínez rebuilt it again and concluded the
+                almost exactly. Peter Heering rebuilt the instrument. He found the ball drifting two or three degrees every few seconds. He concluded that Coulomb cannot have obtained those numbers by measuring. Alberto Martínez rebuilt it again and concluded the
                 opposite. It is not settled.
               </p>
             </div>
-            <p><strong>Two things worth taking from that, pulling in different directions.</strong> Data that agrees with its conclusion perfectly is not automatically better data — sometimes it is a reason to ask harder questions. And a famous name on a result does not close the question of how the result was obtained.</p>
+            <p><strong>Two things worth taking from that, pulling in different directions.</strong> Data that agrees with its conclusion perfectly is not automatically better data. Sometimes it is a reason to ask harder questions. And a famous name on a result does not close the question of how the result was obtained.</p>
             <div className="card accent">
               <p style={{ margin: 0 }}>
                 It also sharpens the comparison from the previous screen. Cavendish could state a bound:
                 within one part in fifty. Coulomb gave three numbers and <strong>no uncertainty at
-                all</strong>. That is not a contest between two men — Cavendish came <em>before</em>{' '}
-                Coulomb and sat unpublished for a century, so the two never competed. It is a difference
+                all</strong>. That is not a contest between two men. Cavendish came <em>before</em>{' '}
+                Coulomb and sat unpublished for a century. The two never competed. It is a difference
                 between two <em>ways of asking</em>.
               </p>
             </div>
@@ -1361,17 +1335,14 @@ export default function E2Investigation() {
                 <p style={{ margin: 0 }}>
                   {score === 4 ? (
                     <>
-                      <strong>All four.</strong> Notice that two pairs of claims are about the
-                      same physics — the falloff, and the two charges — and land in different
-                      bins. Which bin a claim belongs in depends on how sharp the claim is, not
+                      <strong>All four.</strong> Look at two pairs of claims. One pair is about the falloff. One pair is about the two charges. Each pair is the same physics, and each pair lands in different bins. Which bin a claim belongs in depends on how sharp the claim is, not
                       on what it is about.
                     </>
                   ) : (
                     <>
-                      <strong>{score} of four.</strong> The two pairs are the thing to look at:
+                      <strong>{score} of four.</strong> Look at the two pairs.
                       “falls off faster than proportional” and “falls off as one over distance
-                      squared” are about the same behaviour, and they do not belong in the same
-                      bin. Neither do the two claims about the charges. How sharp a claim is
+                      squared” are about the same behaviour. They still do not belong in the same bin. Neither do the two claims about the charges. How sharp a claim is
                       decides what it takes to establish it.
                     </>
                   )}
@@ -1385,7 +1356,7 @@ export default function E2Investigation() {
                 <div>
                   <h3 style={{ marginTop: 0 }}>You established</h3>
                   <ul className="yes">
-                    <li>The push depends on <strong>both</strong> charges. A lopsided pair and a balanced one with the same product hang at the same distance — so the product form <em>fits everything you measured</em></li>
+                    <li>The push depends on <strong>both</strong> charges. A lopsided pair and a balanced one with the same product hang at the same distance. So the product form <em>fits everything you measured</em></li>
                     <li>Each ball feels the same size of push, however unequal the charges</li>
                     <li>The force falls off with distance faster than simple proportion</li>
                     <li>How far your own apparatus can be trusted, and where it stops</li>
@@ -1394,7 +1365,7 @@ export default function E2Investigation() {
                 <div>
                   <h3 style={{ marginTop: 0 }}>You did not establish</h3>
                   <ul className="no">
-                    <li><strong>That the force really goes as the product.</strong> You compared four charge states along one line, and one arrangement off it. Everything fitted — but “fits everything I tried” and “is the law” are the same two things you separated for the exponent, and they stay separate here.</li>
+                    <li><strong>That the force really goes as the product.</strong> You compared four charge states along one line, and one arrangement off it. Everything fitted. But “fits everything I tried” and “is the law” are the same two things you separated for the exponent, and they stay separate here.</li>
                     <li>
                       <strong>The exact exponent.</strong>{' '}
                       {k >= 1

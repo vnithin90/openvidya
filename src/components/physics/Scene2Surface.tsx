@@ -258,9 +258,7 @@ export default function Scene2Surface() {
       <p className="sim-note">
         Each ● stands for <b>{CHARGE_PER_MARKER} C</b> (
         <SciNum value={countFromCharge(CHARGE_PER_MARKER)} sig={1} /> elementary charges). Real
-        electrons are far too many to draw. The dashed lines are imaginary surfaces you
-        choose — like deciding where to stand and count people walking by, not a door that
-        stops them.
+        electrons are far too many to draw. The dashed lines are imaginary surfaces you choose. Think of deciding where to stand and count people walking by. They are not a door that stops anyone.
       </p>
     </div>
   );

@@ -10,29 +10,22 @@ import ModelPanel from '../../components/ui/ModelPanel.astro';
 
 Throw something. Once it has left your hand, only one force acts on it, and that
 force points straight down. Nothing pushes it forwards. Yet it keeps moving
-forwards. That is the whole of projectile motion, and it is worth sitting with
-for a moment, because it contradicts what most people's intuition suggests.
+forwards. That is the whole of projectile motion. It is worth sitting with for a moment. Most people's intuition says otherwise.
 
 <ProjectileSimulation client:visible />
 
 ## The two motions are independent
 
-Watch the green arrow while the animation runs. It never changes. Gravity acts
-downwards, so it changes only the downward component of velocity — it has no
-horizontal component and therefore no horizontal effect.
+Watch the green arrow while the animation runs. It never changes. Gravity acts downwards, so it changes only the downward component of velocity. It has no horizontal component, and therefore no horizontal effect.
 
 $$
 \frac{d v_x}{dt} = 0, \qquad \frac{d v_y}{dt} = -g
 $$
 
-So the horizontal motion is uniform, and the vertical motion is uniformly
-accelerated, and the two proceed side by side without interacting. Everything
+So the sideways motion is steady. The up-and-down motion speeds up at a fixed rate. The two run side by side and never affect each other. Everything
 else follows from this.
 
-Set the launch angle to 90° and the range collapses to zero — all the velocity
-went into the vertical component and there is nothing left to carry the particle
-forward. Set it to 0° and the range collapses again for the opposite reason: no
-vertical component, so the particle never leaves the ground.
+Set the launch angle to 90° and the range collapses to zero. All the velocity went into the vertical component. Nothing is left to carry the particle forward. Set it to 0° and the range collapses again, for the opposite reason. There is no upward part, so the ball never leaves the ground.
 
 ## Where the maximum lies
 
@@ -54,25 +47,20 @@ destroys.
 
 ## Try changing gravity
 
-Use the Moon and Jupiter buttons. The trajectory keeps its shape — it is always
-a parabola — but it stretches and shrinks. Range and flight time both scale as
+Use the Moon and Jupiter buttons. The trajectory keeps its shape. It is always a parabola. But it stretches and shrinks. Range and flight time both scale as
 $1/g$; maximum height does too.
 
-Notice what does *not* change: the horizontal velocity is still constant, and
-the ascent still takes exactly as long as the descent. Those are consequences of
+Notice what does not change. The sideways speed is still constant. Going up still takes exactly as long as coming down. Those are consequences of
 the structure of the equations, not of the value of $g$.
 
 ## What would break this
 
 The model assumes no air resistance. That assumption is doing far more work than
-it appears to. Drag is not a small correction for most real projectiles — for a
-tennis ball or a badminton shuttle it dominates, the trajectory becomes visibly
-asymmetric, and the optimum launch angle drops well below 45°. The parabola is a
+it appears to. Drag is not a small correction for most real projectiles. For a tennis ball or a badminton shuttle it dominates. The trajectory becomes visibly asymmetric, and the best launch angle drops well below 45°. The parabola is a
 good description of a shot put and a poor description of a ping-pong ball.
 
 This is not a flaw to apologise for. It is what a physical model *is*: a
 deliberately constrained representation, useful exactly as far as its
-assumptions hold, and no further. The panel below states those constraints
-explicitly, together with the evidence that the code obeys the law it claims to.
+assumptions hold, and no further. The panel below lists those limits. It also shows the evidence that the code obeys the law it claims to.
 
 <ModelPanel src="src/content/mechanics/projectile-motion/model.yaml" />

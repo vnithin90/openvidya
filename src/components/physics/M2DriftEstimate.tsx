@@ -91,9 +91,7 @@ export default function M2DriftEstimate() {
         </p>
         {snail && (
           <p className="m2-check ok">
-            For these values the net drift is slower than 1 mm each second. The current can
-            still be amperes because <b>n</b> and <b>A</b> are huge in SI terms — many carriers
-            in a thick enough section.
+            For these values the net drift is slower than 1 mm each second. The current can still be amperes because n and A are huge in SI terms. That means many carriers in a thick enough section.
           </p>
         )}
       </div>

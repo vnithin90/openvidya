@@ -34,22 +34,77 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
-const LESSONS = [
+/**
+ * EVERY student-facing surface, not only the three investigations.
+ *
+ * The first version of this file watched E1–E3 and nothing else. That is how a
+ * standard rots: the lessons get fixed, the concept pages drift, and the check
+ * stays green while a student meets grade-9 prose two clicks away.
+ */
+const SURFACES = [
   ['E1', 'src/components/investigate/E1Investigation.tsx'],
   ['E2', 'src/components/investigate/E2Investigation.tsx'],
   ['E3', 'src/components/investigate/E3Investigation.tsx'],
+  ['home', 'src/pages/index.astro'],
+  ['models index', 'src/pages/models/index.astro'],
+  ['models · charge', 'src/pages/models/charge.astro'],
+  ['what is current', 'src/pages/electricity/what-is-current.mdx'],
+  ['what determines current', 'src/pages/electricity/what-determines-current.mdx'],
+  ['electric field', 'src/pages/fields/electric-field.mdx'],
+  ['projectile motion', 'src/pages/mechanics/projectile-motion.mdx'],
+  ['Scene1 counting', 'src/components/physics/Scene1Counting.tsx'],
+  ['Scene2 surface', 'src/components/physics/Scene2Surface.tsx'],
+  ['Scene3 rate', 'src/components/physics/Scene3Rate.tsx'],
+  ['M2 factors', 'src/components/physics/M2Factors.tsx'],
+  ['M2 twin', 'src/components/physics/M2Twin.tsx'],
+  ['M2 drift', 'src/components/physics/M2DriftEstimate.tsx'],
+  ['charge rate panel', 'src/components/physics/ChargeRatePanel.tsx'],
 ] as const;
 
-/** Student-facing sentences only: <p> and <li> bodies, comments and JSX stripped. */
+/** Student-facing sentences: <p>/<li> bodies plus MDX body text. */
 function sentences(file: string): string[] {
   let s = readFileSync(file, 'utf8');
   s = s.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\{\/\*[\s\S]*?\*\/\}/g, '');
+  s = s.replace(/^---[\s\S]*?^---/m, '');          // astro / mdx frontmatter
+  s = s.replace(/^import .*$/gm, '');
+  s = s.replace(/<style[\s\S]*?<\/style>/g, '');
   const blocks: string[] = [];
-  for (const m of s.matchAll(/<(p|li)\b[^>]*>([\s\S]*?)<\/\1>/g)) {
-    const t = m[2].replace(/<[^>]+>/g, ' ').replace(/\{[^{}]*\}/g, ' ').replace(/\s+/g, ' ').trim();
-    if (t.split(' ').length > 4) blocks.push(t);
+  for (const m of s.matchAll(/<(p|li)\b[^>]*>([\s\S]*?)<\/\1>/g)) blocks.push(m[2]);
+  if (/\.mdx?$/.test(file)) {
+    /**
+     * ⚠ Markdown prose WRAPS. An earlier version of this took each line as a
+     * block, so a three-line paragraph became three fragments and the checker
+     * reported "Everything else about electricity —" as a hard sentence. It was
+     * about to drive a rewrite of prose that was not broken.
+     *
+     * Join consecutive non-blank lines into paragraphs first; a blank line ends
+     * one. Fenced code, tables, headings and JSX are skipped whole.
+     */
+    let para: string[] = [];
+    let inFence = false;
+    const flush = () => {
+      if (para.length) blocks.push(para.join(' '));
+      para = [];
+    };
+    for (const line of s.split('\n')) {
+      const t = line.trim();
+      if (t.startsWith('```')) { inFence = !inFence; flush(); continue; }
+      if (inFence) continue;
+      if (!t || /^[#<|:\-*>]/.test(t)) { flush(); continue; }
+      para.push(t);
+    }
+    flush();
   }
   return blocks
+    .map((b) =>
+      b.replace(/<[^>]+>/g, ' ')
+        .replace(/\{[^{}]*\}/g, ' ')
+        .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+        .replace(/[*_`]/g, '')
+        .replace(/\s+/g, ' ')
+        .trim(),
+    )
+    .filter((t) => t.split(' ').length > 4)
     .flatMap((b) => b.split(/(?<=[.!?]) +/))
     .map((x) => x.trim())
     .filter((x) => x.split(' ').length > 4);
@@ -64,11 +119,13 @@ function fleschKincaid(text: string): number {
   return 0.39 * words.length + 11.8 * sy - 15.59;
 }
 
-describe.each(LESSONS)('%s reads at the level it is aimed at', (name, file) => {
+describe.each(SURFACES)('%s reads at the level it is aimed at', (name, file) => {
   const all = sentences(file);
 
   it('has prose to check at all', () => {
-    expect(all.length).toBeGreaterThan(30);
+    // Small surfaces (a model card, a scene caption) legitimately have few
+    // sentences. Zero means the extractor broke, which is worth catching.
+    expect(all.length).toBeGreaterThan(2);
   });
 
   it('no sentence runs past 25 words', () => {
@@ -86,10 +143,48 @@ describe.each(LESSONS)('%s reads at the level it is aimed at', (name, file) => {
     expect(bad, `${name}: ${bad.length} dash-split sentence(s)\n  · ${bad.join('\n  · ')}`).toEqual([]);
   });
 
-  it('reads at grade 7 or below on average', () => {
-    const mean = all.reduce((n, s) => n + fleschKincaid(s), 0) / all.length;
-    expect(mean, `${name} mean Flesch-Kincaid grade`).toBeLessThanOrEqual(7.0);
-  });
+  /**
+   * The same limitation that killed the per-sentence check applies to short
+   * surfaces. A model card with three sentences has no meaningful average: two
+   * polysyllables move it a whole grade. Twenty sentences is where the mean
+   * starts to describe the prose rather than the vocabulary of one caption.
+   *
+   * The STRUCTURAL checks above still run on every surface, at any size, because
+   * a 30-word sentence is a 30-word sentence whether it has company or not.
+   */
+  const ENOUGH_FOR_AN_AVERAGE = 20;
+
+  /**
+   * TWO BARS, BECAUSE THERE ARE TWO KINDS OF PAGE — and this is a real
+   * distinction in the project, not a threshold tuned until it passed.
+   *
+   * The E-series investigations refuse jargon on principle: nothing is named
+   * before it is earned, so there is no "acceleration", no "superposition", no
+   * "field" until the lesson has bought it. Their vocabulary is chosen, so a
+   * grade-7 average is a fair demand.
+   *
+   * The concept modules are the opposite by design. They document a physical
+   * model for a reader who has the words. "Force sets acceleration, not
+   * velocity" is five words long and scores grade 17, because Flesch-Kincaid
+   * counts syllables and *acceleration* has five. Shortening that sentence
+   * cannot help; the only way to move the number is to stop using the correct
+   * term.
+   *
+   * So the structural limits — sentence length, dash-split clauses — apply
+   * everywhere, because they measure writing. The syllable average is held to
+   * grade 7 where vocabulary is a choice, and grade 8 where the subject fixes
+   * it.
+   */
+  const isInvestigation = /investigate\//.test(file);
+  const bar = isInvestigation ? 7.0 : 8.0;
+
+  it.skipIf(all.length < ENOUGH_FOR_AN_AVERAGE)(
+    `reads at grade ${bar} or below on average`,
+    () => {
+      const mean = all.reduce((n, s) => n + fleschKincaid(s), 0) / all.length;
+      expect(mean, `${name} mean Flesch-Kincaid grade`).toBeLessThanOrEqual(bar);
+    },
+  );
 
   /**
    * ⚠ A PER-SENTENCE FLESCH-KINCAID CHECK WAS HERE AND WAS REMOVED, because it
