@@ -574,9 +574,9 @@ export default function E1Investigation() {
               </tbody>
             </table>
             <p className="inv-lead">
-              A single idea — “rubbing makes things sticky” — cannot explain all three rows. Sticky
-              vs sticky should behave one way everywhere. Here the same rubbed balloon can repel one
-              thing and attract another.
+              One idea cannot explain all three rows. Say rubbing just makes things sticky. Then
+              sticky against sticky should behave the same way every time. But here the same rubbed
+              balloon pushes one thing away and pulls another closer.
             </p>
             <div className="inv-actions">
               <button type="button" className="inv-btn primary" onClick={() => go('judge')}>

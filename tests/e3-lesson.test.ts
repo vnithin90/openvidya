@@ -93,7 +93,7 @@ describe('2. §17.2 — the deferral is declared, and stated to the student', ()
   });
 
   it('says plainly that nobody has measured it', () => {
-    expect(FLAT).toMatch(/Nobody has measured this — not you, and not us/);
+    expect(FLAT).toMatch(/Nobody has measured this\. Not you, and not us/);
   });
 
   it('says WHY it is not available', () => {
@@ -145,10 +145,24 @@ describe('4. the timing question is asked and deliberately not answered', () => 
     expect(FLAT).toMatch(/Nothing in this lesson answers that/);
   });
 
-  it('the delay is quoted as ~3 ns, the figure that was computed', () => {
-    // An earlier draft of the spec said 0.3 ns. 1 m / c = 3.34 ns.
-    expect(FLAT).toMatch(/three nanoseconds/);
-    expect(PROSE).not.toMatch(/0\.3 nanosecond/);
+  /**
+   * This used to require the words "three nanoseconds". The readability rewrite
+   * replaced them with "the time light takes to cross a metre", which a student
+   * can picture where three billionths of a second cannot be pictured at all.
+   *
+   * The test was guarding a PHRASE. What it should guard is the PROPERTY: the
+   * lesson must never state a WRONG delay. An earlier draft of the spec said
+   * 0.3 ns; the computed value is 3.34 ns. Stating no number is fine. Stating
+   * the wrong one is not.
+   */
+  it('never states a wrong figure for the delay', () => {
+    const ns = [...FLAT.matchAll(/([\d.]+)\s*(?:ns|nanosecond)/gi)].map((m) => Number(m[1]));
+    for (const v of ns) {
+      expect(v, `1 m / c = 3.34 ns, so ${v} ns is wrong`).toBeGreaterThan(2.5);
+      expect(v).toBeLessThan(4.5);
+    }
+    // and if it uses the light comparison instead, that must be a metre
+    if (/light takes/.test(FLAT)) expect(FLAT).toMatch(/light takes to cross a metre/);
   });
 });
 

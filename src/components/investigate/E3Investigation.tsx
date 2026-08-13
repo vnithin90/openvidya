@@ -194,9 +194,9 @@ export default function E3Investigation() {
             <div className="card quiet">
               <p style={{ marginTop: 0 }}><strong>You will need nothing.</strong></p>
               <p style={{ marginBottom: 0 }}>
-                No balloons, no bench, no dry day. This one is done with a pencil and your own
-                judgment — and that is not a gap in the lesson, it is what the lesson is about.
-                Some questions in physics are not settled by measuring harder.
+                No balloons, no bench, no dry day. You need a pencil and your own judgment.
+                That is not a gap in the lesson. It is what the lesson is about. Some questions
+                in physics are not settled by measuring harder.
               </p>
             </div>
             <p className="small muted">Prerequisite: E2. Your predictions lock once committed.</p>
@@ -215,9 +215,10 @@ export default function E3Investigation() {
               Every push you have felt in your life happened where two things met.
             </p>
             <p>
-              <strong>Not this one.</strong> You measured that force in E2 without the balls ever
-              touching. There is air between them, and if you did it in a vacuum there would be
-              nothing at all — and the push would still be there.
+              <strong>Not this one.</strong> In E2 the balls pushed without ever touching.
+              The air between them is not doing any pushing you can see. Pumping the air out is
+              said not to kill the push. That is a claim from elsewhere. Nobody measured it in
+              this room.
             </p>
             <div className="card accent">
               <p style={{ margin: 0 }}>
@@ -252,9 +253,9 @@ export default function E3Investigation() {
               onChange={(e) => set('p1why', e.target.value)}
             />
             <p className="small muted">
-              In your own words, with your reason. There is no list to choose from, on purpose —
-              this is the question the whole investigation is built on, and the wording you reach
-              for is part of your answer.
+              In your own words, with your reason. There is no list to choose from. That is on
+               purpose. This is the question the whole investigation is built on, and the words
+               you reach for are part of your answer.
             </p>
             {run.p1locked ? (
               <>
@@ -349,10 +350,9 @@ export default function E3Investigation() {
               <>
                 <div className="card warn">
                   <p style={{ margin: 0 }}>
-                    <strong>Nothing in this lesson answers that</strong>, and nothing you can build
-                    at school will either. It is kept because it turns out to be the question that
-                    decides the one you just answered — and you should have staked something on it
-                    before finding that out.
+                    <strong>Nothing in this lesson answers that.</strong> Nothing you can build
+                    at school will either. Hold the thought. It comes back when the two stories
+                    about the empty spot need a test they disagree on.
                   </p>
                 </div>
                 <div className="actions"><Next to="observe" label="So what have we got?" /></div>
@@ -373,12 +373,11 @@ export default function E3Investigation() {
             <MapScene choices={run.map} caption="your map" />
             <div className="card warn">
               <p style={{ margin: 0 }}>
-                <strong>Nobody has measured this — not you, and not us.</strong> The bench version
-                exists: fix a charged ball, carry a small charged probe to each position, record
-                which way it is pushed. It is not ready, because the apparatus has never been
-                built and checked. We are telling you rather than leaving it out, because a page
-                that hands you a procedure nobody has tried is doing the thing this course exists
-                to argue against.
+                <strong>Nobody has measured this. Not you, and not us.</strong> The bench version
+                exists. Fix a charged ball. Carry a small charged probe to each position. Record
+                which way it is pushed. It is not ready yet, because the apparatus has never been
+                built and checked. We are saying so rather than leaving it out. A page that hands
+                you a procedure nobody has tried is doing what this course argues against.
               </p>
             </div>
             <p>
@@ -391,9 +390,9 @@ export default function E3Investigation() {
                 <strong>Every one of those arrows was drawn by imagining something placed there.</strong>
               </p>
               <p style={{ marginBottom: 0 }}>
-                That is what an arrow on this map means: <em>if I put a charge here, it would be
-                pushed that way</em>. The map is a record of what would happen when a second object
-                is present — which is precisely the thing your very first answer was about.
+                That is what an arrow here means: <em>if I put a charge here, it would be pushed
+                that way</em>. So the map records what happens when a second object <em>is</em>
+                there. That is exactly what your first answer was about.
               </p>
             </div>
             <div className="actions"><Next to="judge" label="Two students disagree" /></div>
@@ -452,10 +451,10 @@ export default function E3Investigation() {
               <>
                 <div className={`card ${right ? 'accent' : 'warn'}`}>
                   <p style={{ marginTop: 0 }}>
-                    <strong>Neither.</strong> Read the two descriptions again and ask what
-                    measurement would come out differently. There isn't one. Every arrow you could
-                    ever draw, and every arrow anyone could ever measure with charges sitting still,
-                    is identical under both accounts.
+                    <strong>Neither.</strong> Read the two stories again. Ask what measurement
+                    would come out differently. There is not one. Give both students the same six
+                    places and they draw the same arrows. Both stories say a second ball would be
+                    pushed the same way.
                   </p>
                   <p style={{ marginBottom: 0 }}>
                     {right
@@ -499,21 +498,21 @@ export default function E3Investigation() {
               <>
                 <div className={`card ${right ? 'accent' : 'warn'}`}>
                   <p style={{ marginTop: 0 }}>
-                    <strong>Movement and timing.</strong> The other three make the same measurement
-                    more precisely, and a more precise version of a measurement that cannot
-                    distinguish two accounts still cannot distinguish them. More decimal places on
-                    the same question is not a different question.
+                    <strong>Movement and timing.</strong> The other three just measure the same
+                    thing more carefully. But a careful version of a measurement that cannot tell
+                    two stories apart still cannot tell them apart. More decimal places on the
+                    same question is not a different question.
                   </p>
                   <p style={{ margin: '0 0 .5rem' }}>
-                    <strong>That is the question you already answered</strong>, back at prediction
-                    three. If the second charge reacts <em>after a delay</em>, then whatever is
-                    going on is not instantaneous, and a description that assigns a condition to
-                    every point in space handles that without alteration.
+                    <strong>You already answered this</strong>, back at prediction three. Suppose
+                    the second charge reacts <em>after a delay</em>. Then the push is not instant.
+                    Something in between had to change first. A description that gives every point
+                    its own condition handles that without any change.
                   </p>
                   <p style={{ marginBottom: 0 }} className="small muted">
-                    You will not measure it here. The delay across a metre is about three
-                    nanoseconds — three billionths of a second. Naming the right experiment is the
-                    achievement; reaching it is not.
+                    You will not measure it here. Across a metre the wait is the time light takes
+                    to cross a metre. Naming the right experiment is the achievement. Reaching it
+                    is not.
                   </p>
                 </div>
                 <div className="then-now">
@@ -566,10 +565,10 @@ export default function E3Investigation() {
               </div>
             </div>
             <p>
-              We describe this spatial pattern using the <strong>electric field</strong>. Treating
-              it as something present at every point is a <strong>choice of description</strong>{' '}
-              that electrostatics alone does not force — and one that becomes far more than
-              bookkeeping once charges move.
+              We describe this pattern using the <strong>electric field</strong>. Treating it as
+              something present at every point is a <strong>choice of description</strong>. Still
+              charges do not force that choice on you. It becomes much more than bookkeeping once
+              charges move.
             </p>
             <div className="card quiet">
               <p style={{ marginTop: 0 }}>Three reasons that choice turned out to be the right one. Only the first is anything you have seen.</p>
@@ -580,8 +579,8 @@ export default function E3Investigation() {
               </ol>
             </div>
             <p className="small muted">
-              Reasons two and three are outside anything you did today. They are named as the
-              reasons, and marked as promises this course has to keep — not as things you have
+              Reasons two and three are outside anything you did today. They are named here as
+              the reasons. They are promises this course has to keep. They are not things you have
               shown.
             </p>
             <div className="actions">
@@ -612,9 +611,9 @@ export default function E3Investigation() {
               The mathematical tradition of Ampère and Poisson treated electric and magnetic forces
               as acting directly across distance. Faraday thought instead in terms of{' '}
               <strong>lines of force</strong> filling the space, and held that they were physically
-              real rather than a drawing aid. Maxwell later put that picture into equations — and
-              those equations predicted that a disturbance in the field travels at a finite speed,
-              which turned out to be the speed of light.
+              real rather than a drawing aid. Maxwell later put that picture into equations. Those
+              equations predicted that a disturbance in the field travels at a fixed speed. That
+              speed turned out to be the speed of light.
             </p>
             <div className="card accent">
               <p style={{ margin: 0 }}>
@@ -646,13 +645,13 @@ export default function E3Investigation() {
               <p style={{ marginTop: 0 }}><strong>Two things are not here, on purpose.</strong></p>
               <p style={{ margin: '0 0 .5rem' }}>
                 <strong>No formula for E itself.</strong> Nothing you did today measured how the
-                field of a charge falls off — that was E2's question and E2 could not settle it
+                field of a charge falls off. That was E2's question, and E2 could not settle it
                 either.
               </p>
               <p style={{ margin: 0 }}>
-                <strong>No field lines.</strong> You drew six arrows. Joining them into continuous
-                curves is a further choice, and it adds a claim about the space between your six
-                positions that nothing here supports. Later, when there is a reason.
+                <strong>No field lines.</strong> You drew six arrows. Joining them into curves is
+                a further choice. It adds a claim about the space between your six positions.
+                Nothing here supports that claim. Later, when there is a reason.
               </p>
             </div>
             <p className="small muted">You have earned the <strong>field model</strong>. It stays available.</p>
@@ -692,17 +691,17 @@ export default function E3Investigation() {
               <strong>{run.p1why || '(left blank)'}</strong>
             </div>
             <p>
-              Read it again. You wrote that before you had a map, before you had two accounts to
-              choose between, and before you knew the question could not be settled by looking
-              harder. <strong>You do not have to have been wrong.</strong> The useful thing is
-              whether you can now say what your answer was assuming.
+              Read it again. You wrote that before you had a map. Before you had two stories to
+              choose between. Before you knew the question could not be settled by looking harder.
+              <strong>You do not have to have been wrong.</strong> The useful thing is whether you
+              can now say what your answer was assuming.
             </p>
             <div className="card accent">
               <p style={{ margin: 0 }}>
-                E2 asked what decides how hard. E3 asked how the push crosses the gap and found the
-                question harder than it looks. Next: why a charged comb picks up paper that has no
-                charge at all — where <strong>F = qE with q = 0 predicts nothing happens</strong>,
-                and the paper moves anyway.
+                E2 asked what decides how hard. E3 asked how the push crosses the gap, and found
+                the question harder than it looks. Next: why a charged comb picks up paper that
+                has no charge at all. The rule says a charge of zero feels no push. The paper
+                moves anyway.
               </p>
             </div>
             <div className="actions">
