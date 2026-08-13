@@ -85,7 +85,7 @@ retired once E2 is ported — `BACKLOG.md` §3a, `docs/D1_REPOSITORY_DECISION.md
 | **E1** | What is charge, and how much of it is there? | — | everyday | Q = Ne with N = N₊ − N₋; the count is the answer, no formula applies | ✅ **built twice** — `E1Investigation.tsx` (astro) and `e1.js` (static). ⚠ duplicate, see ISSUES |
 | **E2** | Two charged objects are near each other. What decides how hard they push? | E1 | laboratory | Asks *what decides*, not *compute F*. Coulomb's law is the answer, not the method | ✅ **built and deployed** (static), 16 screens. ⛔ **B3 open** — apparatus never built |
 | **E3** | How does one charge know the other is there? | E2 | internal_to_theory | ⚠ **first use of `internal_to_theory`** — the field concept has no honest everyday anchor. **Formula-proof by *kind*:** the central question is not a quantity, so no rearrangement answers it | ✅ **built** (astro), 12 screens + optional Faraday branch, 43 tests. §5a `deferred` — the map is predicted, never measured, pending the bench |
-| **E4** | Why does a charged comb attract *neutral* paper — and why doesn't reversing the comb change it? | E1, E3 | everyday | `F = qE` with q = 0 predicts **zero force**; the paper moves | ⬜ (Q-E01, specified) |
+| **E4** | Why does a charged comb attract *neutral* paper — and why doesn't reversing the comb change it? | **E1** (E3 not required, see note) | everyday | `F = qE` with q = 0 predicts **zero force**; the paper moves | ✅ **built** (astro), 12 screens, 4 commitments, 19 physics tests + 24 content tests. Everything in it is performable |
 | **E5** | Why does it take effort to push a charge closer to another? | E2 | laboratory | Energy before volts; V is named after the work is felt | ⬜ |
 | **E6** | How can we store separated charge without an enormous voltage? | E5, E1 | everyday | Opens with the *failure* of a single conductor — no formula addresses that | 📄 Capacitor booklet §1A |
 
@@ -135,6 +135,13 @@ retired once E2 is ported — `BACKLOG.md` §3a, `docs/D1_REPOSITORY_DECISION.md
 |---|---|---|---|---|---|
 | **A1** | Why does a capacitor pass AC but block DC? | C6 | everyday | Booklet §1: *"only the frequency has changed"* | 📄 Capacitor booklet |
 | **A2** | What does a coil do when the current keeps changing? | I1, O3 | laboratory | The mirror of A1 — inductance as induction applied to itself | ⬜ |
+
+⚠ **E4's prerequisite was listed as E1 + E3 and is E1 alone.** The lesson works
+entirely in *kinds* and *pushes* and never uses the field: the gradient argument
+is made as *"the near side is nearer, and the push is stronger close up"*, which
+needs nothing from E3. It does have an undeclared prerequisite — **`P-conduction`**,
+since charge must be able to shift *within* a neutral object — and the lesson
+declares that assumption to the student rather than hiding it.
 
 ## Provisional nodes
 

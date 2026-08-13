@@ -45,6 +45,7 @@ const SURFACES = [
   ['E1', 'src/components/investigate/E1Investigation.tsx'],
   ['E2', 'src/components/investigate/E2Investigation.tsx'],
   ['E3', 'src/components/investigate/E3Investigation.tsx'],
+  ['E4', 'src/components/investigate/E4Investigation.tsx'],
   ['home', 'src/pages/index.astro'],
   ['models index', 'src/pages/models/index.astro'],
   ['models · charge', 'src/pages/models/charge.astro'],

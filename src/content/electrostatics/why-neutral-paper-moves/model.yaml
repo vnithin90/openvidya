@@ -1,0 +1,134 @@
+# Fifth concept. Built from Q-E01 in docs/QUESTION_MAP_SCHEMA_TEST.md, which is
+# the entry that forced `Model ID` to be a LIST — see finding F1 there. The
+# reviewer's draft named one model, "electric field → force on charge or
+# polarizable object", and that conflation hides the whole point of the lesson.
+
+concept: Why does a charged comb attract neutral paper?
+slug: why-neutral-paper-moves
+module: E4
+category: response            # not equilibrium, not field, not definition —
+                              # a neutral object's REACTION to a field
+
+# TWO models, deliberately. F = qE with q = 0 gives zero force; the observed
+# attraction comes from polarisation in a field GRADIENT.
+models:
+  - field-of-charged-object
+  - polarisation-in-non-uniform-field
+
+objective: >
+  Establish that a neutral object is not an inert object, and that a net force
+  on it requires the field to be non-uniform — which is why the attraction
+  survives reversing the comb.
+
+assumptions:
+  - The paper is electrically neutral before the comb arrives. Net charge exactly zero.
+  - Charge inside the paper can shift a small distance and cannot leave it.
+  - The shift is small compared with the comb-to-paper distance.
+  - The comb is treated as a point charge; its own shape is not modelled.
+  - Nothing is transferred between comb and paper. No contact, no spark.
+  - Gravity, friction and air movement are ignored.
+
+governing_law:
+  form: response-to-gradient
+  statement: >
+    A neutral polarisable body in a field E acquires a dipole p ∝ E, and feels a
+    net force F = (p·∇)E. In a UNIFORM field ∇E = 0 and the net force is exactly
+    zero, however strong the field is.
+  latex: "\\mathbf{p} = \\alpha\\mathbf{E}, \\qquad \\mathbf{F} = (\\mathbf{p}\\cdot\\nabla)\\mathbf{E}"
+  sign_independence: >
+    Reversing the source charge reverses E, and therefore reverses p as well.
+    F depends on the PRODUCT of p and the gradient of E, so both sign flips
+    cancel and the force is unchanged. This is the lesson's central observation
+    and it is a consequence of the law, not an extra rule.
+
+# The paper is modelled as two equal and opposite charges a small distance
+# apart. That is a physical dipole, and it is what the student is shown.
+implementation:
+  file: src/physics/polarisation/model.ts
+  method: two-charge-sum
+  scheme: >
+    Exact Coulomb force on each end of the pair, summed. No gradient is taken
+    and no dipole approximation is used anywhere in the implementation.
+  notes: >
+    Returns null when the pair would straddle the source, or when the separation
+    is not small compared with the distance — the two-charge picture has no
+    meaning there and a plausible finite number would be a lie.
+
+# HARD RULE 2. The implementation sums two Coulomb forces. The verification
+# uses the point-dipole gradient formula instead, which shares no algebra with
+# it: one is a difference of two 1/r² terms, the other is a derivative.
+verification:
+  - name: uniform_field_gives_exactly_zero_force
+    method: analytic
+    independent_of: two_charge_sum
+    expected: "F = 0 in a uniform field, for any polarisability and any field strength"
+    tolerance: {absolute: 1.0e-15}
+    note: >
+      The decisive check, named in Q-E01. If this ever passes a non-zero number
+      the lesson's explanation is wrong, because the whole argument is that the
+      near side is CLOSER and therefore in a stronger field.
+
+  - name: dipole_approximation_matches_the_pair
+    method: gradient-formula
+    independent_of: two_charge_sum
+    expected: "F_pair → F_dipole = p·dE/dx as the separation shrinks"
+    tolerance: {relative: 1.0e-3}
+
+  - name: attraction_survives_reversing_the_source
+    method: invariant
+    independent_of: numerics
+    expected: "force direction is unchanged when the source charge changes sign"
+    tolerance: {relative: 0.0}
+
+  - name: force_is_always_toward_the_source
+    method: invariant
+    independent_of: numerics
+    expected: "sign of the net force points at the source for either source sign"
+    tolerance: {relative: 0.0}
+
+  - name: falls_off_faster_than_the_force_on_a_charge
+    method: asymptotic
+    independent_of: closed_form
+    expected: "|F| ∝ 1/r⁵ far away, against 1/r² for a charged object"
+    tolerance: {relative: 5.0e-2}
+
+validity:
+  holds_when:
+    - The paper's net charge is zero.
+    - The induced separation is small compared with the distance to the comb.
+    - The comb is far enough away to be treated as a point.
+  breaks_when:
+    - The paper has picked up real charge by contact — then F = qE applies and the sign of the comb matters again.
+    - The paper touches the comb. Charge transfers, and the paper is often flung away afterwards.
+    - The field is uniform. There is then no net force at all, whatever its strength.
+  not_modelled:
+    - why charge can shift inside paper at all       # P-conduction, undeclared prerequisite
+    - conductors versus insulators
+    - how far the charge shifts, or the value of α
+    - the moment that turns the paper before it moves
+
+pedagogical_notes:
+  common_misconceptions:
+    # Quoted in full. The SAME mistake — opening a quote, closing it mid-line and
+    # continuing in bare text — was made in what-decides-the-push/model.yaml and
+    # went unnoticed for days because nothing parsed these files. It was made
+    # again here, in the same field, and tests/model-yaml.test.ts caught it
+    # immediately. That is the check earning its place rather than the author
+    # learning a lesson.
+    - '"It is neutral, so nothing happens." F = qE with q = 0 predicts exactly that, and the paper moves anyway.'
+    - '"Reversing the comb should reverse the effect." Both the field and the induced dipole flip, so the force does not.'
+    - '"The paper picked up charge from the comb." Then the same bits would be pushed away by the opposite comb. They are not.'
+  representation_choices:
+    - The paper is drawn with both kinds still inside it, shifted. It must never be drawn as having acquired net charge.
+    - The near side is drawn nearer, because the whole explanation is that nearer means a stronger pull.
+  conceptual_debt:
+    - "Why charge can shift within paper is assumed, not shown. That is P-conduction, which is not on the spine yet."
+
+external_couplings:
+  - quantity: sign independence
+    used_by: "the lesson's second trial, which is the only thing separating polarisation from a picked-up-charge story"
+    note: >
+      If this stopped being true the lesson would lose its discriminating
+      experiment. A review of a parallel build found exactly that failure —
+      docs/specs/E4-grok-review.md — where the story was worded so that both
+      accounts predicted attraction in both trials.
