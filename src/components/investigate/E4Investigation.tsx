@@ -28,6 +28,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import DevJump from './DevJump';
+import { Contrast, PrereqNote, RecordBar, clearRun, earnModel, loadRun, saveRun } from './runtime';
 import { CombPaperScene, GradientScene, InsideScene, KitScene } from './scenes/E4Scenes';
 
 type P1 = 'toward' | 'away' | 'nothing';
@@ -96,8 +97,6 @@ interface RunState {
   failed?: Failed; failedlocked: boolean;
 }
 
-const STORAGE_KEY = 'openvidya-e4-run-v1';
-const MODEL_KEY = 'openvidya-models-earned';
 
 function defaultRun(): RunState {
   return {
@@ -109,21 +108,7 @@ function defaultRun(): RunState {
   };
 }
 
-function loadRun(): RunState {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return { ...defaultRun(), ...JSON.parse(raw) };
-  } catch { /* ignore */ }
-  return defaultRun();
-}
 
-function earnModel(id: string) {
-  try {
-    const raw = localStorage.getItem(MODEL_KEY);
-    const list: string[] = raw ? JSON.parse(raw) : [];
-    if (!list.includes(id)) localStorage.setItem(MODEL_KEY, JSON.stringify([...list, id]));
-  } catch { /* ignore */ }
-}
 
 const P1_LABEL: Record<P1, string> = {
   toward: 'The paper moves toward the comb',
@@ -163,10 +148,10 @@ export default function E4Investigation() {
   const [run, setRun] = useState<RunState>(defaultRun);
   const [hydrated, setHydrated] = useState(false);
 
-  useEffect(() => { setRun(loadRun()); setHydrated(true); }, []);
+  useEffect(() => { setRun(loadRun('e4', defaultRun)); setHydrated(true); }, []);
   useEffect(() => {
     if (!hydrated) return;
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(run)); } catch { /* ignore */ }
+    saveRun('e4', run);
   }, [run, hydrated]);
   useEffect(() => { if (run.step === 'maths') earnModel('polarisation'); }, [run.step]);
 
@@ -211,7 +196,8 @@ export default function E4Investigation() {
                 On a damp day nothing happens. That is the air, not a new law. Try a drier room.
               </p>
             </div>
-            <p className="small muted">Best after E1. Your predictions lock once you commit them.</p>
+            <PrereqNote needs="charge" label="E1 · What is charge?" href="/learn/electricity/what-is-charge" />
+            <p className="small muted">Your predictions lock once you commit them.</p>
             <div className="actions"><Next to="encounter" label="Begin" /></div>
           </>
         );
@@ -299,10 +285,12 @@ export default function E4Investigation() {
               </div>
             )}
             {run.o1 && run.o1 !== 'nothing' && (
-              <div className="then-now">
-                <div><span className="lab">You predicted</span><strong>{run.p1 ? P1_LABEL[run.p1] : '—'}</strong></div>
-                <div><span className="lab">You saw</span><strong>{P1_LABEL[run.o1]}</strong></div>
-              </div>
+              <Contrast
+                predicted={run.p1}
+                observed={run.o1}
+                predictedLabel={run.p1 ? P1_LABEL[run.p1] : '—'}
+                observedLabel={P1_LABEL[run.o1]}
+              />
             )}
             <div className="actions"><Next to="p2" label="Next prediction" enabled={!!run.o1} /></div>
           </>
@@ -381,10 +369,14 @@ export default function E4Investigation() {
               </div>
             )}
             {run.o2 && run.o2 !== 'nothing' && (
-              <div className="then-now">
-                <div><span className="lab">You predicted</span><strong>{run.p2 ? P2_LABEL[run.p2] : '—'}</strong></div>
-                <div><span className="lab">You saw</span><strong>{run.o2 === 'toward' ? P2_LABEL.toward : P2_LABEL.away}</strong></div>
-              </div>
+              <Contrast
+                /* "I cannot say" is a real answer here, not a wrong one. It has
+                   nothing to compare against, so Contrast is told so. */
+                predicted={run.p2 === 'unsure' ? undefined : run.p2}
+                observed={run.o2}
+                predictedLabel={run.p2 ? P2_LABEL[run.p2] : '—'}
+                observedLabel={run.o2 === 'toward' ? P2_LABEL.toward : P2_LABEL.away}
+              />
             )}
             <div className="actions"><Next to="judge" label="Two students disagree" enabled={!!run.o2} /></div>
           </>
@@ -624,6 +616,7 @@ export default function E4Investigation() {
               Read it again. “It is neutral, so nothing happens” is a good first answer. It is what
               the usual formula says. The useful thing is knowing which assumption it was leaning on.
             </p>
+            <RecordBar />
             <div className="actions">
               <a className="btn primary" href="/models">See the models you have earned</a>
               <a className="btn" href="/">Home</a>
@@ -631,7 +624,7 @@ export default function E4Investigation() {
                 className="btn ghost"
                 onClick={() => {
                   if (confirm('Start E4 from the beginning? Your locked answers will be cleared.')) {
-                    localStorage.removeItem(STORAGE_KEY);
+                    clearRun('e4');
                     setRun(defaultRun());
                   }
                 }}

@@ -46,6 +46,11 @@ const SURFACES = [
   ['E2', 'src/components/investigate/E2Investigation.tsx'],
   ['E3', 'src/components/investigate/E3Investigation.tsx'],
   ['E4', 'src/components/investigate/E4Investigation.tsx'],
+  /* runtime.tsx is not a lesson, but it speaks to the student in every lesson —
+     the verdict after each observation, the note about keeping a copy. Shared
+     prose is exactly the prose that escapes review, because it reads as
+     plumbing. */
+  ['shared runtime', 'src/components/investigate/runtime.tsx'],
   ['home', 'src/pages/index.astro'],
   ['models index', 'src/pages/models/index.astro'],
   ['models · charge', 'src/pages/models/charge.astro'],

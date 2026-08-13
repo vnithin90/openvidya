@@ -6,6 +6,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import DevJump from './DevJump';
+import { Contrast, RecordBar, clearRun, earnModel, loadRun, saveRun } from './runtime';
 import {
   ApparatusScene,
   CancellationScene,
@@ -53,8 +54,6 @@ interface RunState {
   franklinLocked: boolean;
 }
 
-const STORAGE_KEY = 'openvidya-e1-run-v1';
-const MODEL_KEY = 'openvidya-models-earned';
 
 const STEPS: Step[] = [
   'entry',
@@ -79,15 +78,6 @@ const labelTrio = (t: Trio) =>
 const labelJudge = (j: JudgePick) =>
   j === 'A' ? 'A only' : j === 'B' ? 'B only' : j === 'both' ? 'Both' : 'Neither';
 
-function loadRun(): RunState {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return { ...defaultRun(), ...JSON.parse(raw) };
-  } catch {
-    /* ignore */
-  }
-  return defaultRun();
-}
 
 function defaultRun(): RunState {
   return {
@@ -163,35 +153,6 @@ function ChoiceList<T extends string>({
   );
 }
 
-function Mismatch({
-  predicted,
-  observed,
-}: {
-  predicted: string;
-  observed: string;
-}) {
-  const agree = predicted === observed;
-  return (
-    <div className={`inv-mismatch ${agree ? 'agree' : ''}`}>
-      <div className="pair">
-        <div className="box">
-          <span className="lab">You predicted</span>
-          <span className="big">{predicted}</span>
-        </div>
-        <div className="box">
-          <span className="lab">You observed</span>
-          <span className="big">{observed}</span>
-        </div>
-      </div>
-      <p className="need">
-        {agree
-          ? 'Your prediction matched this observation. Keep going — we will stress-test it.'
-          : 'Your model predicted one thing. The experiment produced another. Something needs explaining.'}
-      </p>
-    </div>
-  );
-}
-
 function BalloonStage({ caption }: { caption: string }) {
   return (
     <div className="vis-stage" aria-hidden>
@@ -202,41 +163,26 @@ function BalloonStage({ caption }: { caption: string }) {
   );
 }
 
-function earnChargeModel() {
-  try {
-    const raw = localStorage.getItem(MODEL_KEY);
-    const list: string[] = raw ? JSON.parse(raw) : [];
-    if (!list.includes('charge')) {
-      localStorage.setItem(MODEL_KEY, JSON.stringify([...list, 'charge']));
-    }
-  } catch {
-    /* ignore */
-  }
-}
 
 export default function E1Investigation() {
   const [run, setRun] = useState<RunState>(defaultRun);
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    setRun(loadRun());
+    setRun(loadRun('e1', defaultRun));
     setHydrated(true);
   }, []);
 
   useEffect(() => {
     if (!hydrated) return;
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(run));
-    } catch {
-      /* ignore */
-    }
+    saveRun('e1', run);
   }, [run, hydrated]);
 
   const go = useCallback((step: Step) => setRun((r) => ({ ...r, step })), []);
 
   const reset = () => {
     if (confirm('Start E1 from the beginning? Your locked predictions will be cleared.')) {
-      localStorage.removeItem(STORAGE_KEY);
+      clearRun('e1');
       setRun(defaultRun());
     }
   };
@@ -378,7 +324,12 @@ export default function E1Investigation() {
               onChange={(o1) => setRun((r) => ({ ...r, o1 }))}
             />
             {run.o1 && run.p1 && (
-              <Mismatch predicted={labelTrio(run.p1)} observed={labelTrio(run.o1)} />
+              <Contrast
+                predicted={run.p1}
+                observed={run.o1}
+                predictedLabel={labelTrio(run.p1)}
+                observedLabel={labelTrio(run.o1)}
+              />
             )}
             <p className="note-soft">
               If humidity kills the effect, note “couldn’t tell” and continue — or retry on a drier
@@ -468,7 +419,12 @@ export default function E1Investigation() {
               onChange={(o2) => setRun((r) => ({ ...r, o2 }))}
             />
             {run.o2 && run.p2 && (
-              <Mismatch predicted={labelTrio(run.p2)} observed={labelTrio(run.o2)} />
+              <Contrast
+                predicted={run.p2}
+                observed={run.o2}
+                predictedLabel={labelTrio(run.p2)}
+                observedLabel={labelTrio(run.o2)}
+              />
             )}
             <div className="inv-actions">
               <button
@@ -895,7 +851,7 @@ export default function E1Investigation() {
                 type="button"
                 className="inv-btn primary"
                 onClick={() => {
-                  earnChargeModel();
+                  earnModel('charge');
                   go('done');
                 }}
               >
@@ -938,6 +894,7 @@ export default function E1Investigation() {
                 re-teaching from zero.
               </p>
             </div>
+            <RecordBar />
             <div className="inv-actions">
               <a className="inv-btn primary" href="/models/charge" style={{ textDecoration: 'none' }}>
                 View Charge model
@@ -963,7 +920,7 @@ export default function E1Investigation() {
    *
    * This component used to return `<p>Loading investigation…</p>` until the
    * hydration effect had run. The guard existed for a real reason — `loadRun()`
-   * reads localStorage, which the server cannot see, so rendering the stored
+   * reads sessionStorage, which the server cannot see, so rendering the stored
    * step on the server would mismatch the client.
    *
    * But it made the entire lesson depend on JavaScript succeeding. On 12 Aug an

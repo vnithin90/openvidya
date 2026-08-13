@@ -20,6 +20,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { predicted } from '../../physics/coulomb-force/model';
 import DevJump from './DevJump';
+import { PrereqNote, RecordBar, clearRun, earnModel, loadRun, saveRun } from './runtime';
 import {
   ChargingFigure,
   ConductionFigure,
@@ -179,8 +180,6 @@ interface RunState {
   ratio?: Ratio; ratiolocked: boolean;
 }
 
-const STORAGE_KEY = 'openvidya-e2-run-v1';
-const MODEL_KEY = 'openvidya-models-earned';
 
 function defaultRun(): RunState {
   return {
@@ -200,21 +199,7 @@ function defaultRun(): RunState {
   };
 }
 
-function loadRun(): RunState {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return { ...defaultRun(), ...JSON.parse(raw) };
-  } catch { /* ignore */ }
-  return defaultRun();
-}
 
-function earnModel(id: string) {
-  try {
-    const raw = localStorage.getItem(MODEL_KEY);
-    const list: string[] = raw ? JSON.parse(raw) : [];
-    if (!list.includes(id)) localStorage.setItem(MODEL_KEY, JSON.stringify([...list, id]));
-  } catch { /* ignore */ }
-}
 
 const num = (v: string): number | null => {
   const x = parseFloat(v);
@@ -312,10 +297,10 @@ export default function E2Investigation() {
   const [run, setRun] = useState<RunState>(defaultRun);
   const [hydrated, setHydrated] = useState(false);
 
-  useEffect(() => { setRun(loadRun()); setHydrated(true); }, []);
+  useEffect(() => { setRun(loadRun('e2', defaultRun)); setHydrated(true); }, []);
   useEffect(() => {
     if (!hydrated) return;
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(run)); } catch { /* ignore */ }
+    saveRun('e2', run);
   }, [run, hydrated]);
 
   const go = useCallback((step: Step) => {
@@ -384,6 +369,7 @@ export default function E2Investigation() {
                 stop swinging, and how fast the charge drained away while you waited</em>. If those two times turn out to be similar, this experiment cannot be done as described. We would rather find that out from you than pretend otherwise.
               </p>
             </div>
+            <PrereqNote needs="charge" label="E1 · What is charge?" href="/learn/electricity/what-is-charge" />
             <p className="small muted">Your predictions lock once you commit them.</p>
             <div className="actions"><Next to="encounter" label="Begin" /></div>
           </>
@@ -1386,6 +1372,7 @@ export default function E2Investigation() {
                 <strong>E3 · How does one charge know the other is there?</strong>
               </p>
             </div>
+            <RecordBar />
             <div className="actions">
               <a className="btn primary" href="/learn/electricity/how-does-it-know">Go to E3 →</a>
               <a className="btn" href="/models">See the models you have earned</a>
@@ -1393,7 +1380,7 @@ export default function E2Investigation() {
                 className="btn ghost"
                 onClick={() => {
                   if (confirm('Start E2 from the beginning? Your locked predictions will be cleared.')) {
-                    localStorage.removeItem(STORAGE_KEY);
+                    clearRun('e2');
                     setRun(defaultRun());
                   }
                 }}

@@ -30,6 +30,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import DevJump from './DevJump';
+import { PrereqNote, RecordBar, clearRun, earnModel, loadRun, saveRun } from './runtime';
 import { GapScene, MapScene, POSITIONS, TimingScene, type Dir } from './scenes/E3Scenes';
 
 type Timing = 'instant' | 'delay' | 'unsure';
@@ -92,8 +93,6 @@ interface RunState {
   decide?: Decide; decidelocked: boolean;
 }
 
-const STORAGE_KEY = 'openvidya-e3-run-v1';
-const MODEL_KEY = 'openvidya-models-earned';
 
 function defaultRun(): RunState {
   return {
@@ -106,21 +105,7 @@ function defaultRun(): RunState {
   };
 }
 
-function loadRun(): RunState {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return { ...defaultRun(), ...JSON.parse(raw) };
-  } catch { /* ignore */ }
-  return defaultRun();
-}
 
-function earnModel(id: string) {
-  try {
-    const raw = localStorage.getItem(MODEL_KEY);
-    const list: string[] = raw ? JSON.parse(raw) : [];
-    if (!list.includes(id)) localStorage.setItem(MODEL_KEY, JSON.stringify([...list, id]));
-  } catch { /* ignore */ }
-}
 
 const DIRS: { id: Dir; label: string }[] = [
   { id: 'out', label: 'away from the ball' },
@@ -154,10 +139,10 @@ export default function E3Investigation() {
   const [run, setRun] = useState<RunState>(defaultRun);
   const [hydrated, setHydrated] = useState(false);
 
-  useEffect(() => { setRun(loadRun()); setHydrated(true); }, []);
+  useEffect(() => { setRun(loadRun('e3', defaultRun)); setHydrated(true); }, []);
   useEffect(() => {
     if (!hydrated) return;
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(run)); } catch { /* ignore */ }
+    saveRun('e3', run);
   }, [run, hydrated]);
   useEffect(() => { if (run.step === 'math') earnModel('electric-field'); }, [run.step]);
 
@@ -199,7 +184,8 @@ export default function E3Investigation() {
                 in physics are not settled by measuring harder.
               </p>
             </div>
-            <p className="small muted">Prerequisite: E2. Your predictions lock once committed.</p>
+            <PrereqNote needs="coulomb-force" label="E2 · What decides how hard two charges push?" href="/learn/electricity/what-decides-the-push" />
+            <p className="small muted">Your predictions lock once committed.</p>
             <div className="actions"><Next to="encounter" label="Begin" /></div>
           </>
         );
@@ -704,13 +690,14 @@ export default function E3Investigation() {
                 moves anyway.
               </p>
             </div>
+            <RecordBar />
             <div className="actions">
               <a className="btn primary" href="/models">See the models you have earned</a>
               <button
                 className="btn ghost"
                 onClick={() => {
                   if (confirm('Start E3 from the beginning? Your locked answers will be cleared.')) {
-                    localStorage.removeItem(STORAGE_KEY);
+                    clearRun('e3');
                     setRun(defaultRun());
                   }
                 }}

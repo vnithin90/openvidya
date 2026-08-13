@@ -21,25 +21,38 @@ import InvestigateLayout from '../../layouts/InvestigateLayout.astro';
 </InvestigateLayout>
 
 <script>
-  const KEY = 'openvidya-models-earned';
+  /* sessionStorage, and the key must match src/components/investigate/runtime.tsx.
+     A lab machine is shared: what the last student earned is not this student's
+     inventory. See the reasoning in runtime.tsx. */
+  const KEY = 'openvidya.models';
+
+  const KNOWN = {
+    charge: ['Charge', 'Two kinds · transfer · like/unlike · net ≠ total', '/models/charge'],
+    'coulomb-force': ['Coulomb force', 'Both charges · falls off fast with distance', null],
+    'electric-field': ['Field', 'A judgment left open, with the criteria stated', null],
+    polarisation: ['Polarisation', 'Charge shifts inside · zero leftover still feels a pull', null],
+  };
+
   const el = document.getElementById('model-list');
   if (el) {
     let list = [];
     try {
-      list = JSON.parse(localStorage.getItem(KEY) || '[]');
+      list = JSON.parse(sessionStorage.getItem(KEY) || '[]');
     } catch {
       list = [];
     }
     if (!list.length) {
       el.innerHTML =
-        '<p class="note-soft">No models earned yet. Complete <a href="/learn/electricity/what-is-charge">What is charge?</a> to earn <strong>Charge</strong>.</p>';
+        '<p class="note-soft">Nothing earned in this tab yet. Complete <a href="/learn/electricity/what-is-charge">What is charge?</a> to earn <strong>Charge</strong>. If you kept a copy of your record from another day, open it at the end of any investigation.</p>';
     } else {
       el.innerHTML = list
         .map((id) => {
-          if (id === 'charge') {
-            return `<a class="model-link" href="/models/charge"><strong>Charge</strong><span>Two kinds · transfer · like/unlike · net ≠ total</span></a>`;
-          }
-          return `<div class="model-link"><strong>${id}</strong></div>`;
+          const m = KNOWN[id];
+          if (!m) return `<div class="model-link"><strong>${id}</strong></div>`;
+          const [name, gloss, href] = m;
+          return href
+            ? `<a class="model-link" href="${href}"><strong>${name}</strong><span>${gloss}</span></a>`
+            : `<div class="model-link"><strong>${name}</strong><span>${gloss}</span></div>`;
         })
         .join('');
     }
