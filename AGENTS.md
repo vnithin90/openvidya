@@ -239,15 +239,19 @@ saying it looks correct.
 
 ## §D · Live deploy (this folder only)
 
-Git remote: `https://github.com/vnithin90/openvidya.git`  
-Vercel is connected to **that** repo. A push to `main` is a live deploy.
+Git remotes:
+
+- `origin` → `https://github.com/vnithin90/openvidya.git` (source of truth)
+- `vercel-live` → `https://github.com/vnithin90/openvidya-static.git`
+
+The Vercel project **openvidya.vercel.app** is still wired to `openvidya-static`, not to `openvidya`. The `post-commit` hook therefore pushes **both** remotes.
 
 This is **not** `openvidya-grok` / `vnithin90/openvidya2`. Do not push this tree there.
 
 After any change in this website:
 
 1. Commit in this folder only.
-2. `git push origin main` (a `post-commit` hook also does this).
+2. The hook pushes `origin` and `vercel-live`.
 3. Do not wait to be asked.
 
 Do not commit `node_modules/`, `dist/`, `.astro/`, or `.vercel/`.
