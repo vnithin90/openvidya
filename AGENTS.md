@@ -24,6 +24,7 @@ about each other. See the amendment log.
 | 11 Aug 2026 | Hard rule 13 added — sourcing register. | Empirical sourcing is one of four evidence classes and had no owner. Four ⚠ values are unsourced today because of it. |
 | 11 Aug 2026 | §C architecture acceptance test added. | The lens structure is a hypothesis about our own process. It gets tested like any other. |
 | 11 Aug 2026 | Hard rules 1–12 kept verbatim. | They are checkable, and every one was earned. `AGENTS_REVIEW.md` §"load-bearing" gives the evidence. |
+| 14 Aug 2026 | §D live deploy: push `main` to `vnithin90/openvidya`. | This folder is the Claude site. Vercel deploys that repo. `openvidya2` is the Grok site — do not mix them. |
 
 ---
 
@@ -233,3 +234,20 @@ stand on their own.
 
 None of the above is satisfied by a page rendering, a suite passing, or an agent
 saying it looks correct.
+
+---
+
+## §D · Live deploy (this folder only)
+
+Git remote: `https://github.com/vnithin90/openvidya.git`  
+Vercel is connected to **that** repo. A push to `main` is a live deploy.
+
+This is **not** `openvidya-grok` / `vnithin90/openvidya2`. Do not push this tree there.
+
+After any change in this website:
+
+1. Commit in this folder only.
+2. `git push origin main` (a `post-commit` hook also does this).
+3. Do not wait to be asked.
+
+Do not commit `node_modules/`, `dist/`, `.astro/`, or `.vercel/`.

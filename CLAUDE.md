@@ -13,7 +13,7 @@ Quick reference:
 npm install
 npm test        # physics verification — must pass before any PR
 npm run dev     # local site
-npm run build   # what Netlify runs
+npm run build   # what Vercel (and Netlify) run
 ```
 
 Two things that are easy to get wrong here and matter more than usual:
